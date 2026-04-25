@@ -1169,7 +1169,7 @@ export default function CircleOfFifthsTrainer() {
                   value={keyAnswer}
                   onChange={(e) => {
                     const v = e.target.value;
-                    setKeyAnswer(v.includes(' ') ? v : v.toUpperCase());
+                    setKeyAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
                   }}
                   placeholder={options.minor ? 'e.g. G, F#, Am, Ebm' : 'e.g. G, Eb, F#'}
                 />

@@ -741,7 +741,7 @@ export default function IntervalTrainer() {
                     value={answer}
                     onChange={(e) => {
                       const v = e.target.value;
-                      setAnswer(v.includes(' ') ? v : v.toUpperCase());
+                      setAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
                     }}
                     placeholder="?"
                     maxLength={3}

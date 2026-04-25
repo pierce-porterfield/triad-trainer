@@ -1307,7 +1307,7 @@ export default function TriadTrainer() {
                         value={answers.notes[i] || ''}
                         onChange={(e) => {
                           const v = e.target.value;
-                          const forced = v.includes(' ') ? v : v.toUpperCase();
+                          const forced = v ? v[0].toUpperCase() + v.slice(1) : v;
                           const next = [...(answers.notes || [])];
                           next[i] = forced;
                           setAnswers((a) => ({ ...a, notes: next }));

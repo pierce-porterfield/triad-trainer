@@ -216,6 +216,7 @@ const chordNameMatch = (user, correct) => {
 // ============================================================================
 export default function TriadTrainer() {
   const [options, setOptions] = useState({
+    base: true,
     dim: true,
     aug: true,
     sevenths: false,
@@ -225,10 +226,14 @@ export default function TriadTrainer() {
   });
 
   const enabledQualities = useMemo(() => {
-    const enabled = ['maj', 'min'];
+    const enabled = [];
+    if (options.base) enabled.push('maj', 'min');
     if (options.dim) enabled.push('dim');
     if (options.aug) enabled.push('aug');
-    if (options.sevenths) enabled.push('maj7', 'dom7', 'min7', 'm7b5', 'dim7');
+    if (options.sevenths) {
+      enabled.push('maj7', 'dom7', 'min7');
+      if (options.dim) enabled.push('m7b5', 'dim7');
+    }
     if (options.ninths) enabled.push('maj9', 'dom9', 'min9');
     if (options.thirteenths) enabled.push('maj13', 'dom13', 'min13');
     return enabled;
@@ -251,7 +256,7 @@ export default function TriadTrainer() {
   const [isNewBest, setIsNewBest] = useState(false);
 
   const optionsKey = useMemo(() =>
-    `d${options.dim ? 1 : 0}a${options.aug ? 1 : 0}_7${options.sevenths ? 1 : 0}_9${options.ninths ? 1 : 0}_13${options.thirteenths ? 1 : 0}${options.staffMode ? '_staff' : ''}`,
+    `b${options.base ? 1 : 0}d${options.dim ? 1 : 0}a${options.aug ? 1 : 0}_7${options.sevenths ? 1 : 0}_9${options.ninths ? 1 : 0}_13${options.thirteenths ? 1 : 0}${options.staffMode ? '_staff' : ''}`,
     [options]
   );
   const keyFor = (dir) => `triad-${dir}-${optionsKey}`;
@@ -1059,6 +1064,15 @@ export default function TriadTrainer() {
               <div className="tt-options-section-label">Triad qualities</div>
               <div className="tt-toggle-grid">
                 <div
+                  className={`tt-toggle ${options.base ? 'on' : ''}`}
+                  onClick={() => toggleOption('base')}
+                  role="button" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('base'); }}
+                >
+                  <span>Major + minor</span>
+                  <span className="tt-toggle-detail">base</span>
+                </div>
+                <div
                   className={`tt-toggle ${options.dim ? 'on' : ''}`}
                   onClick={() => toggleOption('dim')}
                   role="button" tabIndex={0}
@@ -1089,7 +1103,9 @@ export default function TriadTrainer() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('sevenths'); }}
                 >
                   <span>7ths</span>
-                  <span className="tt-toggle-detail">maj7 · 7 · m7 · m7♭5 · °7</span>
+                  <span className="tt-toggle-detail">
+                    maj7 · 7 · m7{options.dim ? ' · m7♭5 · °7' : ''}
+                  </span>
                 </div>
                 <div
                   className={`tt-toggle ${options.ninths ? 'on' : ''}`}

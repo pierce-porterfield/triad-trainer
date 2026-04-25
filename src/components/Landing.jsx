@@ -21,7 +21,7 @@ export default function Landing() {
         radial-gradient(ellipse at bottom right, rgba(139, 44, 32, 0.06), transparent 50%),
         repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(26, 20, 16, 0.012) 2px, rgba(26, 20, 16, 0.012) 3px);
       min-height: 100vh;
-      padding: 3rem 1rem;
+      padding: 1.5rem 1rem;
       position: relative;
       overflow-x: hidden;
     }
@@ -42,7 +42,7 @@ export default function Landing() {
     }
     .landing-header {
       text-align: center;
-      margin-bottom: 3.5rem;
+      margin-bottom: 2rem;
     }
     .landing-eyebrow {
       font-family: 'JetBrains Mono', monospace;
@@ -54,7 +54,7 @@ export default function Landing() {
     }
     .landing-title {
       font-family: 'Italiana', serif;
-      font-size: clamp(3rem, 9vw, 5.5rem);
+      font-size: clamp(2.25rem, 6vw, 3.75rem);
       font-weight: 400;
       line-height: 0.95;
       letter-spacing: -0.01em;
@@ -101,6 +101,9 @@ export default function Landing() {
     }
     @media (min-width: 720px) {
       .landing-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1080px) {
+      .landing-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .landing-card {
@@ -208,7 +211,6 @@ export default function Landing() {
       <div className="landing-container landing-fade-in">
 
         <header className="landing-header">
-          <div className="landing-eyebrow">A Compendium</div>
           <h1 className="landing-title">
             Music <em>Theory</em>
             <br />Trainer
@@ -225,14 +227,13 @@ export default function Landing() {
               Triad <em>Trainer</em>
             </div>
             <div className="landing-card-desc">
-              Major, minor, diminished, and augmented triads across every root.
-              Spell the chord, name the chord, or identify the 2nd and 6th of its scale.
+              Triads and extended chords across every root — major, minor, diminished,
+              augmented, plus optional 7ths, 9ths, and 13ths. Spell the chord on a staff
+              or by typing, or name it from its notes.
             </div>
             <div className="landing-card-modes">
               I. Chord → notes<br />
-              II. Notes → chord<br />
-              III. Chord → 2nd<br />
-              IV. Chord → 6th
+              II. Notes → chord
             </div>
             <div className="landing-card-cta">
               <span>Begin</span>
@@ -246,8 +247,8 @@ export default function Landing() {
               Circle of <em>Fifths</em>
             </div>
             <div className="landing-card-desc">
-              Every major key signature around the circle. Mark the sharps and flats,
-              or read the scale and name the key.
+              Every key signature around the circle, major and minor. Mark the sharps
+              and flats, or read the scale and name the key.
             </div>
             <div className="landing-card-modes">
               I. Key → sharps &amp; flats<br />
@@ -259,9 +260,28 @@ export default function Landing() {
             </div>
           </Link>
 
+          <Link to="/intervals" className="landing-card">
+            <div className="landing-card-num">— Opus III —</div>
+            <div className="landing-card-title">
+              Interval <em>Trainer</em>
+            </div>
+            <div className="landing-card-desc">
+              2nds through 7ths plus the 4th, tritone, and 5th. Toggle which intervals
+              to study, then name the note that lies above each root.
+            </div>
+            <div className="landing-card-modes">
+              I. Toggle any subset<br />
+              II. Root + interval → note
+            </div>
+            <div className="landing-card-cta">
+              <span>Begin</span>
+              <span className="landing-card-arrow">→</span>
+            </div>
+          </Link>
+
         </div>
 
-        <div className="landing-footer">— ad studium musicae —</div>
+        <div className="landing-footer">Created by Pierce Porterfield</div>
       </div>
     </div>
   );

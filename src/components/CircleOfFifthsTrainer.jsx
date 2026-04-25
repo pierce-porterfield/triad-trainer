@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 
 // ============================================================================
 // KEY SIGNATURE DATA — all 15 major keys
@@ -9,25 +10,45 @@ import { Link } from 'react-router-dom';
 const ORDER_OF_SHARPS = ['F', 'C', 'G', 'D', 'A', 'E', 'B'];
 const ORDER_OF_FLATS  = ['B', 'E', 'A', 'D', 'G', 'C', 'F'];
 
-const KEYS = [
+const MAJOR_KEYS = [
   // Natural
-  { name: 'C',  count: 0, type: 'natural', sharps: [], flats: [] },
+  { tonic: 'C',  name: 'C',  count: 0, type: 'natural', sharps: [], flats: [], mode: 'major' },
   // Sharp keys
-  { name: 'G',  count: 1, type: 'sharp', sharps: ['F'], flats: [] },
-  { name: 'D',  count: 2, type: 'sharp', sharps: ['F', 'C'], flats: [] },
-  { name: 'A',  count: 3, type: 'sharp', sharps: ['F', 'C', 'G'], flats: [] },
-  { name: 'E',  count: 4, type: 'sharp', sharps: ['F', 'C', 'G', 'D'], flats: [] },
-  { name: 'B',  count: 5, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A'], flats: [] },
-  { name: 'F#', count: 6, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E'], flats: [] },
-  { name: 'C#', count: 7, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E', 'B'], flats: [] },
+  { tonic: 'G',  name: 'G',  count: 1, type: 'sharp', sharps: ['F'], flats: [], mode: 'major' },
+  { tonic: 'D',  name: 'D',  count: 2, type: 'sharp', sharps: ['F', 'C'], flats: [], mode: 'major' },
+  { tonic: 'A',  name: 'A',  count: 3, type: 'sharp', sharps: ['F', 'C', 'G'], flats: [], mode: 'major' },
+  { tonic: 'E',  name: 'E',  count: 4, type: 'sharp', sharps: ['F', 'C', 'G', 'D'], flats: [], mode: 'major' },
+  { tonic: 'B',  name: 'B',  count: 5, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A'], flats: [], mode: 'major' },
+  { tonic: 'F#', name: 'F#', count: 6, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E'], flats: [], mode: 'major' },
+  { tonic: 'C#', name: 'C#', count: 7, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E', 'B'], flats: [], mode: 'major' },
   // Flat keys
-  { name: 'F',  count: 1, type: 'flat', sharps: [], flats: ['B'] },
-  { name: 'Bb', count: 2, type: 'flat', sharps: [], flats: ['B', 'E'] },
-  { name: 'Eb', count: 3, type: 'flat', sharps: [], flats: ['B', 'E', 'A'] },
-  { name: 'Ab', count: 4, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D'] },
-  { name: 'Db', count: 5, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G'] },
-  { name: 'Gb', count: 6, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G', 'C'] },
+  { tonic: 'F',  name: 'F',  count: 1, type: 'flat', sharps: [], flats: ['B'], mode: 'major' },
+  { tonic: 'Bb', name: 'Bb', count: 2, type: 'flat', sharps: [], flats: ['B', 'E'], mode: 'major' },
+  { tonic: 'Eb', name: 'Eb', count: 3, type: 'flat', sharps: [], flats: ['B', 'E', 'A'], mode: 'major' },
+  { tonic: 'Ab', name: 'Ab', count: 4, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D'], mode: 'major' },
+  { tonic: 'Db', name: 'Db', count: 5, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G'], mode: 'major' },
+  { tonic: 'Gb', name: 'Gb', count: 6, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G', 'C'], mode: 'major' },
 ];
+
+// Each natural minor key shares the key signature of its relative major.
+const MINOR_TONICS = [
+  ['A',   0],  ['E',   1], ['B',   2], ['F#',  3], ['C#',  4], ['G#',  5], ['D#',  6], ['A#',  7],
+  ['D',   1], ['G',   2], ['C',   3], ['F',   4], ['Bb',  5], ['Eb',  6],
+];
+const MINOR_KEYS = MINOR_TONICS.map(([tonic, idx]) => {
+  const m = MAJOR_KEYS[idx];
+  return {
+    tonic,
+    name: tonic + 'm',
+    count: m.count,
+    type: m.type,
+    sharps: m.sharps,
+    flats: m.flats,
+    mode: 'minor',
+  };
+});
+
+const KEYS = [...MAJOR_KEYS, ...MINOR_KEYS];
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 
@@ -40,10 +61,8 @@ const accidentalFor = (key, letter) => {
 
 // Build the full set of notes in a key, in scale order starting from the tonic
 const notesInKey = (key) => {
-  // Find the root letter (first char of key.name)
-  const rootLetter = key.name[0];
+  const rootLetter = key.tonic[0];
   const rootIdx = LETTERS.indexOf(rootLetter);
-  // Scale letters in order from root
   const scaleLetters = [];
   for (let i = 0; i < 7; i++) {
     scaleLetters.push(LETTERS[(rootIdx + i) % 7]);
@@ -70,16 +89,30 @@ const answersMatch = (userMap, key) => {
   return true;
 };
 
-// For mode 2, normalize a key name the user types
-const normalizeKeyName = (s) => {
-  if (!s) return '';
-  const clean = s.trim().replace(/\s+/g, '').replace('♯', '#').replace('♭', 'b');
-  if (!clean) return '';
-  return clean[0].toUpperCase() + clean.slice(1).toLowerCase();
+// Parse a key-name input into { root, mode } or null if unparseable.
+const parseKeyInput = (s) => {
+  if (!s) return null;
+  const t = s.trim().replace(/\s+/g, '').replace('♯', '#').replace('♭', 'b');
+  if (!t) return null;
+  const letter = t[0].toUpperCase();
+  if (!'ABCDEFG'.includes(letter)) return null;
+  let i = 1;
+  let acc = '';
+  while (i < t.length && (t[i] === '#' || t[i] === 'b')) {
+    acc += t[i];
+    i++;
+  }
+  const root = letter + acc;
+  const rest = t.slice(i).toLowerCase();
+  let keyMode = 'major';
+  if (rest === 'm' || rest === 'min' || rest === 'minor' || rest === '-') keyMode = 'minor';
+  return { root, mode: keyMode };
 };
 
 const keyNameMatch = (userInput, key) => {
-  return normalizeKeyName(userInput) === normalizeKeyName(key.name);
+  const u = parseKeyInput(userInput);
+  if (!u) return false;
+  return u.root === key.tonic && u.mode === key.mode;
 };
 
 // ============================================================================
@@ -99,16 +132,44 @@ export default function CircleOfFifthsTrainer() {
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [results, setResults] = useState([]);
   const [flipped, setFlipped] = useState(false);
+  const [startedAt, setStartedAt] = useState(null);
+  const [elapsed, setElapsed] = useState(0);
+  const [finalTime, setFinalTime] = useState(null);
+  const [isNewBest, setIsNewBest] = useState(false);
+
+  const [options, setOptions] = useState({ major: true, minor: false });
+
+  const filteredKeys = useMemo(() => {
+    return KEYS.filter((k) =>
+      (k.mode === 'major' && options.major) || (k.mode === 'minor' && options.minor)
+    );
+  }, [options]);
+
+  const optionsKey = `M${options.major ? 1 : 0}m${options.minor ? 1 : 0}`;
+  const keyFor = (dir) => `cof-${dir}-${optionsKey}`;
+  const bestForDirection = (dir) => getBestTime(keyFor(dir));
+
+  const toggleOption = (k) => setOptions((o) => ({ ...o, [k]: !o[k] }));
+
+  useEffect(() => {
+    if (mode !== 'playing' || !startedAt) return;
+    const id = setInterval(() => setElapsed(Date.now() - startedAt), 250);
+    return () => clearInterval(id);
+  }, [mode, startedAt]);
 
   const startGame = (dir) => {
     setDirection(dir);
-    setDeck(shuffle(KEYS));
+    setDeck(shuffle(filteredKeys));
     setIdx(0);
     setResults([]);
     setLetterAnswers({ A: '', B: '', C: '', D: '', E: '', F: '', G: '' });
     setKeyAnswer('');
     setFeedback(null);
     setFlipped(false);
+    setStartedAt(Date.now());
+    setElapsed(0);
+    setFinalTime(null);
+    setIsNewBest(false);
     setMode('playing');
   };
 
@@ -146,6 +207,11 @@ export default function CircleOfFifthsTrainer() {
 
   const handleNext = () => {
     if (idx + 1 >= deck.length) {
+      const raw = Date.now() - startedAt;
+      const wrong = results.length - results.filter((r) => r.correct).length;
+      const adjusted = raw + wrong * WRONG_PENALTY_MS;
+      setFinalTime(adjusted);
+      setIsNewBest(recordTime(keyFor(direction), adjusted));
       setMode('finished');
     } else {
       setIdx(idx + 1);
@@ -208,7 +274,7 @@ export default function CircleOfFifthsTrainer() {
         radial-gradient(ellipse at bottom right, rgba(139, 44, 32, 0.06), transparent 50%),
         repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(26, 20, 16, 0.012) 2px, rgba(26, 20, 16, 0.012) 3px);
       min-height: 100vh;
-      padding: 2rem 1rem;
+      padding: 1.25rem 1rem 2rem;
       position: relative;
       overflow-x: hidden;
     }
@@ -248,6 +314,17 @@ export default function CircleOfFifthsTrainer() {
       letter-spacing: normal;
       margin-right: 0.5rem;
     }
+    .cof-back-btn {
+      background: transparent;
+      border: 1px solid var(--ink-soft);
+      cursor: pointer;
+      padding: 0.4rem 0.75rem;
+      color: var(--ink-soft);
+    }
+    .cof-back-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
 
     /* HEADER */
     .cof-header {
@@ -255,6 +332,13 @@ export default function CircleOfFifthsTrainer() {
       margin-bottom: 2.5rem;
       position: relative;
     }
+    .cof-header.compact { margin-bottom: 1rem; }
+    .cof-header.compact .cof-title { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+    .cof-header.compact .cof-rule { margin: 0.4rem auto; }
+    .cof-header.compact .cof-rule::before, .cof-header.compact .cof-rule::after { max-width: 50px; }
+    .cof-header.compact .cof-rule-mark { font-size: 0.9rem; }
+    .cof-header.compact .cof-eyebrow { font-size: 0.6rem; margin-bottom: 0.25rem; }
+    .cof-header.compact .cof-eyebrow:last-child { display: none; }
     .cof-eyebrow {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.7rem;
@@ -370,6 +454,85 @@ export default function CircleOfFifthsTrainer() {
       font-style: italic;
       color: var(--ink-soft);
     }
+    .cof-options-section {
+      margin-bottom: 1.25rem;
+    }
+    .cof-options-section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 0.6rem;
+    }
+    .cof-toggle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .cof-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.55rem 0.85rem;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .cof-toggle:hover { background: #efe5cc; }
+    .cof-toggle.on { background: var(--ink); color: var(--paper); }
+    .cof-toggle-detail {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      opacity: 0.7;
+    }
+    .cof-mode-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .cof-best-row {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px dotted var(--ink-soft);
+    }
+    .cof-best-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      text-align: center;
+      margin-bottom: 0.6rem;
+    }
+    .cof-best-line {
+      display: flex; justify-content: space-between;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      padding: 0.2rem 0.5rem;
+      color: var(--ink-soft);
+    }
+    .cof-best-line strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+    .cof-best-inline { opacity: 0.7; font-size: 0.9em; }
+    .cof-score-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .cof-score-time strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-style: normal;
+      color: var(--ink);
+    }
+    .cof-new-best { color: var(--accent); font-weight: 600; font-style: normal; }
     .cof-deck-info strong {
       font-weight: 600;
       font-style: normal;
@@ -795,13 +958,20 @@ export default function CircleOfFifthsTrainer() {
       <style>{css}</style>
       <div className="cof-container">
 
-        <Link to="/" className="cof-back">
-          <span className="cof-back-arrow">←</span>
-          Back to studies
-        </Link>
+        {mode === 'playing' ? (
+          <button className="cof-back cof-back-btn" onClick={() => setMode('finished')}>
+            <span className="cof-back-arrow">×</span>
+            End study
+          </button>
+        ) : (
+          <Link to="/" className="cof-back">
+            <span className="cof-back-arrow">←</span>
+            Back to studies
+          </Link>
+        )}
 
         {/* HEADER */}
-        <header className="cof-header">
+        <header className={`cof-header ${mode === 'playing' ? 'compact' : ''}`}>
           <div className="cof-eyebrow">Opus II · Nº 14</div>
           <h1 className="cof-title">
             Circle of <em>Fifths</em>
@@ -814,16 +984,49 @@ export default function CircleOfFifthsTrainer() {
         {mode === 'menu' && (
           <div className="cof-menu-card cof-fade-in">
             <div className="cof-menu-label">— Select a study —</div>
+
+            <div className="cof-options-section">
+              <div className="cof-options-section-label">Include keys</div>
+              <div className="cof-toggle-grid">
+                <div
+                  className={`cof-toggle ${options.major ? 'on' : ''}`}
+                  onClick={() => toggleOption('major')}
+                  role="button" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('major'); }}
+                >
+                  <span>Major</span>
+                  <span className="cof-toggle-detail">{MAJOR_KEYS.length}</span>
+                </div>
+                <div
+                  className={`cof-toggle ${options.minor ? 'on' : ''}`}
+                  onClick={() => toggleOption('minor')}
+                  role="button" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('minor'); }}
+                >
+                  <span>Minor</span>
+                  <span className="cof-toggle-detail">{MINOR_KEYS.length}</span>
+                </div>
+              </div>
+            </div>
+
             <div className="cof-menu-q">Which direction shall we begin?</div>
 
-            <button className="cof-mode-btn" onClick={() => startGame('key-to-accidentals')}>
+            <button
+              className="cof-mode-btn"
+              disabled={filteredKeys.length === 0}
+              onClick={() => startGame('key-to-accidentals')}
+            >
               <span>
                 <span className="cof-mode-btn-num">I. </span>
                 Key name → mark the sharps &amp; flats
               </span>
               <span className="cof-mode-btn-arrow">→</span>
             </button>
-            <button className="cof-mode-btn" onClick={() => startGame('notes-to-key')}>
+            <button
+              className="cof-mode-btn"
+              disabled={filteredKeys.length === 0}
+              onClick={() => startGame('notes-to-key')}
+            >
               <span>
                 <span className="cof-mode-btn-num">II. </span>
                 Notes of the scale → name the key
@@ -832,8 +1035,19 @@ export default function CircleOfFifthsTrainer() {
             </button>
 
             <div className="cof-deck-info">
-              <strong>{KEYS.length}</strong> major keys around the circle
-              <br /><em>C, seven sharp keys, six flat keys</em>
+              <strong>{filteredKeys.length}</strong> keys in deck
+            </div>
+
+            <div className="cof-best-row">
+              <div className="cof-best-label">Best times · +20s per wrong</div>
+              <div className="cof-best-line">
+                <span>Key → accidentals</span>
+                <strong>{formatTime(bestForDirection('key-to-accidentals'))}</strong>
+              </div>
+              <div className="cof-best-line">
+                <span>Notes → key</span>
+                <strong>{formatTime(bestForDirection('notes-to-key'))}</strong>
+              </div>
             </div>
           </div>
         )}
@@ -843,6 +1057,12 @@ export default function CircleOfFifthsTrainer() {
           <div className="cof-fade-in">
             <div className="cof-progress-row">
               <span>Card {String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</span>
+              <span>
+                Time · {formatTime(elapsed)}
+                {bestForDirection(direction) != null && (
+                  <span className="cof-best-inline"> · best {formatTime(bestForDirection(direction))}</span>
+                )}
+              </span>
               <span>Score · {score}</span>
             </div>
             <div className="cof-progress-bar">
@@ -857,8 +1077,8 @@ export default function CircleOfFifthsTrainer() {
                   {direction === 'key-to-accidentals' ? (
                     <>
                       <div className="cof-card-label">— Key of —</div>
-                      <div className="cof-key-display">{formatName(current.name)}</div>
-                      <div className="cof-key-quality">major</div>
+                      <div className="cof-key-display">{formatName(current.tonic)}</div>
+                      <div className="cof-key-quality">{current.mode}</div>
                     </>
                   ) : (
                     <>
@@ -888,7 +1108,7 @@ export default function CircleOfFifthsTrainer() {
                         <div className="cof-answer-value">
                           {direction === 'key-to-accidentals'
                             ? correctAccidentalDisplay
-                            : formatName(current.name) + ' major'}
+                            : formatName(current.tonic) + ' ' + current.mode}
                         </div>
                       </div>
                     </>
@@ -908,7 +1128,7 @@ export default function CircleOfFifthsTrainer() {
                         <div className="cof-answer-value">
                           {direction === 'key-to-accidentals'
                             ? correctAccidentalDisplay
-                            : formatName(current.name) + ' major'}
+                            : formatName(current.tonic) + ' ' + current.mode}
                         </div>
                       </div>
                     </>
@@ -947,8 +1167,11 @@ export default function CircleOfFifthsTrainer() {
                   type="text"
                   autoFocus
                   value={keyAnswer}
-                  onChange={(e) => setKeyAnswer(e.target.value)}
-                  placeholder="e.g. G, Eb, F#"
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setKeyAnswer(v.includes(' ') ? v : v.toUpperCase());
+                  }}
+                  placeholder={options.minor ? 'e.g. G, F#, Am, Ebm' : 'e.g. G, Eb, F#'}
                 />
                 <div className="cof-hint">Name the major key · # or b accepted</div>
               </>
@@ -974,6 +1197,27 @@ export default function CircleOfFifthsTrainer() {
                 {scorePercent}<em>%</em>
               </div>
               <div className="cof-score-fraction">{score} of {results.length} correct</div>
+              {finalTime != null && (() => {
+                const wrong = results.length - score;
+                const penalty = wrong * WRONG_PENALTY_MS;
+                const raw = finalTime - penalty;
+                return (
+                  <div className="cof-score-time">
+                    {wrong > 0 ? (
+                      <>
+                        {formatTime(raw)} + {formatTime(penalty)} ({wrong} wrong) · <strong>{formatTime(finalTime)}</strong>
+                      </>
+                    ) : (
+                      <>Time · <strong>{formatTime(finalTime)}</strong></>
+                    )}
+                    {isNewBest
+                      ? <span className="cof-new-best"> — new best!</span>
+                      : bestForDirection(direction) != null && (
+                          <span className="cof-best-inline"> · best {formatTime(bestForDirection(direction))}</span>
+                        )}
+                  </div>
+                );
+              })()}
               <div className="cof-score-verdict">{verdict(scorePercent)}</div>
             </div>
 
@@ -990,7 +1234,7 @@ export default function CircleOfFifthsTrainer() {
                     <div>
                       <div className="cof-result-q">
                         {direction === 'key-to-accidentals'
-                          ? formatName(r.card.name) + ' major'
+                          ? formatName(r.card.tonic) + ' ' + r.card.mode
                           : notesInKey(r.card).map(formatName).join(' · ')}
                       </div>
                       {!r.correct && (
@@ -1001,7 +1245,7 @@ export default function CircleOfFifthsTrainer() {
                           <div className="cof-result-q-sub">
                             answer: {direction === 'key-to-accidentals'
                               ? correctStr
-                              : formatName(r.card.name) + ' major'}
+                              : formatName(r.card.tonic) + ' ' + r.card.mode}
                           </div>
                         </>
                       )}
@@ -1025,7 +1269,7 @@ export default function CircleOfFifthsTrainer() {
           </div>
         )}
 
-        <div className="cof-footer">— ad studium musicae —</div>
+        <div className="cof-footer">Created by Pierce Porterfield</div>
       </div>
     </div>
   );

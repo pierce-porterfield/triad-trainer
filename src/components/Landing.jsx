@@ -409,7 +409,7 @@ export default function Landing() {
           <Link to="/triads" className="landing-card">
             <div className="landing-card-num">— Opus I —</div>
             <div className="landing-card-title">
-              Triad <em>Trainer</em>
+              Chord <em>Trainer</em>
             </div>
             <div className="landing-card-desc">
               Triads and extended chords across every root — major, minor, diminished,

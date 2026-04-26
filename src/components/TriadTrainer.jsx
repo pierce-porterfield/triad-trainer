@@ -1016,7 +1016,7 @@ export default function TriadTrainer() {
         <header className={`tt-header ${mode === 'playing' ? 'compact' : ''}`}>
           <div className="tt-eyebrow">Opus I</div>
           <h1 className="tt-title">
-            Triad <em>Trainer</em>
+            Chord <em>Trainer</em>
           </h1>
           <div className="tt-rule"><span className="tt-rule-mark">❦</span></div>
           <div className="tt-eyebrow" style={{ opacity: 0.7 }}>Triads &amp; extended chords</div>

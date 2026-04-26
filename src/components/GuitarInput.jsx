@@ -3,21 +3,21 @@ import { noteToPc, pcToNote } from '../data/pitchClass';
 
 // Standard tuning (low to high): E A D G B E. Pitch classes:
 //   E=4  A=9  D=2  G=7  B=11  E=4
-// Each string row's pitch class at fret 0 (open string).
+// Drawn high-to-low top-to-bottom: top row is high e, bottom row is low E.
 const TUNING_PC = [4, 9, 2, 7, 11, 4];
-// String labels for display. Drawn from low (bottom) to high (top) — but we
-// render top-to-bottom matching the player's eye view (high E at top).
 const STRING_LABELS_TOP_DOWN = ['e', 'B', 'G', 'D', 'A', 'E'];
 const TUNING_TOP_DOWN = [...TUNING_PC].reverse();
 
 const FRETS = 15;
 const FRET_W = 60;
-const NUT_X = 44;
+const NUT_X = 48;
 const FRET_AREA_W = FRETS * FRET_W;
-const W = NUT_X + FRET_AREA_W + 16;
-const H = 240;
-const STRING_GAP = (H - 30) / (TUNING_TOP_DOWN.length - 1);
-const TOP_Y = 16;
+const W = NUT_X + FRET_AREA_W + 20;
+const H = 280;
+const TOP_Y = 24;
+const BOTTOM_PAD = 36; // room for fret-number labels under the board
+const STRING_GAP = (H - TOP_Y - BOTTOM_PAD) / (TUNING_TOP_DOWN.length - 1);
+const FRETBOARD_BOTTOM = H - BOTTOM_PAD;
 
 const fretPc = (stringIdx, fret) =>
   ((TUNING_TOP_DOWN[stringIdx] + fret) % 12 + 12) % 12;
@@ -62,43 +62,66 @@ export default function GuitarInput({
         style={{ touchAction: 'pan-x' }}
       >
         {/* Background fingerboard */}
-        <rect x={NUT_X} y={TOP_Y - 2} width={FRET_AREA_W} height={H - 2 * TOP_Y + 4} fill="#3d2817" />
+        <rect x={NUT_X} y={TOP_Y - 4} width={FRET_AREA_W} height={FRETBOARD_BOTTOM - TOP_Y + 8} fill="#3d2817" />
         {/* Nut (thick line at fret 0) */}
-        <rect x={NUT_X - 4} y={TOP_Y - 2} width={4} height={H - 2 * TOP_Y + 4} fill="#1a1410" />
+        <rect x={NUT_X - 4} y={TOP_Y - 4} width={4} height={FRETBOARD_BOTTOM - TOP_Y + 8} fill="#1a1410" />
         {/* Frets */}
         {Array.from({ length: FRETS }, (_, i) => i + 1).map((f) => (
           <line
             key={`f-${f}`}
             x1={NUT_X + f * FRET_W}
-            y1={TOP_Y - 2}
+            y1={TOP_Y - 4}
             x2={NUT_X + f * FRET_W}
-            y2={H - TOP_Y + 2}
+            y2={FRETBOARD_BOTTOM + 4}
             stroke="#a08060"
             strokeWidth={f <= 5 ? 1.5 : 1}
           />
         ))}
         {/* Inlay dots at 3, 5, 7, 9, 15 — double at 12 */}
-        {[3, 5, 7, 9, 15].map((f) => f <= FRETS && (
-          <circle key={`inlay-${f}`} cx={xForFret(f)} cy={H / 2} r={5} fill="#d9cbad" opacity="0.6" />
-        ))}
-        {12 <= FRETS && (
-          <>
-            <circle cx={xForFret(12)} cy={H / 2 - STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
-            <circle cx={xForFret(12)} cy={H / 2 + STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
-          </>
-        )}
+        {(() => {
+          const midY = (TOP_Y + FRETBOARD_BOTTOM) / 2;
+          return (
+            <>
+              {[3, 5, 7, 9, 15].map((f) => f <= FRETS && (
+                <circle key={`inlay-${f}`} cx={xForFret(f)} cy={midY} r={5} fill="#d9cbad" opacity="0.6" />
+              ))}
+              {12 <= FRETS && (
+                <>
+                  <circle cx={xForFret(12)} cy={midY - STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
+                  <circle cx={xForFret(12)} cy={midY + STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
+                </>
+              )}
+            </>
+          );
+        })()}
 
-        {/* Strings */}
+        {/* Strings — bottom (low E) thickest, top (high e) thinnest */}
         {TUNING_TOP_DOWN.map((_, sIdx) => (
           <line
             key={`s-${sIdx}`}
-            x1={NUT_X - 8}
+            x1={NUT_X - 10}
             y1={TOP_Y + sIdx * STRING_GAP}
-            x2={W - 8}
+            x2={W - 10}
             y2={TOP_Y + sIdx * STRING_GAP}
             stroke="#f4ecdc"
-            strokeWidth={1 + (5 - sIdx) * 0.25}
+            strokeWidth={1.4 + sIdx * 0.45}
           />
+        ))}
+
+        {/* Fret number labels under the board */}
+        {Array.from({ length: FRETS + 1 }, (_, f) => f).map((f) => (
+          <text
+            key={`fl-${f}`}
+            x={f === 0 ? (NUT_X - 4) / 2 : xForFret(f)}
+            y={FRETBOARD_BOTTOM + 22}
+            textAnchor="middle"
+            fontFamily="JetBrains Mono, monospace"
+            fontSize="13"
+            fill="#3d342b"
+            pointerEvents="none"
+          >
+            {f}
+          </text>
         ))}
 
         {/* String labels (left of nut) */}

@@ -6,6 +6,10 @@ import Staff, { layoutChordNotes } from './Staff.jsx';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
 import ChordPicker from './ChordPicker.jsx';
+import PianoInput from './PianoInput.jsx';
+import GuitarInput from './GuitarInput.jsx';
+import InputModeSelector from './InputModeSelector.jsx';
+import { pcSetsEqual } from '../data/pitchClass';
 import { shuffle, notesMatch } from '../data/notes';
 import { QUALITIES, buildTriadDeck, chordNameMatch } from '../data/triads';
 
@@ -22,7 +26,7 @@ export default function TriadTrainer() {
     sevenths: false,
     ninths: false,
     thirteenths: false,
-    staffMode: false,
+    inputMode: 'tap', // 'tap' | 'staff' | 'piano' | 'guitar'
   });
 
   const enabledQualities = useMemo(() => {
@@ -56,7 +60,7 @@ export default function TriadTrainer() {
   const [isNewBest, setIsNewBest] = useState(false);
 
   const optionsKey = useMemo(() =>
-    `b${options.base ? 1 : 0}d${options.dim ? 1 : 0}a${options.aug ? 1 : 0}_7${options.sevenths ? 1 : 0}_9${options.ninths ? 1 : 0}_13${options.thirteenths ? 1 : 0}${options.staffMode ? '_staff' : ''}`,
+    `b${options.base ? 1 : 0}d${options.dim ? 1 : 0}a${options.aug ? 1 : 0}_7${options.sevenths ? 1 : 0}_9${options.ninths ? 1 : 0}_13${options.thirteenths ? 1 : 0}_${options.inputMode}`,
     [options]
   );
   const keyFor = (dir) => `triad-${dir}-${optionsKey}`;
@@ -94,15 +98,20 @@ export default function TriadTrainer() {
     let isCorrect = false;
     let userAnswer = '';
     if (direction === 'chord-to-notes') {
-      if (options.staffMode) {
-        // Staff mode: compare letter+accidental directly (spelling matters).
+      if (options.inputMode === 'staff') {
+        // Staff: spelling matters (letter + accidental compared directly).
         const userTokens = (answers.staffNotes || []).map((n) => `${n.letter}${n.accidental || ''}`);
         userAnswer = userTokens.length ? userTokens.join(' – ') : '(blank)';
-        const expectedSorted = [...current.notes].map((s) => s).sort();
+        const expectedSorted = [...current.notes].sort();
         const userSorted = [...userTokens].sort();
         isCorrect =
           userSorted.length === expectedSorted.length &&
           userSorted.every((v, i) => v === expectedSorted[i]);
+      } else if (options.inputMode === 'piano' || options.inputMode === 'guitar') {
+        // Pitch-class match (sharps and flats compared as the same pitch).
+        const userNotes = answers.notes || [];
+        userAnswer = userNotes.filter(Boolean).join(' – ') || '(blank)';
+        isCorrect = pcSetsEqual(userNotes, current.notes);
       } else {
         const userNotes = answers.notes;
         userAnswer = userNotes.filter(Boolean).join(' – ') || '(blank)';
@@ -829,27 +838,41 @@ export default function TriadTrainer() {
   // RENDER — playing view uses TrainerLayout for mobile-first full-viewport
   // ============================================================================
   if (mode === 'playing' && current) {
-    const inputInterface = !feedback && direction === 'chord-to-notes' && options.staffMode ? (
-      <Staff
-        mode="input"
-        inputNotes={answers.staffNotes || []}
-        onInputChange={(next) => setAnswers((a) => ({ ...a, staffNotes: next }))}
-        maxNotes={current.notes.length}
-      />
-    ) : !feedback && direction === 'chord-to-notes' ? (
-      (() => {
-        const labels = ['1', '3', '5', '7', '9', '13'];
-        const names = ['ROOT', '3rd', '5th', '7th', '9th', '13th'];
-        return (
-          <NotePicker
-            count={current.notes.length}
-            value={answers.notes}
-            onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
-            slotLabels={labels.slice(0, current.notes.length)}
-            slotNames={names.slice(0, current.notes.length)}
-          />
-        );
-      })()
+    const inputInterface = !feedback && direction === 'chord-to-notes' ? (
+      options.inputMode === 'staff' ? (
+        <Staff
+          mode="input"
+          inputNotes={answers.staffNotes || []}
+          onInputChange={(next) => setAnswers((a) => ({ ...a, staffNotes: next }))}
+          maxNotes={current.notes.length}
+        />
+      ) : options.inputMode === 'piano' ? (
+        <PianoInput
+          value={answers.notes || []}
+          onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
+          maxNotes={current.notes.length}
+        />
+      ) : options.inputMode === 'guitar' ? (
+        <GuitarInput
+          value={answers.notes || []}
+          onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
+          maxNotes={current.notes.length}
+        />
+      ) : (
+        (() => {
+          const labels = ['1', '3', '5', '7', '9', '13'];
+          const names = ['ROOT', '3rd', '5th', '7th', '9th', '13th'];
+          return (
+            <NotePicker
+              count={current.notes.length}
+              value={answers.notes}
+              onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
+              slotLabels={labels.slice(0, current.notes.length)}
+              slotNames={names.slice(0, current.notes.length)}
+            />
+          );
+        })()
+      )
     ) : !feedback && direction === 'notes-to-chord' ? (
       (() => {
         const qualityOptions = enabledQualities.map((k) => {
@@ -914,8 +937,12 @@ export default function TriadTrainer() {
                 {direction === 'notes-to-chord' && (
                   <>
                     <div className="tt-card-label">— Name the chord —</div>
-                    {options.staffMode ? (
+                    {options.inputMode === 'staff' ? (
                       <Staff mode="display" displayNotes={layoutChordNotes(current.notes)} />
+                    ) : options.inputMode === 'piano' ? (
+                      <PianoInput mode="display" value={current.notes} />
+                    ) : options.inputMode === 'guitar' ? (
+                      <GuitarInput mode="display" value={current.notes} />
                     ) : (
                       <div className="tt-notes-display">
                         {current.notes.map((n, i) => (
@@ -1068,17 +1095,10 @@ export default function TriadTrainer() {
 
             <div className="tt-options-section">
               <div className="tt-options-section-label">Input mode</div>
-              <div className="tt-toggle-grid">
-                <div
-                  className={`tt-toggle ${options.staffMode ? 'on' : ''}`}
-                  onClick={() => toggleOption('staffMode')}
-                  role="button" tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('staffMode'); }}
-                >
-                  <span>Music staff mode</span>
-                  <span className="tt-toggle-detail">click to place · ♯ ♭ ♮</span>
-                </div>
-              </div>
+              <InputModeSelector
+                value={options.inputMode}
+                onChange={(id) => setOptions((o) => ({ ...o, inputMode: id }))}
+              />
             </div>
 
             <button

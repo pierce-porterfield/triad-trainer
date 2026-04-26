@@ -4,8 +4,13 @@ import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
+import Staff from './Staff.jsx';
+import PianoInput from './PianoInput.jsx';
+import GuitarInput from './GuitarInput.jsx';
+import InputModeSelector from './InputModeSelector.jsx';
 import { shuffle, notesEqual, formatNote } from '../data/notes';
 import { INTERVALS, INTERVAL_BY_ID, GROUPS, buildIntervalDeck } from '../data/intervals';
+import { pcSetsEqual } from '../data/pitchClass';
 
 const buildDeck = buildIntervalDeck;
 
@@ -20,9 +25,11 @@ export default function IntervalTrainer() {
     [activeGroups]
   );
   const [mode, setMode] = useState('menu'); // 'menu' | 'playing' | 'done'
+  const [inputMode, setInputMode] = useState('tap'); // 'tap' | 'staff' | 'piano' | 'guitar'
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
   const [answer, setAnswer] = useState('');
+  const [staffNotes, setStaffNotes] = useState([]); // for staff mode: [{letter, accidental, octave}]
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [score, setScore] = useState(0);
   const [lastWrongAnswer, setLastWrongAnswer] = useState('');
@@ -30,8 +37,8 @@ export default function IntervalTrainer() {
   const current = deck[idx];
 
   const settingsKey = useMemo(
-    () => `interval-${[...activeGroups].sort().join('_')}`,
-    [activeGroups]
+    () => `interval-${[...activeGroups].sort().join('_')}_${inputMode}`,
+    [activeGroups, inputMode]
   );
   const bestTime = getBestTime(settingsKey);
 
@@ -61,6 +68,7 @@ export default function IntervalTrainer() {
     setDeck(newDeck);
     setIdx(0);
     setAnswer('');
+    setStaffNotes([]);
     setFeedback(null);
     setScore(0);
     setLastWrongAnswer('');
@@ -73,14 +81,24 @@ export default function IntervalTrainer() {
 
   const submit = () => {
     if (feedback || !current) return;
-    const isCorrect = notesEqual(answer, current.note);
+    let isCorrect = false;
+    let userAnswer = '';
+    if (inputMode === 'staff') {
+      const tok = staffNotes[0];
+      userAnswer = tok ? `${tok.letter}${tok.accidental || ''}` : '(blank)';
+      // Staff: spelling matters
+      isCorrect = !!tok && `${tok.letter}${tok.accidental || ''}` === current.note;
+    } else {
+      userAnswer = answer || '(blank)';
+      isCorrect = notesEqual(answer, current.note);
+    }
     if (isCorrect) {
       setFeedback('correct');
       setScore((s) => s + 1);
       hapticCorrect();
     } else {
       setFeedback('wrong');
-      setLastWrongAnswer(answer || '(blank)');
+      setLastWrongAnswer(userAnswer);
       hapticWrong();
     }
   };
@@ -96,6 +114,7 @@ export default function IntervalTrainer() {
     } else {
       setIdx((i) => i + 1);
       setAnswer('');
+      setStaffNotes([]);
       setFeedback(null);
       setLastWrongAnswer('');
     }
@@ -472,13 +491,34 @@ export default function IntervalTrainer() {
 
   if (mode === 'playing' && current) {
     const inputInterface = !feedback ? (
-      <NotePicker
-        count={1}
-        value={[answer]}
-        onChange={(next) => setAnswer(next[0] || '')}
-        slotLabels={['?']}
-        slotNames={['ANSWER']}
-      />
+      inputMode === 'staff' ? (
+        <Staff
+          mode="input"
+          inputNotes={staffNotes}
+          onInputChange={setStaffNotes}
+          maxNotes={1}
+        />
+      ) : inputMode === 'piano' ? (
+        <PianoInput
+          value={answer ? [answer] : []}
+          onChange={(next) => setAnswer(next[next.length - 1] || '')}
+          maxNotes={1}
+        />
+      ) : inputMode === 'guitar' ? (
+        <GuitarInput
+          value={answer ? [answer] : []}
+          onChange={(next) => setAnswer(next[next.length - 1] || '')}
+          maxNotes={1}
+        />
+      ) : (
+        <NotePicker
+          count={1}
+          value={[answer]}
+          onChange={(next) => setAnswer(next[0] || '')}
+          slotLabels={['?']}
+          slotNames={['ANSWER']}
+        />
+      )
     ) : null;
 
     const submitButton = !feedback ? (
@@ -600,6 +640,11 @@ export default function IntervalTrainer() {
             <div className="it-toggle-actions">
               <button className="it-mini-btn" onClick={allOn}>All on</button>
               <button className="it-mini-btn" onClick={allOff}>All off</button>
+            </div>
+
+            <div style={{ marginBottom: '1.25rem' }}>
+              <div className="it-best-label" style={{ marginBottom: '0.5rem' }}>Input mode</div>
+              <InputModeSelector value={inputMode} onChange={setInputMode} />
             </div>
 
             <button

@@ -343,6 +343,89 @@ input {
   cursor: not-allowed;
 }
 
+/* ============================================================================
+ * Input mode selector — icon buttons
+ * ========================================================================= */
+.ims-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: 0.4rem;
+}
+.ims-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.7rem 0.5rem 0.5rem;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  min-height: 72px;
+}
+.ims-btn:hover { background: var(--paper-deep); }
+.ims-btn.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ims-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.ims-btn.on .ims-icon {
+  filter: invert(1);
+}
+.ims-label { line-height: 1; }
+
+/* ============================================================================
+ * Piano input
+ * ========================================================================= */
+.piano-wrapper { display: flex; flex-direction: column; align-items: center; }
+.piano-svg {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  user-select: none;
+}
+.piano-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+/* ============================================================================
+ * Guitar input
+ * ========================================================================= */
+.guitar-wrapper { display: flex; flex-direction: column; align-items: center; }
+.guitar-svg {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  user-select: none;
+}
+.guitar-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
 /* Music Staff (shared across trainers) */
 .staff-wrapper {
   display: flex;

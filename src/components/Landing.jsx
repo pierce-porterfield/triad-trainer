@@ -376,7 +376,7 @@ export default function Landing() {
             <div className="daily-body">
               <div className="daily-eyebrow">— Today's training · #{String(puzzle.number).padStart(3, '0')} —</div>
               <h2 className="daily-title">
-                The <em>Daily</em>
+                Note<em>dle</em>
               </h2>
               <div className="daily-desc">
                 Three rounds, fifteen flashcards, one shot per day. Same training

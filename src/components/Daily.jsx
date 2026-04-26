@@ -321,7 +321,7 @@ export default function Daily() {
             <span>←</span> Back
           </Link>
           <div className="d-pre-eyebrow">— Today's training —</div>
-          <h1 className="d-pre-title">Triad<em>le</em> · #{String(puzzle.number).padStart(3, '0')}</h1>
+          <h1 className="d-pre-title">Note<em>dle</em> · #{String(puzzle.number).padStart(3, '0')}</h1>
           <div className="d-pre-date">{puzzle.date}</div>
           <div className="d-pre-rule">❦</div>
 
@@ -460,7 +460,7 @@ function ResultsScreen({ puzzle, result, state }) {
       return filled + empty;
     });
     const lines = [
-      `Triadle #${String(result.puzzleNumber).padStart(3, '0')} \u00B7 ${formatTime(result.time * 1000)}`,
+      `Notedle #${String(result.puzzleNumber).padStart(3, '0')} \u00B7 ${formatTime(result.time * 1000)}`,
       ...blocks,
       `${result.score}/15 \u00B7 triadtrainer.org`,
     ];
@@ -505,7 +505,7 @@ function ResultsScreen({ puzzle, result, state }) {
       <style>{dailyCss}</style>
       <div className="d-pre-container d-fade-in">
         <Link to="/" className="d-pre-back"><span>←</span> Back</Link>
-        <div className="d-pre-eyebrow">— Triadle #{String(result.puzzleNumber).padStart(3, '0')} —</div>
+        <div className="d-pre-eyebrow">— Notedle #{String(result.puzzleNumber).padStart(3, '0')} —</div>
         <h1 className="d-pre-title">{formatTime(result.time * 1000)}</h1>
         <div className="d-pre-date">
           {result.score} / 15 correct

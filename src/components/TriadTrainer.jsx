@@ -508,7 +508,7 @@ export default function TriadTrainer() {
     }
     .tt-card-inner {
       position: relative;
-      min-height: 440px;
+      min-height: 380px;
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }

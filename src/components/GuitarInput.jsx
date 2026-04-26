@@ -24,9 +24,9 @@ const FRET_W = 60;
 const NUT_X = 48;
 const FRET_AREA_W = FRETS * FRET_W;
 const W = NUT_X + FRET_AREA_W + 20;
-const H = 280;
-const TOP_Y = 24;
-const BOTTOM_PAD = 36; // room for fret-number labels under the board
+const H = 240;
+const TOP_Y = 22;
+const BOTTOM_PAD = 30; // room for fret-number labels under the board
 const STRING_GAP = (H - TOP_Y - BOTTOM_PAD) / (TUNING_TOP_DOWN.length - 1);
 const FRETBOARD_BOTTOM = H - BOTTOM_PAD;
 
@@ -203,7 +203,7 @@ export default function GuitarInput({
           <text
             key={`fl-${f}`}
             x={f === 0 ? (NUT_X - 4) / 2 : xForFret(f)}
-            y={FRETBOARD_BOTTOM + 22}
+            y={FRETBOARD_BOTTOM + 20}
             textAnchor="middle"
             fontFamily="JetBrains Mono, monospace"
             fontSize="13"

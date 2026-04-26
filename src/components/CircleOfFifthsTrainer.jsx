@@ -4,119 +4,19 @@ import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
 import KeyPicker from './KeyPicker.jsx';
-
-// ============================================================================
-// KEY SIGNATURE DATA — all 15 major keys
-// Each key has: name, type ('sharp'|'flat'|'natural'), and a map of
-// letter → accidental ('#', 'b', or '' for natural)
-// ============================================================================
-const ORDER_OF_SHARPS = ['F', 'C', 'G', 'D', 'A', 'E', 'B'];
-const ORDER_OF_FLATS  = ['B', 'E', 'A', 'D', 'G', 'C', 'F'];
-
-const MAJOR_KEYS = [
-  // Natural
-  { tonic: 'C',  name: 'C',  count: 0, type: 'natural', sharps: [], flats: [], mode: 'major' },
-  // Sharp keys
-  { tonic: 'G',  name: 'G',  count: 1, type: 'sharp', sharps: ['F'], flats: [], mode: 'major' },
-  { tonic: 'D',  name: 'D',  count: 2, type: 'sharp', sharps: ['F', 'C'], flats: [], mode: 'major' },
-  { tonic: 'A',  name: 'A',  count: 3, type: 'sharp', sharps: ['F', 'C', 'G'], flats: [], mode: 'major' },
-  { tonic: 'E',  name: 'E',  count: 4, type: 'sharp', sharps: ['F', 'C', 'G', 'D'], flats: [], mode: 'major' },
-  { tonic: 'B',  name: 'B',  count: 5, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A'], flats: [], mode: 'major' },
-  { tonic: 'F#', name: 'F#', count: 6, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E'], flats: [], mode: 'major' },
-  { tonic: 'C#', name: 'C#', count: 7, type: 'sharp', sharps: ['F', 'C', 'G', 'D', 'A', 'E', 'B'], flats: [], mode: 'major' },
-  // Flat keys
-  { tonic: 'F',  name: 'F',  count: 1, type: 'flat', sharps: [], flats: ['B'], mode: 'major' },
-  { tonic: 'Bb', name: 'Bb', count: 2, type: 'flat', sharps: [], flats: ['B', 'E'], mode: 'major' },
-  { tonic: 'Eb', name: 'Eb', count: 3, type: 'flat', sharps: [], flats: ['B', 'E', 'A'], mode: 'major' },
-  { tonic: 'Ab', name: 'Ab', count: 4, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D'], mode: 'major' },
-  { tonic: 'Db', name: 'Db', count: 5, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G'], mode: 'major' },
-  { tonic: 'Gb', name: 'Gb', count: 6, type: 'flat', sharps: [], flats: ['B', 'E', 'A', 'D', 'G', 'C'], mode: 'major' },
-];
-
-// Each natural minor key shares the key signature of its relative major.
-const MINOR_TONICS = [
-  ['A',   0],  ['E',   1], ['B',   2], ['F#',  3], ['C#',  4], ['G#',  5], ['D#',  6], ['A#',  7],
-  ['D',   1], ['G',   2], ['C',   3], ['F',   4], ['Bb',  5], ['Eb',  6],
-];
-const MINOR_KEYS = MINOR_TONICS.map(([tonic, idx]) => {
-  const m = MAJOR_KEYS[idx];
-  return {
-    tonic,
-    name: tonic + 'm',
-    count: m.count,
-    type: m.type,
-    sharps: m.sharps,
-    flats: m.flats,
-    mode: 'minor',
-  };
-});
-
-const KEYS = [...MAJOR_KEYS, ...MINOR_KEYS];
-
-const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-
-// Return the accidental for a letter in a given key: '#', 'b', or ''
-const accidentalFor = (key, letter) => {
-  if (key.sharps.includes(letter)) return '#';
-  if (key.flats.includes(letter)) return 'b';
-  return '';
-};
-
-// Build the full set of notes in a key, in scale order starting from the tonic
-const notesInKey = (key) => {
-  const rootLetter = key.tonic[0];
-  const rootIdx = LETTERS.indexOf(rootLetter);
-  const scaleLetters = [];
-  for (let i = 0; i < 7; i++) {
-    scaleLetters.push(LETTERS[(rootIdx + i) % 7]);
-  }
-  return scaleLetters.map((l) => l + accidentalFor(key, l));
-};
-
-const shuffle = (arr) => {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
-
-// Compare user's answer (map letter → '#'|'b'|'') to correct key
-const answersMatch = (userMap, key) => {
-  for (const letter of LETTERS) {
-    const correct = accidentalFor(key, letter);
-    const given = userMap[letter] || '';
-    if (correct !== given) return false;
-  }
-  return true;
-};
-
-// Parse a key-name input into { root, mode } or null if unparseable.
-const parseKeyInput = (s) => {
-  if (!s) return null;
-  const t = s.trim().replace(/\s+/g, '').replace('♯', '#').replace('♭', 'b');
-  if (!t) return null;
-  const letter = t[0].toUpperCase();
-  if (!'ABCDEFG'.includes(letter)) return null;
-  let i = 1;
-  let acc = '';
-  while (i < t.length && (t[i] === '#' || t[i] === 'b')) {
-    acc += t[i];
-    i++;
-  }
-  const root = letter + acc;
-  const rest = t.slice(i).toLowerCase();
-  let keyMode = 'major';
-  if (rest === 'm' || rest === 'min' || rest === 'minor' || rest === '-') keyMode = 'minor';
-  return { root, mode: keyMode };
-};
-
-const keyNameMatch = (userInput, key) => {
-  const u = parseKeyInput(userInput);
-  if (!u) return false;
-  return u.root === key.tonic && u.mode === key.mode;
-};
+import { shuffle } from '../data/notes';
+import {
+  ORDER_OF_SHARPS,
+  ORDER_OF_FLATS,
+  KEY_LETTERS as LETTERS,
+  MAJOR_KEYS,
+  MINOR_KEYS,
+  KEYS,
+  accidentalFor,
+  notesInKey,
+  answersMatch,
+  keyNameMatch,
+} from '../data/keys';
 
 // ============================================================================
 // COMPONENT

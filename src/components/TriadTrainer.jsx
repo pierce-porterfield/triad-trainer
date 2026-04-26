@@ -957,7 +957,7 @@ export default function TriadTrainer() {
                     {options.inputMode === 'staff' ? (
                       <Staff mode="display" displayNotes={layoutChordNotes(current.notes)} />
                     ) : options.inputMode === 'piano' ? (
-                      <PianoInput mode="display" value={current.notes} />
+                      <PianoInput mode="display" value={current.notes} chordSeed={current.chordName} />
                     ) : options.inputMode === 'guitar' ? (
                       <GuitarInput mode="display" value={current.notes} chordSeed={current.chordName} />
                     ) : (

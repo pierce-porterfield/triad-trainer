@@ -1,5 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
+import { cyrb53 } from '../utils/seededRandom';
+
+const DOT_COLORS = [
+  '#8b2c20', // accent red
+  '#a88734', // gold
+  '#2f6d4f', // green
+  '#3a5c8b', // blue
+  '#6b4d8b', // purple
+  '#3d342b', // ink-soft
+];
+
+// For display mode: pick one (octave, pitch-class) per note so the same note
+// doesn't light up across both octaves. Notes ascend; octave varied by seed.
+const placeChordOnPiano = (notes, seed) => {
+  const seedNum = cyrb53(String(seed || ''));
+  const positions = [];
+  let prevAbs = -1;
+  let startOctave = seedNum % 2; // 0 or 1
+  notes.forEach((note) => {
+    const pc = noteToPc(note);
+    if (pc < 0) return;
+    let oct = positions.length === 0 ? startOctave : 0;
+    while (oct * 12 + pc <= prevAbs && oct < 2) oct++;
+    if (oct >= 2) oct = 1;
+    positions.push({ pc, octave: oct });
+    prevAbs = oct * 12 + pc;
+  });
+  return positions;
+};
 
 // 2 octaves visible (24 semitones) starting at C.
 // Pitch-class only (octave-agnostic). Selecting any C selects "C".
@@ -37,10 +66,33 @@ export default function PianoInput({
   value = [],
   onChange,
   maxNotes = 6,
+  chordSeed,
 }) {
   const selectedPcs = new Set(
     value.map(noteToPc).filter((pc) => pc >= 0)
   );
+
+  // Display mode: pick one (octave, pc) per note so notes don't repeat across octaves.
+  const displayPositions = useMemo(
+    () => mode === 'display' ? placeChordOnPiano(value, chordSeed) : [],
+    [mode, value, chordSeed]
+  );
+
+  const positionIndexAt = (pc, octave) =>
+    displayPositions.findIndex((p) => p.pc === pc && p.octave === octave);
+
+  const isKeyLit = (pc, octave) => {
+    if (mode === 'display') return positionIndexAt(pc, octave) !== -1;
+    return selectedPcs.has(pc);
+  };
+
+  const colorForKey = (pc, octave) => {
+    if (mode === 'display') {
+      const idx = positionIndexAt(pc, octave);
+      return idx >= 0 ? DOT_COLORS[idx % DOT_COLORS.length] : 'var(--accent)';
+    }
+    return 'var(--accent)';
+  };
 
   const handlePcTap = (pc) => {
     if (mode !== 'input' || !onChange) return;
@@ -68,7 +120,8 @@ export default function PianoInput({
         {Array.from({ length: OCTAVES }, (_, oct) =>
           WHITE_KEYS.map((k) => {
             const x = (oct * 7 + k.idx) * WHITE_W;
-            const isOn = selectedPcs.has(k.pc);
+            const isOn = isKeyLit(k.pc, oct);
+            const color = colorForKey(k.pc, oct);
             return (
               <g
                 key={`w-${oct}-${k.idx}`}
@@ -80,7 +133,7 @@ export default function PianoInput({
                   y={0}
                   width={WHITE_W}
                   height={H}
-                  fill={isOn ? 'var(--accent)' : '#fafafa'}
+                  fill={isOn ? color : '#fafafa'}
                   stroke="#1a1410"
                   strokeWidth="1"
                 />
@@ -93,7 +146,8 @@ export default function PianoInput({
           BLACK_KEYS.map((b) => {
             const xCenter = (oct * 7 + b.afterIdx + 1) * WHITE_W;
             const x = xCenter - BLACK_W / 2;
-            const isOn = selectedPcs.has(b.pc);
+            const isOn = isKeyLit(b.pc, oct);
+            const color = colorForKey(b.pc, oct);
             return (
               <rect
                 key={`b-${oct}-${b.pc}`}
@@ -101,7 +155,7 @@ export default function PianoInput({
                 y={0}
                 width={BLACK_W}
                 height={BLACK_H}
-                fill={isOn ? 'var(--accent)' : '#1a1410'}
+                fill={isOn ? color : '#1a1410'}
                 stroke="#1a1410"
                 strokeWidth="1"
                 style={{ cursor: mode === 'input' ? 'pointer' : 'default' }}

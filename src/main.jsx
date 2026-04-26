@@ -1,13 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.jsx';
+import { ViteReactSSG } from 'vite-react-ssg';
+import { routes } from './App.jsx';
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
-);
+// vite-react-ssg drives both `vite-react-ssg dev` and `vite-react-ssg build`.
+// The build step crawls the route list and emits real HTML files per route,
+// which is the SEO foundation per docs/seo-strategy.md.
+export const createRoot = ViteReactSSG({ routes });

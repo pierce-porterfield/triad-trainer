@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
+import { cyrb53 } from '../utils/seededRandom';
 
 // Per-position dot palette. Cycled through as the user places notes.
 const DOT_COLORS = [
@@ -36,11 +37,41 @@ const xForFret = (fret) => NUT_X + (fret - 0.5) * FRET_W;
 // Open-string indicator dot above the nut
 const openX = NUT_X / 2 + 2;
 
+// For display mode: pick one (string, fret) per note, varying placement on the
+// neck so different chords appear in different spots. Uses cyrb53(seed) to
+// pick a "centre fret"; greedy nearest-neighbour assignment per string.
+const placeChordOnNeck = (notes, seed) => {
+  const seedNum = cyrb53(String(seed || ''));
+  const centreFret = seedNum % 13; // 0..12
+  const usedStrings = new Set();
+  const positions = [];
+  for (const note of notes) {
+    const pc = noteToPc(note);
+    if (pc < 0) continue;
+    const candidates = [];
+    for (let s = 0; s < 6; s++) {
+      if (usedStrings.has(s)) continue;
+      for (let f = 0; f <= FRETS; f++) {
+        if (fretPc(s, f) === pc) {
+          candidates.push({ stringIdx: s, fret: f, dist: Math.abs(f - centreFret) });
+        }
+      }
+    }
+    if (candidates.length === 0) continue;
+    candidates.sort((a, b) => a.dist - b.dist);
+    const chosen = candidates[0];
+    positions.push({ stringIdx: chosen.stringIdx, fret: chosen.fret });
+    usedStrings.add(chosen.stringIdx);
+  }
+  return positions;
+};
+
 export default function GuitarInput({
   mode = 'input',
   value = [],
   onChange,
   maxNotes = 6,
+  chordSeed,
 }) {
   // For input mode, track each placed dot at its specific (string, fret) position
   // so two same-pitch frets aren't both auto-lit. The pitch-class array fed to
@@ -55,21 +86,20 @@ export default function GuitarInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, value.length]);
 
-  // For display mode, light up every fret that produces a note in `value`.
-  const selectedPcsForDisplay = new Set(
-    value.map(noteToPc).filter((pc) => pc >= 0)
+  // For display mode, place exactly one dot per note, varied by chord seed.
+  const displayPositions = useMemo(
+    () => mode === 'display' ? placeChordOnNeck(value, chordSeed) : [],
+    [mode, value, chordSeed]
   );
 
-  const positionAt = (stringIdx, fret) =>
-    positions.findIndex((p) => p.stringIdx === stringIdx && p.fret === fret);
-
-  const isPositionLit = (stringIdx, fret) => {
-    if (mode === 'input') return positionAt(stringIdx, fret) !== -1;
-    return selectedPcsForDisplay.has(fretPc(stringIdx, fret));
+  const positionAt = (stringIdx, fret) => {
+    const pool = mode === 'input' ? positions : displayPositions;
+    return pool.findIndex((p) => p.stringIdx === stringIdx && p.fret === fret);
   };
 
+  const isPositionLit = (stringIdx, fret) => positionAt(stringIdx, fret) !== -1;
+
   const colorForPosition = (stringIdx, fret) => {
-    if (mode !== 'input') return 'var(--accent)';
     const idx = positionAt(stringIdx, fret);
     if (idx < 0) return 'var(--accent)';
     return DOT_COLORS[idx % DOT_COLORS.length];

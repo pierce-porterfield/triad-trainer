@@ -945,7 +945,7 @@ export default function TriadTrainer() {
                     ) : options.inputMode === 'piano' ? (
                       <PianoInput mode="display" value={current.notes} />
                     ) : options.inputMode === 'guitar' ? (
-                      <GuitarInput mode="display" value={current.notes} />
+                      <GuitarInput mode="display" value={current.notes} chordSeed={current.chordName} />
                     ) : (
                       <div className="tt-notes-display">
                         {current.notes.map((n, i) => (

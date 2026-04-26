@@ -715,8 +715,11 @@ export default function TriadTrainer() {
     }
     .tt-btn-row {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
+    .tt-btn-row .tt-btn { flex: 1 1 140px; min-width: 0; }
 
     /* RESULTS */
     .tt-score-display {

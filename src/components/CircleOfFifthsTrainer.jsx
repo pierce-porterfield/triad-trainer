@@ -732,8 +732,11 @@ export default function CircleOfFifthsTrainer() {
     }
     .cof-btn-row {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
+    .cof-btn-row .cof-btn { flex: 1 1 140px; min-width: 0; }
 
     /* RESULTS */
     .cof-score-display {

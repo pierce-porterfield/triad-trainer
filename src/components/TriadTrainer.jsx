@@ -508,7 +508,7 @@ export default function TriadTrainer() {
     }
     .tt-card-inner {
       position: relative;
-      min-height: 320px;
+      min-height: 440px;
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }
@@ -521,13 +521,12 @@ export default function TriadTrainer() {
       backface-visibility: hidden;
       background: var(--paper-deep);
       border: 1px solid var(--ink);
-      padding: 3rem 1.5rem 2rem;
+      padding: 2.25rem 1.5rem 1.75rem;
       box-shadow: 8px 8px 0 var(--paper-shadow);
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      overflow: hidden;
     }
     .tt-card-face::before {
       content: '';

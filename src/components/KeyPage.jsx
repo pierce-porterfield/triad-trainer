@@ -33,7 +33,7 @@ export default function KeyPage({ slug }) {
     diatonic, relativeMinor, intro, progressions, commonMistakes, faq,
   } = data;
 
-  const canonical = `https://triadtrainer.org/keys/${slug}`;
+  const canonical = `https://theory-trainer.com/keys/${slug}`;
   const title = `Key of ${name} — notes, key signature, and chords | Music Theory Trainer`;
   const accidentalSummary = accidentalCount === 0
     ? 'no sharps or flats'

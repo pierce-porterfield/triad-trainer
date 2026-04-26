@@ -37,7 +37,7 @@ const liveKeys = scrapeLiveSlugs('src/data/keyContent.js');
 const liveScales = scrapeLiveSlugs('src/data/scaleContent.js');
 const liveLearn = scrapeLiveSlugs('src/data/learnContent.js');
 
-const SITE = 'https://triadtrainer.org';
+const SITE = 'https://theory-trainer.com';
 
 const STATIC_ROUTES = [
   { path: '/',                 priority: '1.0', changefreq: 'weekly' },

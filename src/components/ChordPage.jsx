@@ -39,7 +39,7 @@ export default function ChordPage({ slug }) {
     inProgressions, faq,
   } = data;
 
-  const canonical = `https://triadtrainer.org/chords/${slug}`;
+  const canonical = `https://theory-trainer.com/chords/${slug}`;
   const title = `${displayName} chord — notes, intervals, and practice | Music Theory Trainer`;
   const description =
     `Learn the notes in the ${displayName} chord (${notes.join(', ')}), see the intervals, and drill it with interactive flash cards.`;

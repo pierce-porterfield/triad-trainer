@@ -546,7 +546,7 @@ function ResultsScreen({ puzzle, result, state }) {
     const lines = [
       `Etudle #${String(result.puzzleNumber).padStart(3, '0')} \u00B7 ${formatTime(result.time * 1000)}`,
       ...blocks,
-      `${result.score}/15 \u00B7 triadtrainer.org`,
+      `${result.score}/15 \u00B7 etudle.com`,
     ];
     if (state.currentStreak > 1) {
       lines[0] += `  \uD83D\uDD25 ${state.currentStreak}`;

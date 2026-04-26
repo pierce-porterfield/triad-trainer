@@ -31,7 +31,7 @@ export default function LearnPage({ slug }) {
   }
 
   const { title, description, blocks, faq } = data;
-  const canonical = `https://triadtrainer.org/learn/${slug}`;
+  const canonical = `https://theory-trainer.com/learn/${slug}`;
 
   // JSON-LD: Article + FAQPage.
   const articleLd = {

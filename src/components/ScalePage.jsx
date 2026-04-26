@@ -33,7 +33,7 @@ export default function ScalePage({ slug }) {
     relativeKeyName, intro, context, commonMistakes, faq,
   } = data;
 
-  const canonical = `https://triadtrainer.org/scales/${slug}`;
+  const canonical = `https://theory-trainer.com/scales/${slug}`;
   const title = `The ${name} scale — notes, intervals, and pattern | Music Theory Trainer`;
   const description = `The ${name} scale is ${scaleNotes.join(', ')}. Interval pattern: ${pattern.join('-')}. See every interval from the root and practice with flash cards.`;
 

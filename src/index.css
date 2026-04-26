@@ -213,6 +213,11 @@ input {
   color: var(--paper);
   box-shadow: 4px 4px 0 var(--accent);
 }
+.np-slot.ready:not(.focused) {
+  border-style: dashed;
+  border-color: var(--accent);
+  box-shadow: 3px 3px 0 var(--accent);
+}
 .np-slot-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.55rem;
@@ -246,6 +251,10 @@ input {
 .np-acc.on {
   background: var(--ink);
   color: var(--paper);
+}
+.np-acc:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 .np-clear {
   margin-left: 0.5rem;

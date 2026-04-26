@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
 const ACCIDENTALS = [
   { value: 'b', glyph: '\u266D' },
-  { value: '',  glyph: '\u266E' },
   { value: '#', glyph: '\u266F' },
 ];
 
@@ -16,88 +15,83 @@ const formatNote = (s) =>
   s.replace('##', '\u{1D12A}').replace('bb', '\u{1D12B}')
    .replace('#', '\u266F').replace('b', '\u266D');
 
-// Note-slot picker.
-// Props:
-//   value:       string[] of notes (e.g. ['C', 'E', 'G'])
-//   onChange:    (next: string[]) => void
-//   slotLabels:  string[] same length as count (e.g. ['1', '3', '5'])
-//   slotNames:   optional friendly names (e.g. ['ROOT', '3rd', '5th'])
-//   count:       number of slots
+// Note-slot picker — letter first, then optional accidental.
+//
+// Behavior:
+//   - Tapping a letter writes it to the first empty slot (or to a slot
+//     that's been explicitly selected). After a letter is written, that
+//     slot becomes the accidental target.
+//   - Tapping ♭ or ♯ toggles the accidental on the accidental-target slot.
+//     Natural is the default (no accidental); tap the same accidental again
+//     to clear it.
+//   - Tapping a slot selects it: the next letter or accidental will operate
+//     on that slot. Selection clears after a letter is written.
+//   - Clear resets every slot.
 export default function NotePicker({ value, onChange, slotLabels, slotNames, count }) {
-  const [focused, setFocused] = useState(0);
-  const [armedAcc, setArmedAcc] = useState('');
+  const [selectedIdx, setSelectedIdx] = useState(-1);
+  const [lastFilled, setLastFilled] = useState(-1);
 
-  // Keep focus in range as count changes between cards
+  // Reset selection state when the card changes (count / value identity)
   useEffect(() => {
-    if (focused >= count) setFocused(0);
-  }, [count, focused]);
+    setSelectedIdx(-1);
+    setLastFilled(-1);
+  }, [count]);
 
   const slots = Array.from({ length: count }, (_, i) => parseSlot(value[i] || ''));
 
-  const updateSlot = (i, note) => {
+  const findNextEmpty = () => {
+    for (let i = 0; i < count; i++) if (!slots[i].letter) return i;
+    return -1;
+  };
+
+  const writeSlot = (i, note) => {
     const next = [...value];
     while (next.length < count) next.push('');
     next[i] = note;
     onChange(next.slice(0, count));
   };
 
-  const findNextEmpty = (from) => {
-    for (let i = from + 1; i < count; i++) {
-      if (!slots[i].letter) return i;
-    }
-    for (let i = 0; i < from; i++) {
-      if (!slots[i].letter) return i;
-    }
-    return -1;
-  };
-
   const handleLetter = (letter) => {
-    const cur = slots[focused];
-    if (cur.letter) {
-      // Already has a letter — revise, keep accidental
-      updateSlot(focused, letter + cur.accidental);
-    } else {
-      // Empty slot: apply letter + armed accidental, advance
-      updateSlot(focused, letter + armedAcc);
-      setArmedAcc('');
-      const next = findNextEmpty(focused);
-      if (next !== -1) setFocused(next);
-    }
+    const targetIdx = selectedIdx >= 0 ? selectedIdx : findNextEmpty();
+    if (targetIdx === -1) return; // every slot is full and none selected
+    writeSlot(targetIdx, letter); // replace; accidental cleared
+    setLastFilled(targetIdx);
+    setSelectedIdx(-1);
   };
 
   const handleAccidental = (acc) => {
-    const cur = slots[focused];
-    if (cur.letter) {
-      // Apply directly to filled slot (toggle off if same)
-      updateSlot(focused, cur.letter + (cur.accidental === acc ? '' : acc));
-      setArmedAcc('');
-    } else {
-      // Empty slot: arm for next letter (toggle off if same)
-      setArmedAcc(armedAcc === acc ? '' : acc);
-    }
+    const targetIdx = selectedIdx >= 0 ? selectedIdx : lastFilled;
+    if (targetIdx === -1) return;
+    const cur = slots[targetIdx];
+    if (!cur.letter) return;
+    writeSlot(targetIdx, cur.letter + (cur.accidental === acc ? '' : acc));
   };
 
   const handleSlotTap = (i) => {
-    setFocused(i);
-    setArmedAcc('');
+    setSelectedIdx(i);
   };
 
   const handleClear = () => {
     onChange(Array.from({ length: count }, () => ''));
-    setFocused(0);
-    setArmedAcc('');
+    setSelectedIdx(-1);
+    setLastFilled(-1);
   };
+
+  const nextEmptyIdx = findNextEmpty();
+  const accTargetIdx = selectedIdx >= 0 ? selectedIdx : lastFilled;
+  const accTargetSlot = accTargetIdx >= 0 ? slots[accTargetIdx] : null;
 
   return (
     <div className="np-wrapper">
       <div className="np-slots">
         {slots.map((s, i) => {
-          const isFocused = i === focused;
+          const isSelected = selectedIdx === i;
+          const isReady = selectedIdx === -1 && nextEmptyIdx === i;
           return (
             <button
               key={i}
               type="button"
-              className={`np-slot ${isFocused ? 'focused' : ''} ${s.letter ? 'filled' : ''}`}
+              className={`np-slot ${isSelected ? 'focused' : ''} ${isReady ? 'ready' : ''} ${s.letter ? 'filled' : ''}`}
               onClick={() => handleSlotTap(i)}
             >
               <span className="np-slot-label">{slotNames ? slotNames[i] : slotLabels[i]}</span>
@@ -109,37 +103,31 @@ export default function NotePicker({ value, onChange, slotLabels, slotNames, cou
         })}
       </div>
 
+      <div className="np-letter-row">
+        {LETTERS.map((l) => (
+          <button key={l} type="button" className="np-letter" onClick={() => handleLetter(l)}>
+            {l}
+          </button>
+        ))}
+      </div>
+
       <div className="np-acc-row">
         {ACCIDENTALS.map((a) => {
-          const cur = slots[focused];
-          const isOn = cur.letter
-            ? cur.accidental === a.value
-            : armedAcc === a.value;
+          const isOn = accTargetSlot && accTargetSlot.letter && accTargetSlot.accidental === a.value;
+          const enabled = accTargetSlot && accTargetSlot.letter;
           return (
             <button
-              key={a.value || 'natural'}
+              key={a.value}
               type="button"
               className={`np-acc ${isOn ? 'on' : ''}`}
               onClick={() => handleAccidental(a.value)}
+              disabled={!enabled}
             >
               {a.glyph}
             </button>
           );
         })}
         <button type="button" className="np-clear" onClick={handleClear}>Clear</button>
-      </div>
-
-      <div className="np-letter-row">
-        {LETTERS.map((l) => (
-          <button
-            key={l}
-            type="button"
-            className="np-letter"
-            onClick={() => handleLetter(l)}
-          >
-            {l}
-          </button>
-        ))}
       </div>
     </div>
   );

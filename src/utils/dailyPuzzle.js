@@ -104,18 +104,18 @@ const pickRoundOptions = (round, dayNumber, roundIndex) => {
 
   if (round.type === 'triad') {
     qualities = choice(rng, [
-      [TRIAD_BASE,         50],
-      [TRIAD_SEVENTHS,     25],
-      [TRIAD_NINTHS,       15],
-      [TRIAD_THIRTEENTHS,  10],
+      [TRIAD_BASE,         20],
+      [TRIAD_SEVENTHS,     35],
+      [TRIAD_NINTHS,       25],
+      [TRIAD_THIRTEENTHS,  20],
     ]);
   }
 
   if (round.type === 'key') {
     keyPool = choice(rng, [
-      ['major', 60],
-      ['minor', 20],
-      ['mixed', 20],
+      ['major', 25],
+      ['minor', 30],
+      ['mixed', 45],
     ]);
   }
 

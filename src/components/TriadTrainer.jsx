@@ -527,6 +527,19 @@ export default function TriadTrainer() {
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+      transition: opacity 0.18s ease;
+    }
+    /* Hide the question face quickly as the card crosses the midpoint */
+    .tt-card-inner.flipped .tt-card-face:not(.tt-card-back) {
+      opacity: 0;
+      transition: opacity 0.18s ease 0.22s;
+    }
+    .tt-card-back {
+      opacity: 0;
+    }
+    .tt-card-inner.flipped .tt-card-back {
+      opacity: 1;
+      transition-delay: 0.42s;
     }
     .tt-card-face::before {
       content: '';
@@ -536,7 +549,7 @@ export default function TriadTrainer() {
       opacity: 0.12;
       pointer-events: none;
     }
-    .tt-card-back {
+    .tt-card-face.tt-card-back {
       transform: rotateY(180deg);
     }
     .tt-card-back.correct {

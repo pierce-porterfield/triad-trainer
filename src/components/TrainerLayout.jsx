@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Mobile-first full-viewport layout for the "playing" view of any trainer.
 // Top bar (~48px) · progress bar · flexible card area · pinned bottom controls.
@@ -10,6 +10,17 @@ export default function TrainerLayout({
   children,   // card area
   controls,   // bottom controls
 }) {
+  // Lock scroll on the document while the playing view is mounted, so iOS
+  // Safari's address bar / toolbar don't pop in/out and shift the layout.
+  useEffect(() => {
+    document.documentElement.classList.add('trainer-locked');
+    document.body.classList.add('trainer-locked');
+    return () => {
+      document.documentElement.classList.remove('trainer-locked');
+      document.body.classList.remove('trainer-locked');
+    };
+  }, []);
+
   return (
     <div className="trainer-screen">
       <div className="trainer-topbar">

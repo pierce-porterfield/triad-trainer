@@ -493,6 +493,7 @@ export default function CircleOfFifthsTrainer() {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      transition: opacity 0.18s ease;
     }
     .cof-card-face::before {
       content: '';
@@ -502,8 +503,17 @@ export default function CircleOfFifthsTrainer() {
       opacity: 0.2;
       pointer-events: none;
     }
+    .cof-card-inner.flipped .cof-card-face:not(.cof-card-back) {
+      opacity: 0;
+      transition: opacity 0.18s ease 0.22s;
+    }
     .cof-card-back {
       transform: rotateY(180deg);
+      opacity: 0;
+    }
+    .cof-card-inner.flipped .cof-card-back {
+      opacity: 1;
+      transition-delay: 0.42s;
     }
     .cof-card-back.correct {
       background: #e8ecd4;

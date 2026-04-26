@@ -138,6 +138,25 @@ function Block({ block }) {
       const Diagram = DIAGRAMS[block.name];
       return Diagram ? <Diagram /> : null;
     }
+    case 'video': {
+      // YouTube embed. Lazy-loads so it doesn't block first paint.
+      const src = `https://www.youtube-nocookie.com/embed/${block.id}`;
+      return (
+        <figure className="learn-video">
+          <div className="learn-video-frame">
+            <iframe
+              src={src}
+              title={block.title || 'Embedded video'}
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+          {block.caption && <figcaption>{block.caption}</figcaption>}
+        </figure>
+      );
+    }
     default:
       return null;
   }
@@ -222,6 +241,31 @@ const styles = `
     margin-top: 1.25rem; color: var(--ink);
   }
   .learn-faq dd { margin: 0.4rem 0 0; color: var(--ink-soft); }
+  .learn-video { margin: 1.5rem 0 2rem; }
+  .learn-video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #1a1410;
+    border: 1px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--paper-shadow);
+    overflow: hidden;
+  }
+  .learn-video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .learn-video figcaption {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    text-align: center;
+    margin-top: 0.75rem;
+  }
   .learn-footer {
     max-width: 720px; margin: 4rem auto 0;
     padding-top: 2rem; border-top: 1px solid var(--paper-shadow);

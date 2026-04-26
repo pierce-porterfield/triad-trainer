@@ -176,61 +176,106 @@ input {
 }
 .trainer-time-best { opacity: 0.65; font-size: 0.85em; }
 
-/* Music Staff (shared across trainers) */
-.staff-wrapper {
+/* ============================================================================
+ * NotePicker — tap-only note slots + letter/accidental rows
+ * ========================================================================= */
+.np-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+.np-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+.np-slot {
+  flex: 1 1 70px;
+  min-width: 70px;
+  max-width: 110px;
+  min-height: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0.5rem 0;
-}
-.staff-svg {
-  width: 100%;
-  max-width: 360px;
-  height: auto;
-  background: #f4ecdc;
-  border: 1px solid #1a1410;
-  user-select: none;
-  touch-action: manipulation;
-}
-.staff-acc-row {
-  display: flex;
-  gap: 0.4rem;
-  margin-bottom: 0.5rem;
-}
-.staff-acc-btn {
-  font-size: 1.3rem;
-  width: 2.4rem;
-  height: 2.4rem;
-  border: 1px solid #1a1410;
-  background: #f4ecdc;
-  color: #1a1410;
+  justify-content: center;
+  padding: 0.35rem 0.5rem;
+  background: var(--paper-deep);
+  border: 1px solid var(--ink);
   cursor: pointer;
-  font-family: 'Times New Roman', serif;
-  line-height: 1;
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  box-shadow: 3px 3px 0 var(--paper-shadow);
 }
-.staff-acc-btn:hover { background: #ebe0c9; }
-.staff-acc-btn.on {
-  background: #1a1410;
-  color: #f4ecdc;
+.np-slot.focused {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 4px 4px 0 var(--accent);
 }
-.staff-acc-btn.ghost {
+.np-slot-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  width: auto;
-  padding: 0 0.75rem;
+  opacity: 0.7;
+  margin-bottom: 0.15rem;
 }
-.staff-hint {
+.np-slot-value {
+  font-family: 'Italiana', serif;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.np-acc-row {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
+.np-acc {
+  min-width: 48px;
+  min-height: 44px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'Times New Roman', serif;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.np-acc.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.np-clear {
+  margin-left: 0.5rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  background: transparent;
+  border: 1px solid var(--ink-soft);
+  color: var(--ink-soft);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #3d342b;
-  opacity: 0.7;
-  margin-top: 0.5rem;
-  text-align: center;
+  cursor: pointer;
 }
+.np-letter-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+.np-letter {
+  min-height: 48px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'Italiana', serif;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.np-letter:hover { background: var(--paper-deep); }
 
 /* Music Staff (shared across trainers) */
 .staff-wrapper {

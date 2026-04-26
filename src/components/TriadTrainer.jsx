@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import Staff, { layoutChordNotes } from './Staff.jsx';
 import TrainerLayout from './TrainerLayout.jsx';
+import NotePicker from './NotePicker.jsx';
 
 // ============================================================================
 // TRIAD DATA
@@ -1037,32 +1038,19 @@ export default function TriadTrainer() {
         maxNotes={current.notes.length}
       />
     ) : !feedback && direction === 'chord-to-notes' ? (
-      <>
-        <div className="tt-input-row" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
-          {current.notes.map((_, i) => {
-            const placeholders = ['1', '3', '5', '7', '9', '13'];
-            return (
-              <input
-                key={i}
-                className="tt-note-input"
-                type="text"
-                autoFocus={i === 0}
-                value={answers.notes[i] || ''}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  const forced = v ? v[0].toUpperCase() + v.slice(1) : v;
-                  const next = [...(answers.notes || [])];
-                  next[i] = forced;
-                  setAnswers((a) => ({ ...a, notes: next }));
-                }}
-                placeholder={placeholders[i] || '?'}
-                maxLength={3}
-              />
-            );
-          })}
-        </div>
-        <div className="tt-hint">Accepts # or b · Any order</div>
-      </>
+      (() => {
+        const labels = ['1', '3', '5', '7', '9', '13'];
+        const names = ['ROOT', '3rd', '5th', '7th', '9th', '13th'];
+        return (
+          <NotePicker
+            count={current.notes.length}
+            value={answers.notes}
+            onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
+            slotLabels={labels.slice(0, current.notes.length)}
+            slotNames={names.slice(0, current.notes.length)}
+          />
+        );
+      })()
     ) : !feedback && direction === 'notes-to-chord' ? (
       <>
         <div className="tt-input-row">

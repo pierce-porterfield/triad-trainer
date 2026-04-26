@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import TrainerLayout from './TrainerLayout.jsx';
+import NotePicker from './NotePicker.jsx';
 
 // ============================================================================
 // INTERVAL DATA
@@ -604,23 +605,13 @@ export default function IntervalTrainer() {
 
   if (mode === 'playing' && current) {
     const inputInterface = !feedback ? (
-      <>
-        <div className="it-input-row">
-          <input
-            className="it-note-input"
-            type="text"
-            autoFocus
-            value={answer}
-            onChange={(e) => {
-              const v = e.target.value;
-              setAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
-            }}
-            placeholder="?"
-            maxLength={3}
-          />
-        </div>
-        <div className="it-hint">Accepts # or b · Enter to submit</div>
-      </>
+      <NotePicker
+        count={1}
+        value={[answer]}
+        onChange={(next) => setAnswer(next[0] || '')}
+        slotLabels={['?']}
+        slotNames={['ANSWER']}
+      />
     ) : null;
 
     const submitButton = !feedback ? (

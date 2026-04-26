@@ -143,7 +143,8 @@ input {
   background: transparent;
   border: 1px solid var(--ink-soft);
   color: var(--ink-soft);
-  padding: 0.4rem 0.7rem;
+  min-height: 32px;
+  padding: 0.3rem 0.65rem;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6rem;
   letter-spacing: 0.25em;

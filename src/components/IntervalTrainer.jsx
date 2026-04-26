@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
+import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
 
@@ -212,9 +213,11 @@ export default function IntervalTrainer() {
     if (isCorrect) {
       setFeedback('correct');
       setScore((s) => s + 1);
+      hapticCorrect();
     } else {
       setFeedback('wrong');
       setLastWrongAnswer(answer || '(blank)');
+      hapticWrong();
     }
   };
 

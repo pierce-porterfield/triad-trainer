@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
+import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import Staff, { layoutChordNotes } from './Staff.jsx';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
@@ -317,6 +318,7 @@ export default function TriadTrainer() {
     setFeedback(isCorrect ? 'correct' : 'wrong');
     setFlipped(true);
     setResults((r) => [...r, { card: current, correct: isCorrect, userAnswer }]);
+    if (isCorrect) hapticCorrect(); else hapticWrong();
   };
 
   const handleNext = () => {

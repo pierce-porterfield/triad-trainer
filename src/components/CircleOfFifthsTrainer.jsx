@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
+import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
 
 // ============================================================================
@@ -204,6 +205,7 @@ export default function CircleOfFifthsTrainer() {
     setFeedback(isCorrect ? 'correct' : 'wrong');
     setFlipped(true);
     setResults((r) => [...r, { card: current, correct: isCorrect, userAnswer: userAnswerDisplay }]);
+    if (isCorrect) hapticCorrect(); else hapticWrong();
   };
 
   const handleNext = () => {
@@ -732,7 +734,8 @@ export default function CircleOfFifthsTrainer() {
     .cof-acc-btn {
       width: 100%;
       min-width: 0;
-      padding: 0.45rem 0.2rem;
+      min-height: 44px;
+      padding: 0.5rem 0.2rem;
       background: var(--paper);
       border: 1px solid var(--ink);
       font-family: 'Italiana', serif;

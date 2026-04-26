@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import HamburgerNav from './components/HamburgerNav.jsx';
 import Landing from './components/Landing.jsx';
 import TriadTrainer from './components/TriadTrainer.jsx';
 import CircleOfFifthsTrainer from './components/CircleOfFifthsTrainer.jsx';
@@ -8,9 +9,15 @@ import Daily from './components/Daily.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import { PUBLISHED_CHORD_SLUGS } from './data/chordContent.js';
 
-// Root layout. vite-react-ssg's <Head> component handles head extraction
-// internally, so this is just an Outlet.
-const RootLayout = () => <Outlet />;
+// Root layout. Renders the persistent hamburger nav on every route so the
+// chord library, trainers, and home all link to each other (kills SEO orphan
+// pages). vite-react-ssg's <Head> handles head extraction internally.
+const RootLayout = () => (
+  <>
+    <HamburgerNav />
+    <Outlet />
+  </>
+);
 
 // Bind the slug as a stable closure for each chord route. We list concrete
 // paths (rather than `:slug`) because vite-react-ssg needs to enumerate every

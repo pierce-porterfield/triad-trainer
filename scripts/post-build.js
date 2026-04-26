@@ -34,6 +34,8 @@ const scrapeLiveSlugs = (path) => {
 
 const liveChords = scrapeLiveSlugs('src/data/chordContent.js');
 const liveKeys = scrapeLiveSlugs('src/data/keyContent.js');
+const liveScales = scrapeLiveSlugs('src/data/scaleContent.js');
+const liveLearn = scrapeLiveSlugs('src/data/learnContent.js');
 
 const SITE = 'https://triadtrainer.org';
 
@@ -47,8 +49,18 @@ const STATIC_ROUTES = [
 
 const urls = [
   ...STATIC_ROUTES,
+  ...liveLearn.map((slug) => ({
+    path: `/learn/${slug}`,
+    priority: '0.85',
+    changefreq: 'monthly',
+  })),
   ...liveKeys.map((slug) => ({
     path: `/keys/${slug}`,
+    priority: '0.8',
+    changefreq: 'monthly',
+  })),
+  ...liveScales.map((slug) => ({
+    path: `/scales/${slug}`,
     priority: '0.8',
     changefreq: 'monthly',
   })),
@@ -79,4 +91,4 @@ Sitemap: ${SITE}/sitemap.xml
 writeFileSync(resolve(distDir, 'sitemap.xml'), sitemap);
 writeFileSync(resolve(distDir, 'robots.txt'), robots);
 
-console.log(`[post-build] wrote sitemap.xml (${urls.length} urls — ${liveKeys.length} keys, ${liveChords.length} chords) + robots.txt`);
+console.log(`[post-build] wrote sitemap.xml (${urls.length} urls — ${liveLearn.length} guides, ${liveKeys.length} keys, ${liveScales.length} scales, ${liveChords.length} chords) + robots.txt`);

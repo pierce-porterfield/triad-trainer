@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PUBLISHED_CHORD_SLUGS, slugToChord } from '../data/chordContent.js';
 import { PUBLISHED_KEY_SLUGS, slugToKey } from '../data/keyContent.js';
+import { PUBLISHED_SCALE_SLUGS, slugToScale } from '../data/scaleContent.js';
+import { PUBLISHED_LEARN_SLUGS, getLearnTitle } from '../data/learnContent.js';
 
 // Site-wide nav. Mounts in RootLayout so every prerendered page links to
 // every other — kills orphan-page SEO penalties (seo-strategy.md "internal
@@ -38,6 +40,11 @@ export default function HamburgerNav() {
   const keyLinks = PUBLISHED_KEY_SLUGS
     .map((slug) => ({ slug, meta: slugToKey(slug) }))
     .filter((x) => x.meta);
+  const scaleLinks = PUBLISHED_SCALE_SLUGS
+    .map((slug) => ({ slug, meta: slugToScale(slug) }))
+    .filter((x) => x.meta);
+  const learnLinks = PUBLISHED_LEARN_SLUGS
+    .map((slug) => ({ slug, title: getLearnTitle(slug) }));
 
   return (
     <>
@@ -82,6 +89,19 @@ export default function HamburgerNav() {
           </ul>
         </div>
 
+        {learnLinks.length > 0 && (
+          <div className="nav-section">
+            <h3 className="nav-section-title">Guides</h3>
+            <ul>
+              {learnLinks.map(({ slug, title }) => (
+                <li key={slug}>
+                  <Link to={`/learn/${slug}`}>{title}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         {keyLinks.length > 0 && (
           <div className="nav-section">
             <h3 className="nav-section-title">Key library</h3>
@@ -89,6 +109,21 @@ export default function HamburgerNav() {
               {keyLinks.map(({ slug, meta }) => (
                 <li key={slug}>
                   <Link to={`/keys/${slug}`}>{meta.tonic} major</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {scaleLinks.length > 0 && (
+          <div className="nav-section">
+            <h3 className="nav-section-title">Scale library</h3>
+            <ul>
+              {scaleLinks.map(({ slug, meta }) => (
+                <li key={slug}>
+                  <Link to={`/scales/${slug}`}>
+                    {meta.tonic} {meta.type === 'major' ? 'major' : 'minor'}
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -8,8 +8,12 @@ import IntervalTrainer from './components/IntervalTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import KeyPage from './components/KeyPage.jsx';
+import ScalePage from './components/ScalePage.jsx';
+import LearnPage from './components/LearnPage.jsx';
 import { PUBLISHED_CHORD_SLUGS } from './data/chordContent.js';
 import { PUBLISHED_KEY_SLUGS } from './data/keyContent.js';
+import { PUBLISHED_SCALE_SLUGS } from './data/scaleContent.js';
+import { PUBLISHED_LEARN_SLUGS } from './data/learnContent.js';
 
 // Root layout. Renders the persistent hamburger nav on every route so the
 // chord library, trainers, and home all link to each other (kills SEO orphan
@@ -36,6 +40,18 @@ const makeKeyRoute = (slug) => ({
   entry: 'src/components/KeyPage.jsx',
 });
 
+const makeScaleRoute = (slug) => ({
+  path: `scales/${slug}`,
+  Component: () => <ScalePage slug={slug} />,
+  entry: 'src/components/ScalePage.jsx',
+});
+
+const makeLearnRoute = (slug) => ({
+  path: `learn/${slug}`,
+  Component: () => <LearnPage slug={slug} />,
+  entry: 'src/components/LearnPage.jsx',
+});
+
 export const routes = [
   {
     path: '/',
@@ -48,6 +64,8 @@ export const routes = [
       { path: 'daily', Component: Daily },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
       ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),
+      ...PUBLISHED_SCALE_SLUGS.map(makeScaleRoute),
+      ...PUBLISHED_LEARN_SLUGS.map(makeLearnRoute),
     ],
   },
 ];

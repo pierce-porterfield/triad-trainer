@@ -213,113 +213,147 @@ export default function Landing() {
 
     /* Daily card — sits in its own row above the trainer grid */
     .daily-row {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
     .daily-card {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
-      background: var(--paper-deep);
-      border: 1px solid var(--ink);
-      padding: 1.5rem 1.5rem;
-      box-shadow: 8px 8px 0 var(--gold);
+      background: linear-gradient(135deg, #1a1410 0%, #2b1f17 100%);
+      border: 2px solid var(--gold);
+      padding: 1.75rem 1.5rem;
+      box-shadow:
+        10px 10px 0 var(--gold),
+        0 0 0 5px var(--paper) inset;
       position: relative;
       text-decoration: none;
-      color: inherit;
-      transition: all 0.2s ease;
+      color: var(--paper);
+      transition: all 0.25s ease;
+      overflow: hidden;
     }
     .daily-card:hover {
-      transform: translate(-3px, -3px);
-      box-shadow: 11px 11px 0 var(--accent);
+      transform: translate(-4px, -4px);
+      box-shadow:
+        14px 14px 0 var(--accent),
+        0 0 0 5px var(--paper) inset;
     }
     .daily-card::before {
+      content: '\u{1D11E}';
+      position: absolute;
+      top: -1.5rem;
+      right: -0.5rem;
+      font-family: 'Times New Roman', serif;
+      font-size: 14rem;
+      color: var(--gold);
+      opacity: 0.08;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .daily-card::after {
       content: '';
       position: absolute;
-      inset: 6px;
-      border: 1px solid var(--ink);
-      opacity: 0.25;
+      inset: 12px;
+      border: 1px solid var(--gold);
+      opacity: 0.4;
       pointer-events: none;
     }
     @media (min-width: 720px) {
       .daily-card {
         grid-template-columns: 1fr auto;
         align-items: center;
-        padding: 1.75rem 2rem;
+        padding: 2rem 2.5rem;
       }
     }
+    .daily-body { position: relative; z-index: 1; }
     .daily-eyebrow {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.35em;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
       text-transform: uppercase;
-      color: var(--ink-soft);
+      color: var(--gold);
       margin-bottom: 0.5rem;
     }
     .daily-title {
       font-family: 'Italiana', serif;
-      font-size: clamp(2rem, 5.5vw, 3.25rem);
+      font-size: clamp(2.25rem, 6.5vw, 3.75rem);
       line-height: 0.95;
-      margin: 0 0 0.5rem;
+      margin: 0 0 0.6rem;
+      color: var(--paper);
     }
     .daily-title em {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      color: var(--accent);
+      color: var(--gold);
     }
-    .daily-meta {
+    .daily-desc {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      color: var(--ink-soft);
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
+      color: var(--paper);
+      font-size: 1.1rem;
+      line-height: 1.4;
+      opacity: 0.85;
+      margin-bottom: 0.85rem;
+      max-width: 38ch;
+    }
+    .daily-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--paper);
+      opacity: 0.6;
+      margin-bottom: 0.85rem;
     }
     .daily-stats {
       display: flex;
-      gap: 1rem;
+      gap: 1.25rem;
       flex-wrap: wrap;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--ink-soft);
+      color: var(--paper);
+      opacity: 0.7;
     }
     .daily-stats strong {
       font-family: 'Italiana', serif;
       font-weight: 400;
       font-style: normal;
-      font-size: 1.1rem;
-      color: var(--ink);
+      font-size: 1.2rem;
+      color: var(--gold);
       letter-spacing: 0.05em;
-      margin-left: 0.35rem;
+      margin-left: 0.4rem;
     }
     .daily-cta {
       display: flex;
       align-items: center;
       gap: 0.75rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
+      font-size: 0.8rem;
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      color: var(--ink);
-      padding-top: 0.75rem;
-      border-top: 1px dotted var(--ink-soft);
+      color: var(--gold);
+      padding-top: 1rem;
+      border-top: 1px dotted var(--gold);
+      position: relative;
+      z-index: 1;
     }
     @media (min-width: 720px) {
       .daily-cta {
         border-top: none;
         padding-top: 0;
-        border-left: 1px dotted var(--ink-soft);
-        padding-left: 1.5rem;
+        border-left: 1px dotted var(--gold);
+        padding-left: 2rem;
         flex-direction: column;
         align-items: flex-end;
-        gap: 0.4rem;
+        gap: 0.5rem;
       }
     }
     .daily-cta-arrow {
       font-family: 'Italiana', serif;
-      font-size: 1.6rem;
+      font-size: 2rem;
       letter-spacing: normal;
-      color: var(--accent);
+      color: var(--gold);
     }
   `;
 
@@ -339,11 +373,15 @@ export default function Landing() {
 
         <div className="daily-row">
           <Link to="/daily" className="daily-card">
-            <div>
-              <div className="daily-eyebrow">— Today's puzzle —</div>
+            <div className="daily-body">
+              <div className="daily-eyebrow">— Today's training · #{String(puzzle.number).padStart(3, '0')} —</div>
               <h2 className="daily-title">
-                Triad<em>le</em> · #{String(puzzle.number).padStart(3, '0')}
+                The <em>Daily</em>
               </h2>
+              <div className="daily-desc">
+                Three rounds, fifteen flashcards, one shot per day. Same training
+                worldwide — race the clock and build your streak.
+              </div>
               <div className="daily-meta">
                 {puzzle.date} · 3 rounds · 15 cards
               </div>

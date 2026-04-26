@@ -7,18 +7,18 @@ import { buildAllTriadCards } from '../data/triads';
 import { MAJOR_KEYS } from '../data/keys';
 import { buildIntervalDeck } from '../data/intervals';
 
-// Day 0 = 2026-01-01 UTC. The puzzle for any later UTC day is deterministic.
-export const EPOCH_UTC = Date.UTC(2026, 0, 1); // months are 0-indexed
+// Day 1 = 2026-04-26 UTC (launch day). Each subsequent UTC day increments.
+export const EPOCH_UTC = Date.UTC(2026, 3, 26); // months are 0-indexed (April = 3)
 const ONE_DAY_MS = 86400000;
 
-// Days since EPOCH for the given Date (defaults to "now").
+// 1-indexed day number since launch. Defaults to "now".
 export const getDayNumber = (date = new Date()) => {
   const utcMs = Date.UTC(
     date.getUTCFullYear(),
     date.getUTCMonth(),
     date.getUTCDate(),
   );
-  return Math.max(0, Math.floor((utcMs - EPOCH_UTC) / ONE_DAY_MS));
+  return Math.max(1, Math.floor((utcMs - EPOCH_UTC) / ONE_DAY_MS) + 1);
 };
 
 // YYYY-MM-DD UTC string for the given Date (defaults to "now").
@@ -108,7 +108,7 @@ export const getDailyPuzzle = (dayNumber = getDayNumber()) => {
   }));
   return {
     number: dayNumber,
-    date: getUtcDateString(new Date(EPOCH_UTC + dayNumber * ONE_DAY_MS)),
+    date: getUtcDateString(new Date(EPOCH_UTC + (dayNumber - 1) * ONE_DAY_MS)),
     template: template.id,
     templateName: template.name,
     rounds,

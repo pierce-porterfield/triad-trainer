@@ -320,7 +320,7 @@ export default function Daily() {
           <Link to="/" className="d-pre-back">
             <span>←</span> Back
           </Link>
-          <div className="d-pre-eyebrow">— Today's puzzle —</div>
+          <div className="d-pre-eyebrow">— Today's training —</div>
           <h1 className="d-pre-title">Triad<em>le</em> · #{String(puzzle.number).padStart(3, '0')}</h1>
           <div className="d-pre-date">{puzzle.date}</div>
           <div className="d-pre-rule">❦</div>
@@ -355,11 +355,11 @@ export default function Daily() {
           </div>
 
           <button className="d-pre-start" onClick={start}>
-            Start today's puzzle <span className="d-pre-start-arrow">→</span>
+            Start today's training <span className="d-pre-start-arrow">→</span>
           </button>
 
           <div className="d-pre-footer">
-            +20s per wrong · timer starts when you tap Start · one attempt per day
+            Timer starts when you tap Start · one attempt per day
           </div>
         </div>
       </div>
@@ -546,7 +546,7 @@ function ResultsScreen({ puzzle, result, state }) {
         </button>
 
         <div className="d-pre-footer">
-          New puzzle at midnight UTC. Practice triads in the trainers to improve.
+          New training at midnight UTC. Practice in the trainers to improve.
         </div>
       </div>
     </div>

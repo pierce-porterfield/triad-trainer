@@ -435,41 +435,47 @@ input {
 }
 .staff-svg {
   width: 100%;
-  max-width: 360px;
+  max-width: 460px;
   height: auto;
   background: #f4ecdc;
   border: 1px solid #1a1410;
   user-select: none;
-  touch-action: manipulation;
+  touch-action: none;
 }
 .staff-acc-row {
   display: flex;
   gap: 0.4rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .staff-acc-btn {
-  font-size: 1.3rem;
-  width: 2.4rem;
-  height: 2.4rem;
+  font-size: 1.4rem;
+  min-width: 48px;
+  min-height: 44px;
   border: 1px solid #1a1410;
   background: #f4ecdc;
   color: #1a1410;
   cursor: pointer;
   font-family: 'Times New Roman', serif;
   line-height: 1;
+  padding: 0 0.5rem;
 }
-.staff-acc-btn:hover { background: #ebe0c9; }
+.staff-acc-btn:hover:not(:disabled) { background: #ebe0c9; }
 .staff-acc-btn.on {
   background: #1a1410;
   color: #f4ecdc;
 }
+.staff-acc-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 .staff-acc-btn.ghost {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  width: auto;
-  padding: 0 0.75rem;
+  padding: 0 0.85rem;
 }
 .staff-hint {
   font-family: 'JetBrains Mono', monospace;

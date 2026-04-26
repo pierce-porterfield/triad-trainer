@@ -26,8 +26,8 @@ const BLACK_KEYS = [
 ];
 
 const OCTAVES = 2;
-const W = 560;
-const H = 150;
+const W = 700;
+const H = 220;
 const WHITE_W = W / (7 * OCTAVES);
 const BLACK_W = WHITE_W * 0.6;
 const BLACK_H = H * 0.62;
@@ -45,12 +45,15 @@ export default function PianoInput({
   const handlePcTap = (pc) => {
     if (mode !== 'input' || !onChange) return;
     if (selectedPcs.has(pc)) {
-      // Remove all entries with this pitch class
       onChange(value.filter((n) => noteToPc(n) !== pc));
-    } else {
-      if (value.length >= maxNotes) return;
-      onChange([...value, pcToNote(pc)]);
+      return;
     }
+    if (value.length >= maxNotes) {
+      // At capacity — drop the oldest to make room.
+      onChange([...value.slice(1), pcToNote(pc)]);
+      return;
+    }
+    onChange([...value, pcToNote(pc)]);
   };
 
   return (
@@ -81,17 +84,6 @@ export default function PianoInput({
                   stroke="#1a1410"
                   strokeWidth="1"
                 />
-                <text
-                  x={x + WHITE_W / 2}
-                  y={H - 8}
-                  textAnchor="middle"
-                  fontFamily="Cormorant Garamond, serif"
-                  fontSize="13"
-                  fill={isOn ? '#f4ecdc' : '#3d342b'}
-                  pointerEvents="none"
-                >
-                  {k.label}
-                </text>
               </g>
             );
           })

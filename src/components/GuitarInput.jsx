@@ -10,14 +10,14 @@ const TUNING_PC = [4, 9, 2, 7, 11, 4];
 const STRING_LABELS_TOP_DOWN = ['e', 'B', 'G', 'D', 'A', 'E'];
 const TUNING_TOP_DOWN = [...TUNING_PC].reverse();
 
-const FRETS = 12;
-const W = 600;
-const H = 170;
-const NUT_X = 36;
-const FRET_AREA_W = W - NUT_X - 16;
-const FRET_W = FRET_AREA_W / FRETS;
-const STRING_GAP = (H - 24) / (TUNING_TOP_DOWN.length - 1);
-const TOP_Y = 12;
+const FRETS = 15;
+const FRET_W = 60;
+const NUT_X = 44;
+const FRET_AREA_W = FRETS * FRET_W;
+const W = NUT_X + FRET_AREA_W + 16;
+const H = 240;
+const STRING_GAP = (H - 30) / (TUNING_TOP_DOWN.length - 1);
+const TOP_Y = 16;
 
 const fretPc = (stringIdx, fret) =>
   ((TUNING_TOP_DOWN[stringIdx] + fret) % 12 + 12) % 12;
@@ -41,19 +41,25 @@ export default function GuitarInput({
     const pc = fretPc(stringIdx, fret);
     if (selectedPcs.has(pc)) {
       onChange(value.filter((n) => noteToPc(n) !== pc));
-    } else {
-      if (value.length >= maxNotes) return;
-      onChange([...value, pcToNote(pc)]);
+      return;
     }
+    if (value.length >= maxNotes) {
+      onChange([...value.slice(1), pcToNote(pc)]);
+      return;
+    }
+    onChange([...value, pcToNote(pc)]);
   };
 
   return (
     <div className="guitar-wrapper">
+      <div className="guitar-scroll">
       <svg
         className="guitar-svg"
+        width={W}
+        height={H}
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="xMidYMid meet"
-        style={{ touchAction: 'manipulation' }}
+        style={{ touchAction: 'pan-x' }}
       >
         {/* Background fingerboard */}
         <rect x={NUT_X} y={TOP_Y - 2} width={FRET_AREA_W} height={H - 2 * TOP_Y + 4} fill="#3d2817" />
@@ -71,12 +77,16 @@ export default function GuitarInput({
             strokeWidth={f <= 5 ? 1.5 : 1}
           />
         ))}
-        {/* Inlay dots at frets 3, 5, 7, 9, 12 (12 = double) */}
-        {[3, 5, 7, 9].map((f) => (
-          <circle key={`inlay-${f}`} cx={xForFret(f)} cy={H / 2} r={4} fill="#d9cbad" opacity="0.6" />
+        {/* Inlay dots at 3, 5, 7, 9, 15 — double at 12 */}
+        {[3, 5, 7, 9, 15].map((f) => f <= FRETS && (
+          <circle key={`inlay-${f}`} cx={xForFret(f)} cy={H / 2} r={5} fill="#d9cbad" opacity="0.6" />
         ))}
-        <circle cx={xForFret(12)} cy={H / 2 - STRING_GAP} r={4} fill="#d9cbad" opacity="0.6" />
-        <circle cx={xForFret(12)} cy={H / 2 + STRING_GAP} r={4} fill="#d9cbad" opacity="0.6" />
+        {12 <= FRETS && (
+          <>
+            <circle cx={xForFret(12)} cy={H / 2 - STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
+            <circle cx={xForFret(12)} cy={H / 2 + STRING_GAP} r={5} fill="#d9cbad" opacity="0.6" />
+          </>
+        )}
 
         {/* Strings */}
         {TUNING_TOP_DOWN.map((_, sIdx) => (
@@ -167,8 +177,9 @@ export default function GuitarInput({
           })
         )}
       </svg>
+      </div>
       {mode === 'input' && (
-        <div className="guitar-hint">Tap any fret with the right note · open strings tap left of the nut</div>
+        <div className="guitar-hint">Scroll the neck horizontally · tap any fret with the right note · open strings tap left of the nut</div>
       )}
     </div>
   );

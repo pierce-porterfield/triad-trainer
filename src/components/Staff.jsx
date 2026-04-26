@@ -89,7 +89,7 @@ function TrebleClef() {
   return (
     <text
       x={STAFF_LEFT - 8}
-      y={STAFF_TOP + 4 * LINE_GAP + 32}
+      y={STAFF_TOP + 4 * LINE_GAP + 14}
       fontFamily="Times New Roman, serif"
       fontSize="148"
       fill="#1a1410"
@@ -267,10 +267,15 @@ export default function Staff({
       return;
     }
 
-    if ((inputNotes || []).length >= maxNotes) return;
+    const cur = inputNotes || [];
     const { letter, octave } = letterOctaveFromStep(step);
     // Letter-first: place natural; user can apply accidental afterwards.
-    onInputChange([...(inputNotes || []), { letter, accidental: '', octave }]);
+    if (cur.length >= maxNotes) {
+      // At capacity — drop the oldest entry to make room for the new one.
+      onInputChange([...cur.slice(1), { letter, accidental: '', octave }]);
+      return;
+    }
+    onInputChange([...cur, { letter, accidental: '', octave }]);
   };
 
   const cancelDrag = () => {

@@ -11,6 +11,9 @@ import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
 import ChordPicker from './ChordPicker.jsx';
 import KeyPicker from './KeyPicker.jsx';
+import Staff, { layoutChordNotes } from './Staff.jsx';
+import PianoInput from './PianoInput.jsx';
+import GuitarInput from './GuitarInput.jsx';
 import { QUALITIES } from '../data/triads';
 
 const FEEDBACK_DELAY_MS = 1100;
@@ -31,17 +34,26 @@ function CardFront({ round, card }) {
     );
   }
   if (round.type === 'triad' && round.direction === 'notes-to-chord') {
+    const im = round.inputMode || 'tap';
     return (
       <>
         <div className="d-card-label">— Name the chord —</div>
-        <div className="d-card-notes">
-          {card.notes.map((n, i) => (
-            <React.Fragment key={i}>
-              <span className="d-note-chip">{formatNote(n)}</span>
-              {i < card.notes.length - 1 && <span className="d-note-sep">·</span>}
-            </React.Fragment>
-          ))}
-        </div>
+        {im === 'staff' ? (
+          <Staff mode="display" displayNotes={layoutChordNotes(card.notes)} />
+        ) : im === 'piano' ? (
+          <PianoInput mode="display" value={card.notes} chordSeed={card.chordName} />
+        ) : im === 'guitar' ? (
+          <GuitarInput mode="display" value={card.notes} chordSeed={card.chordName} />
+        ) : (
+          <div className="d-card-notes">
+            {card.notes.map((n, i) => (
+              <React.Fragment key={i}>
+                <span className="d-note-chip">{formatNote(n)}</span>
+                {i < card.notes.length - 1 && <span className="d-note-sep">·</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
       </>
     );
   }
@@ -84,6 +96,35 @@ function CardFront({ round, card }) {
 // Per-card-type input rendering
 function CardInput({ round, card, answer, setAnswer }) {
   if (round.type === 'triad' && round.direction === 'chord-to-notes') {
+    const im = round.inputMode || 'tap';
+    if (im === 'staff') {
+      return (
+        <Staff
+          mode="input"
+          inputNotes={answer.staffNotes || []}
+          onInputChange={(next) => setAnswer({ ...answer, staffNotes: next })}
+          maxNotes={card.notes.length}
+        />
+      );
+    }
+    if (im === 'piano') {
+      return (
+        <PianoInput
+          value={answer.notes || []}
+          onChange={(next) => setAnswer({ ...answer, notes: next })}
+          maxNotes={card.notes.length}
+        />
+      );
+    }
+    if (im === 'guitar') {
+      return (
+        <GuitarInput
+          value={answer.notes || []}
+          onChange={(next) => setAnswer({ ...answer, notes: next })}
+          maxNotes={card.notes.length}
+        />
+      );
+    }
     const labels = ['1', '3', '5', '7', '9', '13'];
     const names = ['ROOT', '3rd', '5th', '7th', '9th', '13th'];
     return (
@@ -97,8 +138,9 @@ function CardInput({ round, card, answer, setAnswer }) {
     );
   }
   if (round.type === 'triad' && round.direction === 'notes-to-chord') {
-    // Daily uses a fixed pool of base triad qualities (maj, min, dim, aug)
-    const qualityKeys = ['maj', 'min', 'dim', 'aug'];
+    // Use the chord's quality pool from the round config so users see the
+    // same buttons as the deck behind today's puzzle.
+    const qualityKeys = round.qualities || ['maj', 'min', 'dim', 'aug'];
     const qualityOptions = qualityKeys.map((k) => {
       const q = QUALITIES[k];
       return { key: k, symbol: q.symbol, label: q.symbol || 'maj' };
@@ -138,16 +180,47 @@ function CardInput({ round, card, answer, setAnswer }) {
     );
   }
   if (round.type === 'key' && round.direction === 'notes-to-key') {
+    const allowMajor = round.keyPool !== 'minor';
+    const allowMinor = round.keyPool === 'minor' || round.keyPool === 'mixed';
     return (
       <KeyPicker
         value={answer.keyAnswer || ''}
         onChange={(next) => setAnswer({ ...answer, keyAnswer: next })}
-        allowMajor={true}
-        allowMinor={false}
+        allowMajor={allowMajor}
+        allowMinor={allowMinor}
       />
     );
   }
   if (round.type === 'interval') {
+    const im = round.inputMode || 'tap';
+    if (im === 'staff') {
+      return (
+        <Staff
+          mode="input"
+          inputNotes={answer.staffNotes || []}
+          onInputChange={(next) => setAnswer({ ...answer, staffNotes: next })}
+          maxNotes={1}
+        />
+      );
+    }
+    if (im === 'piano') {
+      return (
+        <PianoInput
+          value={answer.note ? [answer.note] : []}
+          onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
+          maxNotes={1}
+        />
+      );
+    }
+    if (im === 'guitar') {
+      return (
+        <GuitarInput
+          value={answer.note ? [answer.note] : []}
+          onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
+          maxNotes={1}
+        />
+      );
+    }
     return (
       <NotePicker
         count={1}
@@ -162,8 +235,15 @@ function CardInput({ round, card, answer, setAnswer }) {
 }
 
 // Check whether the user's answer for the current card is correct
+// Convert staff input notes (objects) to plain note strings for grading.
+const staffToStrings = (staffNotes) =>
+  (staffNotes || []).map((n) => `${n.letter}${n.accidental || ''}`);
+
 function gradeAnswer(round, card, answer) {
   if (round.type === 'triad' && round.direction === 'chord-to-notes') {
+    if (round.inputMode === 'staff') {
+      return notesMatch(staffToStrings(answer.staffNotes), card.notes);
+    }
     return notesMatch(answer.notes || [], card.notes);
   }
   if (round.type === 'triad' && round.direction === 'notes-to-chord') {
@@ -176,6 +256,10 @@ function gradeAnswer(round, card, answer) {
     return keyNameMatch(answer.keyAnswer || '', card);
   }
   if (round.type === 'interval') {
+    if (round.inputMode === 'staff') {
+      const staff = staffToStrings(answer.staffNotes);
+      return staff.length === 1 && notesMatch(staff, [card.note]);
+    }
     return notesMatch([answer.note || ''], [card.note]);
   }
   return false;

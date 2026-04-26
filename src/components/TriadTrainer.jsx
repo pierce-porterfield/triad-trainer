@@ -5,6 +5,7 @@ import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import Staff, { layoutChordNotes } from './Staff.jsx';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
+import ChordPicker from './ChordPicker.jsx';
 
 // ============================================================================
 // TRIAD DATA
@@ -1054,19 +1055,19 @@ export default function TriadTrainer() {
         );
       })()
     ) : !feedback && direction === 'notes-to-chord' ? (
-      <>
-        <div className="tt-input-row">
-          <input
-            className="tt-chord-input"
-            type="text"
-            autoFocus
+      (() => {
+        const qualityOptions = enabledQualities.map((k) => {
+          const q = QUALITIES[k];
+          return { key: k, symbol: q.symbol, label: q.symbol || 'maj' };
+        });
+        return (
+          <ChordPicker
             value={answers.chord}
-            onChange={(e) => setAnswers((a) => ({ ...a, chord: e.target.value }))}
-            placeholder="e.g. Cm, Fmaj7, G7, Dm9"
+            onChange={(next) => setAnswers((a) => ({ ...a, chord: next }))}
+            qualityOptions={qualityOptions}
           />
-        </div>
-        <div className="tt-hint">m = minor · ° = dim · + = aug · maj7 · 7 · m7 · m7♭5 · °7 · 9 · 13</div>
-      </>
+        );
+      })()
     ) : null;
 
     const submitButton = !feedback ? (

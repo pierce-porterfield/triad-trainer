@@ -288,6 +288,60 @@ input {
   line-height: 1;
 }
 .np-letter:hover { background: var(--paper-deep); }
+.np-letter.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ChordPicker quality grid */
+.cp-quality-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 0.3rem;
+}
+.cp-quality {
+  min-height: 44px;
+  padding: 0.4rem 0.3rem;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.cp-quality.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.cp-quality:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* KeyPicker mode row */
+.kp-mode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.kp-mode {
+  min-height: 44px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.kp-mode.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.kp-mode:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 
 /* Music Staff (shared across trainers) */
 .staff-wrapper {

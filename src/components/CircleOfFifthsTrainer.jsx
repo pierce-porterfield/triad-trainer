@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
+import KeyPicker from './KeyPicker.jsx';
 
 // ============================================================================
 // KEY SIGNATURE DATA — all 15 major keys
@@ -978,20 +979,12 @@ export default function CircleOfFifthsTrainer() {
         <div className="cof-hint">Tap again to deselect · leave blank for naturals</div>
       </>
     ) : !feedback && direction === 'notes-to-key' ? (
-      <>
-        <input
-          className="cof-key-input"
-          type="text"
-          autoFocus
-          value={keyAnswer}
-          onChange={(e) => {
-            const v = e.target.value;
-            setKeyAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
-          }}
-          placeholder={options.minor ? 'e.g. G, F#, Am, Ebm' : 'e.g. G, Eb, F#'}
-        />
-        <div className="cof-hint">Name the key · # or b accepted</div>
-      </>
+      <KeyPicker
+        value={keyAnswer}
+        onChange={setKeyAnswer}
+        allowMajor={options.major}
+        allowMinor={options.minor}
+      />
     ) : null;
 
     const submitButton = !feedback ? (

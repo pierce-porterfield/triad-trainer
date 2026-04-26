@@ -1,5 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
+
+// Per-position dot palette. Cycled through as the user places notes.
+const DOT_COLORS = [
+  '#8b2c20', // accent red
+  '#a88734', // gold
+  '#2f6d4f', // green
+  '#3a5c8b', // blue
+  '#6b4d8b', // purple
+  '#3d342b', // ink-soft (neutral fallback)
+];
 
 // Standard tuning (low to high): E A D G B E. Pitch classes:
 //   E=4  A=9  D=2  G=7  B=11  E=4
@@ -32,22 +42,60 @@ export default function GuitarInput({
   onChange,
   maxNotes = 6,
 }) {
-  const selectedPcs = new Set(
+  // For input mode, track each placed dot at its specific (string, fret) position
+  // so two same-pitch frets aren't both auto-lit. The pitch-class array fed to
+  // the parent is derived from these positions.
+  const [positions, setPositions] = useState([]); // {stringIdx, fret}[]
+
+  // Reset internal positions when the parent clears `value` (new card / clear).
+  useEffect(() => {
+    if (mode === 'input' && value.length === 0 && positions.length > 0) {
+      setPositions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, value.length]);
+
+  // For display mode, light up every fret that produces a note in `value`.
+  const selectedPcsForDisplay = new Set(
     value.map(noteToPc).filter((pc) => pc >= 0)
   );
 
+  const positionAt = (stringIdx, fret) =>
+    positions.findIndex((p) => p.stringIdx === stringIdx && p.fret === fret);
+
+  const isPositionLit = (stringIdx, fret) => {
+    if (mode === 'input') return positionAt(stringIdx, fret) !== -1;
+    return selectedPcsForDisplay.has(fretPc(stringIdx, fret));
+  };
+
+  const colorForPosition = (stringIdx, fret) => {
+    if (mode !== 'input') return 'var(--accent)';
+    const idx = positionAt(stringIdx, fret);
+    if (idx < 0) return 'var(--accent)';
+    return DOT_COLORS[idx % DOT_COLORS.length];
+  };
+
+  const emitPositions = (next) => {
+    setPositions(next);
+    if (onChange) {
+      onChange(next.map((p) => pcToNote(fretPc(p.stringIdx, p.fret))));
+    }
+  };
+
   const handleTap = (stringIdx, fret) => {
     if (mode !== 'input' || !onChange) return;
-    const pc = fretPc(stringIdx, fret);
-    if (selectedPcs.has(pc)) {
-      onChange(value.filter((n) => noteToPc(n) !== pc));
+    const idx = positionAt(stringIdx, fret);
+    if (idx !== -1) {
+      // Toggle off this exact position
+      emitPositions(positions.filter((_, i) => i !== idx));
       return;
     }
-    if (value.length >= maxNotes) {
-      onChange([...value.slice(1), pcToNote(pc)]);
+    if (positions.length >= maxNotes) {
+      // At capacity — drop the oldest position to make room
+      emitPositions([...positions.slice(1), { stringIdx, fret }]);
       return;
     }
-    onChange([...value, pcToNote(pc)]);
+    emitPositions([...positions, { stringIdx, fret }]);
   };
 
   return (
@@ -142,8 +190,8 @@ export default function GuitarInput({
 
         {/* Open-string tap zones + indicators */}
         {TUNING_TOP_DOWN.map((_, sIdx) => {
-          const pc = fretPc(sIdx, 0);
-          const isOn = selectedPcs.has(pc);
+          const isOn = isPositionLit(sIdx, 0);
+          const color = colorForPosition(sIdx, 0);
           const cx = openX;
           const cy = TOP_Y + sIdx * STRING_GAP;
           return (
@@ -156,9 +204,9 @@ export default function GuitarInput({
               <circle
                 cx={cx}
                 cy={cy}
-                r={6}
-                fill={isOn ? 'var(--accent)' : 'transparent'}
-                stroke={isOn ? 'var(--accent)' : '#3d342b'}
+                r={7}
+                fill={isOn ? color : 'transparent'}
+                stroke={isOn ? color : '#3d342b'}
                 strokeWidth="1.5"
               />
             </g>
@@ -168,8 +216,8 @@ export default function GuitarInput({
         {/* Fret tap zones + dots */}
         {TUNING_TOP_DOWN.map((_, sIdx) =>
           Array.from({ length: FRETS }, (_, f) => f + 1).map((fret) => {
-            const pc = fretPc(sIdx, fret);
-            const isOn = selectedPcs.has(pc);
+            const isOn = isPositionLit(sIdx, fret);
+            const color = colorForPosition(sIdx, fret);
             const cx = xForFret(fret);
             const cy = TOP_Y + sIdx * STRING_GAP;
             return (
@@ -189,8 +237,8 @@ export default function GuitarInput({
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={9}
-                    fill="var(--accent)"
+                    r={11}
+                    fill={color}
                     stroke="#1a1410"
                     strokeWidth="1.5"
                   />

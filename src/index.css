@@ -130,8 +130,8 @@ input {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  padding: 0.5rem 0.6rem 0.6rem;
-  padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
+  padding: 0.5rem 0.6rem;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.9rem);
   padding-left: max(0.6rem, env(safe-area-inset-left));
   padding-right: max(0.6rem, env(safe-area-inset-right));
   position: relative;
@@ -158,13 +158,13 @@ input {
 /* Submit/next button — full width, large tap target */
 .trainer-submit {
   width: 100%;
-  min-height: 46px;
+  min-height: 62px;
   background: var(--ink);
   color: var(--paper);
   border: 1px solid var(--ink);
-  padding: 0.7rem 1.25rem;
+  padding: 1rem 1.25rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   cursor: pointer;

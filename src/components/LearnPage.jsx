@@ -2,6 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { getLearnPageContent } from '../data/learnContent.js';
+import CircleOfFifthsDiagram from './CircleOfFifthsDiagram.jsx';
+
+// Named diagrams that learn articles can embed via { type: 'diagram', name: '...' }.
+const DIAGRAMS = {
+  'circle-of-fifths': CircleOfFifthsDiagram,
+};
 
 // Long-form essay article. Each entry in learnContent.js stores its body as
 // an ordered array of typed blocks; this component renders them.
@@ -128,6 +134,10 @@ function Block({ block }) {
           ))}
         </div>
       );
+    case 'diagram': {
+      const Diagram = DIAGRAMS[block.name];
+      return Diagram ? <Diagram /> : null;
+    }
     default:
       return null;
   }

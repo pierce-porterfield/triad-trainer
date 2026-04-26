@@ -21,6 +21,7 @@ const CONTENT = {
     description:
       'A plain-English guide to the circle of fifths — what it is, how to read it, and why it makes key signatures, chord progressions, and modulation easier to understand.',
     blocks: [
+      { type: 'diagram', name: 'circle-of-fifths' },
       { type: 'p', text:
         'The circle of fifths is the single most useful diagram in music theory. Once you understand it, key signatures stop feeling like memorisation and start making structural sense. Chord progressions reveal patterns. Modulating between keys becomes a step rather than a leap.' },
       { type: 'p', text:

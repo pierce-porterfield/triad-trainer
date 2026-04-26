@@ -533,7 +533,7 @@ export default function TriadTrainer() {
       position: absolute;
       inset: 6px;
       border: 1px solid var(--ink);
-      opacity: 0.2;
+      opacity: 0.12;
       pointer-events: none;
     }
     .tt-card-back {
@@ -552,7 +552,8 @@ export default function TriadTrainer() {
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--ink-soft);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
+      padding: 0 0.5rem;
     }
     .tt-chord-display {
       font-family: 'Italiana', serif;

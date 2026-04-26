@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
 import { cyrb53 } from '../utils/seededRandom';
 
@@ -92,6 +92,18 @@ export default function GuitarInput({
     [mode, value, chordSeed]
   );
 
+  // Auto-scroll the fretboard so the placed chord centres in view
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    if (mode !== 'display' || !scrollRef.current || displayPositions.length === 0) return;
+    const xs = displayPositions.map((p) => p.fret === 0 ? openX : xForFret(p.fret));
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const centreX = (minX + maxX) / 2;
+    const containerW = scrollRef.current.clientWidth;
+    scrollRef.current.scrollLeft = Math.max(0, centreX - containerW / 2);
+  }, [mode, displayPositions]);
+
   const positionAt = (stringIdx, fret) => {
     const pool = mode === 'input' ? positions : displayPositions;
     return pool.findIndex((p) => p.stringIdx === stringIdx && p.fret === fret);
@@ -130,7 +142,7 @@ export default function GuitarInput({
 
   return (
     <div className="guitar-wrapper">
-      <div className="guitar-scroll">
+      <div className="guitar-scroll" ref={scrollRef}>
       <svg
         className="guitar-svg"
         width={W}
@@ -202,28 +214,13 @@ export default function GuitarInput({
           </text>
         ))}
 
-        {/* String labels (left of nut) */}
-        {STRING_LABELS_TOP_DOWN.map((label, sIdx) => (
-          <text
-            key={`sl-${sIdx}`}
-            x={NUT_X - 14}
-            y={TOP_Y + sIdx * STRING_GAP + 4}
-            textAnchor="end"
-            fontFamily="JetBrains Mono, monospace"
-            fontSize="11"
-            fill="#3d342b"
-            pointerEvents="none"
-          >
-            {label}
-          </text>
-        ))}
-
-        {/* Open-string tap zones + indicators */}
+        {/* Open-string tap zones + indicators with centred string label */}
         {TUNING_TOP_DOWN.map((_, sIdx) => {
           const isOn = isPositionLit(sIdx, 0);
           const color = colorForPosition(sIdx, 0);
           const cx = openX;
           const cy = TOP_Y + sIdx * STRING_GAP;
+          const label = STRING_LABELS_TOP_DOWN[sIdx];
           return (
             <g
               key={`open-${sIdx}`}
@@ -234,11 +231,23 @@ export default function GuitarInput({
               <circle
                 cx={cx}
                 cy={cy}
-                r={7}
-                fill={isOn ? color : 'transparent'}
+                r={11}
+                fill={isOn ? color : 'var(--paper)'}
                 stroke={isOn ? color : '#3d342b'}
                 strokeWidth="1.5"
               />
+              <text
+                x={cx}
+                y={cy + 4}
+                textAnchor="middle"
+                fontFamily="JetBrains Mono, monospace"
+                fontSize="11"
+                fontWeight="600"
+                fill={isOn ? '#f4ecdc' : '#3d342b'}
+                pointerEvents="none"
+              >
+                {label}
+              </text>
             </g>
           );
         })}

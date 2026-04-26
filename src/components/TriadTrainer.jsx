@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import Staff, { layoutChordNotes } from './Staff.jsx';
+import TrainerLayout from './TrainerLayout.jsx';
 
 // ============================================================================
 // TRIAD DATA
@@ -1025,8 +1026,158 @@ export default function TriadTrainer() {
   `;
 
   // ============================================================================
-  // RENDER
+  // RENDER — playing view uses TrainerLayout for mobile-first full-viewport
   // ============================================================================
+  if (mode === 'playing' && current) {
+    const inputInterface = !feedback && direction === 'chord-to-notes' && options.staffMode ? (
+      <Staff
+        mode="input"
+        inputNotes={answers.staffNotes || []}
+        onInputChange={(next) => setAnswers((a) => ({ ...a, staffNotes: next }))}
+        maxNotes={current.notes.length}
+      />
+    ) : !feedback && direction === 'chord-to-notes' ? (
+      <>
+        <div className="tt-input-row" style={{ flexWrap: 'wrap', justifyContent: 'center' }}>
+          {current.notes.map((_, i) => {
+            const placeholders = ['1', '3', '5', '7', '9', '13'];
+            return (
+              <input
+                key={i}
+                className="tt-note-input"
+                type="text"
+                autoFocus={i === 0}
+                value={answers.notes[i] || ''}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  const forced = v ? v[0].toUpperCase() + v.slice(1) : v;
+                  const next = [...(answers.notes || [])];
+                  next[i] = forced;
+                  setAnswers((a) => ({ ...a, notes: next }));
+                }}
+                placeholder={placeholders[i] || '?'}
+                maxLength={3}
+              />
+            );
+          })}
+        </div>
+        <div className="tt-hint">Accepts # or b · Any order</div>
+      </>
+    ) : !feedback && direction === 'notes-to-chord' ? (
+      <>
+        <div className="tt-input-row">
+          <input
+            className="tt-chord-input"
+            type="text"
+            autoFocus
+            value={answers.chord}
+            onChange={(e) => setAnswers((a) => ({ ...a, chord: e.target.value }))}
+            placeholder="e.g. Cm, Fmaj7, G7, Dm9"
+          />
+        </div>
+        <div className="tt-hint">m = minor · ° = dim · + = aug · maj7 · 7 · m7 · m7♭5 · °7 · 9 · 13</div>
+      </>
+    ) : null;
+
+    const submitButton = !feedback ? (
+      <button className="trainer-submit" onClick={handleSubmit}>Submit answer ⏎</button>
+    ) : (
+      <button className="trainer-submit" onClick={handleNext}>
+        {idx + 1 >= deck.length ? 'See your score ⏎' : 'Next card ⏎'}
+      </button>
+    );
+
+    return (
+      <>
+        <style>{css}</style>
+        <TrainerLayout
+          topLeft={
+            <button className="trainer-end-btn" onClick={() => setMode('finished')}>
+              <span className="trainer-end-arrow">×</span>End
+            </button>
+          }
+          topCenter={<>{String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</>}
+          topRight={
+            <span className="trainer-time-line">
+              <span>{formatTime(elapsed)}</span>
+              {bestForDirection(direction) != null && (
+                <span className="trainer-time-best">/ {formatTime(bestForDirection(direction))}</span>
+              )}
+            </span>
+          }
+          progress={idx / deck.length}
+          controls={
+            <>
+              {inputInterface}
+              {submitButton}
+            </>
+          }
+        >
+          <div className="tt-card" style={{ width: '100%', maxWidth: '480px' }}>
+            <div className={`tt-card-inner ${flipped ? 'flipped' : ''}`}>
+              {/* FRONT */}
+              <div className="tt-card-face">
+                {direction === 'chord-to-notes' && (
+                  <>
+                    <div className="tt-card-label">— Spell the chord —</div>
+                    <div className="tt-chord-display">{formatChord(current.chordName)}</div>
+                    <div className="tt-chord-quality">{current.qualityLabel}</div>
+                  </>
+                )}
+                {direction === 'notes-to-chord' && (
+                  <>
+                    <div className="tt-card-label">— Name the chord —</div>
+                    {options.staffMode ? (
+                      <Staff mode="display" displayNotes={layoutChordNotes(current.notes)} />
+                    ) : (
+                      <div className="tt-notes-display">
+                        {current.notes.map((n, i) => (
+                          <React.Fragment key={i}>
+                            <span className="tt-note-chip">{formatNote(n)}</span>
+                            {i < current.notes.length - 1 && <span className="tt-note-sep">·</span>}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+              {/* BACK */}
+              <div className={`tt-card-face tt-card-back ${feedback || ''}`}>
+                {feedback === 'correct' && (
+                  <>
+                    <div className="tt-feedback-mark correct">✓</div>
+                    <div className="tt-feedback-label correct">— Correct —</div>
+                    <div className="tt-answer-block">
+                      <div className="tt-answer-small">The answer</div>
+                      <div className="tt-answer-value">{correctAnswerDisplay(direction, current)}</div>
+                    </div>
+                  </>
+                )}
+                {feedback === 'wrong' && (
+                  <>
+                    <div className="tt-feedback-mark wrong">✗</div>
+                    <div className="tt-feedback-label wrong">— Not quite —</div>
+                    <div className="tt-answer-block">
+                      <div className="tt-answer-small">Your answer</div>
+                      <div className="tt-answer-value was-wrong">
+                        {results[results.length - 1]?.userAnswer || ''}
+                      </div>
+                    </div>
+                    <div className="tt-answer-block">
+                      <div className="tt-answer-small">Correct answer</div>
+                      <div className="tt-answer-value">{correctAnswerDisplay(direction, current)}</div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </TrainerLayout>
+      </>
+    );
+  }
+
   return (
     <div className="tt-root">
       <style>{css}</style>
@@ -1212,155 +1363,6 @@ export default function TriadTrainer() {
               <span>← Change chord selection</span>
               <span></span>
             </button>
-          </div>
-        )}
-
-        {/* PLAYING */}
-        {mode === 'playing' && current && (
-          <div className="tt-fade-in">
-            <div className="tt-progress-row">
-              <span>Card {String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</span>
-              <span>
-                Time · {formatTime(elapsed)}
-                {bestForDirection(direction) != null && (
-                  <span className="tt-best-inline"> · best {formatTime(bestForDirection(direction))}</span>
-                )}
-              </span>
-              <span>Score · {score}</span>
-            </div>
-            <div className="tt-progress-bar">
-              <div className="tt-progress-fill" style={{ width: `${(idx / deck.length) * 100}%` }} />
-            </div>
-
-            <div className="tt-card">
-              <div className={`tt-card-inner ${flipped ? 'flipped' : ''}`}>
-
-                {/* FRONT */}
-                <div className="tt-card-face">
-                  {direction === 'chord-to-notes' && (
-                    <>
-                      <div className="tt-card-label">— Spell the chord —</div>
-                      <div className="tt-chord-display">{formatChord(current.chordName)}</div>
-                      <div className="tt-chord-quality">{current.qualityLabel}</div>
-                    </>
-                  )}
-                  {direction === 'notes-to-chord' && (
-                    <>
-                      <div className="tt-card-label">— Name the chord —</div>
-                      {options.staffMode ? (
-                        <Staff mode="display" displayNotes={layoutChordNotes(current.notes)} />
-                      ) : (
-                        <div className="tt-notes-display">
-                          {current.notes.map((n, i) => (
-                            <React.Fragment key={i}>
-                              <span className="tt-note-chip">{formatNote(n)}</span>
-                              {i < current.notes.length - 1 && <span className="tt-note-sep">·</span>}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                {/* BACK (feedback) */}
-                <div className={`tt-card-face tt-card-back ${feedback || ''}`}>
-                  {feedback === 'correct' && (
-                    <>
-                      <div className="tt-feedback-mark correct">✓</div>
-                      <div className="tt-feedback-label correct">— Correct —</div>
-                      <div className="tt-answer-block">
-                        <div className="tt-answer-small">The answer</div>
-                        <div className="tt-answer-value">
-                          {correctAnswerDisplay(direction, current)}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {feedback === 'wrong' && (
-                    <>
-                      <div className="tt-feedback-mark wrong">✗</div>
-                      <div className="tt-feedback-label wrong">— Not quite —</div>
-                      <div className="tt-answer-block">
-                        <div className="tt-answer-small">Your answer</div>
-                        <div className="tt-answer-value was-wrong">
-                          {results[results.length - 1]?.userAnswer || ''}
-                        </div>
-                      </div>
-                      <div className="tt-answer-block">
-                        <div className="tt-answer-small">Correct answer</div>
-                        <div className="tt-answer-value">
-                          {correctAnswerDisplay(direction, current)}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-              </div>
-            </div>
-
-            {/* INPUTS */}
-            {!feedback && direction === 'chord-to-notes' && options.staffMode && (
-              <Staff
-                mode="input"
-                inputNotes={answers.staffNotes || []}
-                onInputChange={(next) => setAnswers((a) => ({ ...a, staffNotes: next }))}
-                maxNotes={current.notes.length}
-              />
-            )}
-            {!feedback && direction === 'chord-to-notes' && !options.staffMode && (
-              <>
-                <div className="tt-input-row" style={{ flexWrap: 'wrap' }}>
-                  {current.notes.map((_, i) => {
-                    const placeholders = ['1', '3', '5', '7', '9', '13'];
-                    return (
-                      <input
-                        key={i}
-                        className="tt-note-input"
-                        type="text"
-                        autoFocus={i === 0}
-                        value={answers.notes[i] || ''}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          const forced = v ? v[0].toUpperCase() + v.slice(1) : v;
-                          const next = [...(answers.notes || [])];
-                          next[i] = forced;
-                          setAnswers((a) => ({ ...a, notes: next }));
-                        }}
-                        placeholder={placeholders[i] || '?'}
-                        maxLength={3}
-                      />
-                    );
-                  })}
-                </div>
-                <div className="tt-hint">Accepts # or b · Any order</div>
-              </>
-            )}
-            {!feedback && direction === 'notes-to-chord' && (
-              <>
-                <div className="tt-input-row">
-                  <input
-                    className="tt-chord-input"
-                    type="text"
-                    autoFocus
-                    value={answers.chord}
-                    onChange={(e) => setAnswers((a) => ({ ...a, chord: e.target.value }))}
-                    placeholder="e.g. Cm, Fmaj7, G7, Dm9"
-                  />
-                </div>
-                <div className="tt-hint">m = minor · ° = dim · + = aug · maj7 · 7 · m7 · m7♭5 · °7 · 9 · 13</div>
-              </>
-            )}
-            {!feedback ? (
-              <button className="tt-btn" onClick={handleSubmit}>
-                Submit answer ⏎
-              </button>
-            ) : (
-              <button className="tt-btn" onClick={handleNext}>
-                {idx + 1 >= deck.length ? 'See your score ⏎' : 'Next card ⏎'}
-              </button>
-            )}
           </div>
         )}
 

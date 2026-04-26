@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
+import TrainerLayout from './TrainerLayout.jsx';
 
 // ============================================================================
 // KEY SIGNATURE DATA — all 15 major keys
@@ -953,6 +954,140 @@ export default function CircleOfFifthsTrainer() {
   // ============================================================================
   // RENDER
   // ============================================================================
+  if (mode === 'playing' && current) {
+    const inputInterface = !feedback && direction === 'key-to-accidentals' ? (
+      <>
+        <div className="cof-letter-grid">
+          {LETTERS.map((letter) => (
+            <div key={letter} className="cof-letter-col">
+              <div className="cof-letter-label">{letter}</div>
+              <button
+                className={`cof-acc-btn ${letterAnswers[letter] === '#' ? 'active-sharp' : ''}`}
+                onClick={() => toggleLetter(letter, '#')}
+              >♯</button>
+              <button
+                className={`cof-acc-btn ${letterAnswers[letter] === 'b' ? 'active-flat' : ''}`}
+                onClick={() => toggleLetter(letter, 'b')}
+              >♭</button>
+            </div>
+          ))}
+        </div>
+        <div className="cof-hint">Tap again to deselect · leave blank for naturals</div>
+      </>
+    ) : !feedback && direction === 'notes-to-key' ? (
+      <>
+        <input
+          className="cof-key-input"
+          type="text"
+          autoFocus
+          value={keyAnswer}
+          onChange={(e) => {
+            const v = e.target.value;
+            setKeyAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
+          }}
+          placeholder={options.minor ? 'e.g. G, F#, Am, Ebm' : 'e.g. G, Eb, F#'}
+        />
+        <div className="cof-hint">Name the key · # or b accepted</div>
+      </>
+    ) : null;
+
+    const submitButton = !feedback ? (
+      <button className="trainer-submit" onClick={handleSubmit}>Save answer ⏎</button>
+    ) : (
+      <button className="trainer-submit" onClick={handleNext}>
+        {idx + 1 >= deck.length ? 'See your score ⏎' : 'Next card ⏎'}
+      </button>
+    );
+
+    return (
+      <>
+        <style>{css}</style>
+        <TrainerLayout
+          topLeft={
+            <button className="trainer-end-btn" onClick={() => setMode('finished')}>
+              <span className="trainer-end-arrow">×</span>End
+            </button>
+          }
+          topCenter={<>{String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</>}
+          topRight={
+            <span className="trainer-time-line">
+              <span>{formatTime(elapsed)}</span>
+              {bestForDirection(direction) != null && (
+                <span className="trainer-time-best">/ {formatTime(bestForDirection(direction))}</span>
+              )}
+            </span>
+          }
+          progress={idx / deck.length}
+          controls={<>{inputInterface}{submitButton}</>}
+        >
+          <div className="cof-card" style={{ width: '100%', maxWidth: '480px' }}>
+            <div className={`cof-card-inner ${flipped ? 'flipped' : ''}`}>
+              <div className="cof-card-face">
+                {direction === 'key-to-accidentals' ? (
+                  <>
+                    <div className="cof-card-label">— Key of —</div>
+                    <div className="cof-key-display">{formatName(current.tonic)}</div>
+                    <div className="cof-key-quality">{current.mode}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="cof-card-label">— Notes of the scale —</div>
+                    <div className="cof-notes-display">
+                      {notesInKey(current).map((n, i, arr) => (
+                        <React.Fragment key={i}>
+                          <span className="cof-note-chip">{formatName(n)}</span>
+                          {i < arr.length - 1 && <span className="cof-note-sep">·</span>}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className={`cof-card-face cof-card-back ${feedback || ''}`}>
+                {feedback === 'correct' && (
+                  <>
+                    <div className="cof-feedback-mark correct">✓</div>
+                    <div className="cof-feedback-label correct">— Correct —</div>
+                    <div className="cof-answer-block">
+                      <div className="cof-answer-small">
+                        {direction === 'key-to-accidentals' ? 'Accidentals' : 'The key'}
+                      </div>
+                      <div className="cof-answer-value">
+                        {direction === 'key-to-accidentals'
+                          ? correctAccidentalDisplay
+                          : formatName(current.tonic) + ' ' + current.mode}
+                      </div>
+                    </div>
+                  </>
+                )}
+                {feedback === 'wrong' && (
+                  <>
+                    <div className="cof-feedback-mark wrong">✗</div>
+                    <div className="cof-feedback-label wrong">— Not quite —</div>
+                    <div className="cof-answer-block">
+                      <div className="cof-answer-small">Your answer</div>
+                      <div className="cof-answer-value was-wrong">
+                        {results[results.length - 1]?.userAnswer || ''}
+                      </div>
+                    </div>
+                    <div className="cof-answer-block">
+                      <div className="cof-answer-small">Correct answer</div>
+                      <div className="cof-answer-value">
+                        {direction === 'key-to-accidentals'
+                          ? correctAccidentalDisplay
+                          : formatName(current.tonic) + ' ' + current.mode}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </TrainerLayout>
+      </>
+    );
+  }
+
   return (
     <div className="cof-root">
       <style>{css}</style>
@@ -1053,142 +1188,6 @@ export default function CircleOfFifthsTrainer() {
         )}
 
         {/* PLAYING */}
-        {mode === 'playing' && current && (
-          <div className="cof-fade-in">
-            <div className="cof-progress-row">
-              <span>Card {String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</span>
-              <span>
-                Time · {formatTime(elapsed)}
-                {bestForDirection(direction) != null && (
-                  <span className="cof-best-inline"> · best {formatTime(bestForDirection(direction))}</span>
-                )}
-              </span>
-              <span>Score · {score}</span>
-            </div>
-            <div className="cof-progress-bar">
-              <div className="cof-progress-fill" style={{ width: `${(idx / deck.length) * 100}%` }} />
-            </div>
-
-            <div className="cof-card">
-              <div className={`cof-card-inner ${flipped ? 'flipped' : ''}`}>
-
-                {/* FRONT */}
-                <div className="cof-card-face">
-                  {direction === 'key-to-accidentals' ? (
-                    <>
-                      <div className="cof-card-label">— Key of —</div>
-                      <div className="cof-key-display">{formatName(current.tonic)}</div>
-                      <div className="cof-key-quality">{current.mode}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="cof-card-label">— Notes of the scale —</div>
-                      <div className="cof-notes-display">
-                        {notesInKey(current).map((n, i, arr) => (
-                          <React.Fragment key={i}>
-                            <span className="cof-note-chip">{formatName(n)}</span>
-                            {i < arr.length - 1 && <span className="cof-note-sep">·</span>}
-                          </React.Fragment>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {/* BACK (feedback) */}
-                <div className={`cof-card-face cof-card-back ${feedback || ''}`}>
-                  {feedback === 'correct' && (
-                    <>
-                      <div className="cof-feedback-mark correct">✓</div>
-                      <div className="cof-feedback-label correct">— Correct —</div>
-                      <div className="cof-answer-block">
-                        <div className="cof-answer-small">
-                          {direction === 'key-to-accidentals' ? 'Accidentals' : 'The key'}
-                        </div>
-                        <div className="cof-answer-value">
-                          {direction === 'key-to-accidentals'
-                            ? correctAccidentalDisplay
-                            : formatName(current.tonic) + ' ' + current.mode}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                  {feedback === 'wrong' && (
-                    <>
-                      <div className="cof-feedback-mark wrong">✗</div>
-                      <div className="cof-feedback-label wrong">— Not quite —</div>
-                      <div className="cof-answer-block">
-                        <div className="cof-answer-small">Your answer</div>
-                        <div className="cof-answer-value was-wrong">
-                          {results[results.length - 1]?.userAnswer || ''}
-                        </div>
-                      </div>
-                      <div className="cof-answer-block">
-                        <div className="cof-answer-small">Correct answer</div>
-                        <div className="cof-answer-value">
-                          {direction === 'key-to-accidentals'
-                            ? correctAccidentalDisplay
-                            : formatName(current.tonic) + ' ' + current.mode}
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-              </div>
-            </div>
-
-            {/* INPUT AREA */}
-            {!feedback && direction === 'key-to-accidentals' && (
-              <>
-                <div className="cof-letter-grid">
-                  {LETTERS.map((letter) => (
-                    <div key={letter} className="cof-letter-col">
-                      <div className="cof-letter-label">{letter}</div>
-                      <button
-                        className={`cof-acc-btn ${letterAnswers[letter] === '#' ? 'active-sharp' : ''}`}
-                        onClick={() => toggleLetter(letter, '#')}
-                      >♯</button>
-                      <button
-                        className={`cof-acc-btn ${letterAnswers[letter] === 'b' ? 'active-flat' : ''}`}
-                        onClick={() => toggleLetter(letter, 'b')}
-                      >♭</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="cof-hint">Tap again to deselect · leave blank for naturals</div>
-              </>
-            )}
-
-            {!feedback && direction === 'notes-to-key' && (
-              <>
-                <input
-                  className="cof-key-input"
-                  type="text"
-                  autoFocus
-                  value={keyAnswer}
-                  onChange={(e) => {
-                    const v = e.target.value;
-                    setKeyAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
-                  }}
-                  placeholder={options.minor ? 'e.g. G, F#, Am, Ebm' : 'e.g. G, Eb, F#'}
-                />
-                <div className="cof-hint">Name the major key · # or b accepted</div>
-              </>
-            )}
-
-            {!feedback ? (
-              <button className="cof-btn" onClick={handleSubmit}>
-                Save answer ⏎
-              </button>
-            ) : (
-              <button className="cof-btn" onClick={handleNext}>
-                {idx + 1 >= deck.length ? 'See your score ⏎' : 'Next card ⏎'}
-              </button>
-            )}
-          </div>
-        )}
-
         {/* FINISHED */}
         {mode === 'finished' && (
           <div className="cof-fade-in">

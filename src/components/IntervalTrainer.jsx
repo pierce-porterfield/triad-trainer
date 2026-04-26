@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
+import TrainerLayout from './TrainerLayout.jsx';
 
 // ============================================================================
 // INTERVAL DATA
@@ -601,6 +602,89 @@ export default function IntervalTrainer() {
     .it-new-best { color: var(--accent); font-weight: 600; font-style: normal; }
   `;
 
+  if (mode === 'playing' && current) {
+    const inputInterface = !feedback ? (
+      <>
+        <div className="it-input-row">
+          <input
+            className="it-note-input"
+            type="text"
+            autoFocus
+            value={answer}
+            onChange={(e) => {
+              const v = e.target.value;
+              setAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
+            }}
+            placeholder="?"
+            maxLength={3}
+          />
+        </div>
+        <div className="it-hint">Accepts # or b · Enter to submit</div>
+      </>
+    ) : null;
+
+    const submitButton = !feedback ? (
+      <button className="trainer-submit" onClick={submit}>Submit ⏎</button>
+    ) : (
+      <button className="trainer-submit" onClick={next}>
+        {idx + 1 >= deck.length ? 'Finish ⏎' : 'Next ⏎'}
+      </button>
+    );
+
+    return (
+      <>
+        <style>{css}</style>
+        <TrainerLayout
+          topLeft={
+            <button className="trainer-end-btn" onClick={() => setMode('done')}>
+              <span className="trainer-end-arrow">×</span>End
+            </button>
+          }
+          topCenter={<>{String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</>}
+          topRight={
+            <span className="trainer-time-line">
+              <span>{formatTime(elapsed)}</span>
+              {bestTime != null && <span className="trainer-time-best">/ {formatTime(bestTime)}</span>}
+            </span>
+          }
+          progress={idx / deck.length}
+          controls={<>{inputInterface}{submitButton}</>}
+        >
+          <div className={`it-card ${feedback || ''}`} style={{ width: '100%', maxWidth: '480px' }}>
+            {!feedback && (
+              <>
+                <div className="it-card-label">— A {current.interval.label} above —</div>
+                <div className="it-prompt-root">{formatNote(current.root)}</div>
+              </>
+            )}
+            {feedback === 'correct' && (
+              <>
+                <div className="it-feedback-mark correct">✓</div>
+                <div className="it-card-label">— Correct —</div>
+                <div className="it-answer-row">
+                  {current.interval.label} above {formatNote(current.root)} is{' '}
+                  <strong>{formatNote(current.note)}</strong>
+                </div>
+              </>
+            )}
+            {feedback === 'wrong' && (
+              <>
+                <div className="it-feedback-mark wrong">✗</div>
+                <div className="it-card-label">— Not quite —</div>
+                <div className="it-answer-row was-wrong">
+                  Your answer · <strong>{lastWrongAnswer}</strong>
+                </div>
+                <div className="it-answer-row">
+                  Correct · <strong>{formatNote(current.note)}</strong>
+                </div>
+              </>
+            )}
+          </div>
+        </TrainerLayout>
+      </>
+    );
+  }
+
   return (
     <div className="it-root">
       <style>{css}</style>
@@ -680,87 +764,6 @@ export default function IntervalTrainer() {
             <div className="it-deck-info">
               Name the note that lies the chosen interval above the given root.
             </div>
-          </div>
-        )}
-
-        {/* PLAYING */}
-        {mode === 'playing' && current && (
-          <div className="it-fade-in">
-            <div className="it-progress-row">
-              <span>Card {String(idx + 1).padStart(2, '0')} / {String(deck.length).padStart(2, '0')}</span>
-              <span>
-                Time · {formatTime(elapsed)}
-                {bestTime != null && (
-                  <span className="it-best-inline"> · best {formatTime(bestTime)}</span>
-                )}
-              </span>
-              <span>Score · {score}</span>
-            </div>
-            <div className="it-progress-bar">
-              <div className="it-progress-fill" style={{ width: `${(idx / deck.length) * 100}%` }} />
-            </div>
-
-            <div className={`it-card ${feedback || ''}`}>
-              {!feedback && (
-                <>
-                  <div className="it-card-label">— A {current.interval.label} above —</div>
-                  <div className="it-prompt-root">{formatNote(current.root)}</div>
-                </>
-              )}
-              {feedback === 'correct' && (
-                <>
-                  <div className="it-feedback-mark correct">✓</div>
-                  <div className="it-card-label">— Correct —</div>
-                  <div className="it-answer-row">
-                    {current.interval.label} above {formatNote(current.root)} is{' '}
-                    <strong>{formatNote(current.note)}</strong>
-                  </div>
-                </>
-              )}
-              {feedback === 'wrong' && (
-                <>
-                  <div className="it-feedback-mark wrong">✗</div>
-                  <div className="it-card-label">— Not quite —</div>
-                  <div className="it-answer-row was-wrong">
-                    Your answer · <strong>{lastWrongAnswer}</strong>
-                  </div>
-                  <div className="it-answer-row">
-                    Correct · <strong>{formatNote(current.note)}</strong>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {!feedback && (
-              <>
-                <div className="it-input-row">
-                  <input
-                    className="it-note-input"
-                    type="text"
-                    autoFocus
-                    value={answer}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      setAnswer(v ? v[0].toUpperCase() + v.slice(1) : v);
-                    }}
-                    placeholder="?"
-                    maxLength={3}
-                  />
-                </div>
-                <div className="it-hint">Accepts # or b · Enter to submit</div>
-                <div className="it-action-row">
-                  <button className="it-btn" onClick={submit}>Submit</button>
-                </div>
-              </>
-            )}
-
-            {feedback && (
-              <div className="it-action-row">
-                <button className="it-btn" onClick={next}>
-                  {idx + 1 >= deck.length ? 'Finish' : 'Next →'}
-                </button>
-              </div>
-            )}
           </div>
         )}
 

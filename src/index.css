@@ -1,3 +1,17 @@
+:root {
+  --ink: #1a1410;
+  --ink-soft: #3d342b;
+  --paper: #f4ecdc;
+  --paper-deep: #ebe0c9;
+  --paper-shadow: #d9cbad;
+  --accent: #8b2c20;
+  --accent-deep: #5e1d14;
+  --gold: #a88734;
+  --correct: #3d5a3a;
+  --wrong: #8b2c20;
+  --green: #2f6d4f;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -8,6 +22,7 @@ html, body {
   background: #f4ecdc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
@@ -16,10 +31,205 @@ html, body {
 
 button {
   font-family: inherit;
+  transition: transform 0.1s ease;
+}
+button:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 input {
   font-family: inherit;
+}
+
+/* ============================================================================
+ * TrainerLayout — mobile-first playing view
+ * ========================================================================= */
+.trainer-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;          /* fallback */
+  height: 100dvh;
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse at top left, rgba(168, 135, 52, 0.08), transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(139, 44, 32, 0.06), transparent 50%);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  overscroll-behavior: contain;
+  overflow: hidden;
+  position: relative;
+}
+.trainer-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.trainer-topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 0.75rem;
+  padding-top: env(safe-area-inset-top);
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+  gap: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+.trainer-topbar-slot {
+  display: flex;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.trainer-topbar-left { flex: 1 1 0; justify-content: flex-start; }
+.trainer-topbar-center { flex: 0 0 auto; justify-content: center; }
+.trainer-topbar-right { flex: 1 1 0; justify-content: flex-end; }
+
+.trainer-progress {
+  flex: 0 0 auto;
+  height: 3px;
+  background: var(--paper-shadow);
+  position: relative;
+  z-index: 1;
+}
+.trainer-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.trainer-card-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  overflow: auto;
+  position: relative;
+  z-index: 1;
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+}
+
+.trainer-controls {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+  position: relative;
+  z-index: 1;
+}
+
+/* End-study button used in the top-left during play */
+.trainer-end-btn {
+  background: transparent;
+  border: 1px solid var(--ink-soft);
+  color: var(--ink-soft);
+  padding: 0.4rem 0.7rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 0;
+}
+.trainer-end-btn:hover { color: var(--accent); border-color: var(--accent); }
+.trainer-end-arrow { font-size: 0.85rem; margin-right: 0.4rem; }
+
+/* Submit/next button — full width, large tap target */
+.trainer-submit {
+  width: 100%;
+  min-height: 52px;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  padding: 0.9rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.trainer-submit:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+.trainer-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.trainer-time-line {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: baseline;
+}
+.trainer-time-best { opacity: 0.65; font-size: 0.85em; }
+
+/* Music Staff (shared across trainers) */
+.staff-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+.staff-svg {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  background: #f4ecdc;
+  border: 1px solid #1a1410;
+  user-select: none;
+  touch-action: manipulation;
+}
+.staff-acc-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.staff-acc-btn {
+  font-size: 1.3rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid #1a1410;
+  background: #f4ecdc;
+  color: #1a1410;
+  cursor: pointer;
+  font-family: 'Times New Roman', serif;
+  line-height: 1;
+}
+.staff-acc-btn:hover { background: #ebe0c9; }
+.staff-acc-btn.on {
+  background: #1a1410;
+  color: #f4ecdc;
+}
+.staff-acc-btn.ghost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  width: auto;
+  padding: 0 0.75rem;
+}
+.staff-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #3d342b;
+  opacity: 0.7;
+  margin-top: 0.5rem;
+  text-align: center;
 }
 
 /* Music Staff (shared across trainers) */

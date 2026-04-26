@@ -88,10 +88,10 @@ function StaffLines() {
 function TrebleClef() {
   return (
     <text
-      x={STAFF_LEFT - 50}
-      y={STAFF_TOP + 4 * LINE_GAP + 22}
+      x={STAFF_LEFT - 8}
+      y={STAFF_TOP + 4 * LINE_GAP + 32}
       fontFamily="Times New Roman, serif"
-      fontSize="92"
+      fontSize="148"
       fill="#1a1410"
     >
       {'\u{1D11E}'}
@@ -195,20 +195,20 @@ function DragHandle({ active, dragStep }) {
       <circle
         cx={(HANDLE_LEFT + HANDLE_RIGHT) / 2}
         cy={knobY}
-        r={active ? 16 : 12}
+        r={active ? 24 : 20}
         fill={active ? 'var(--accent)' : 'var(--gold)'}
         stroke="#1a1410"
         strokeWidth="1.5"
-        opacity={active ? 1 : 0.85}
+        opacity={active ? 1 : 0.9}
       />
       <text
         x={(HANDLE_LEFT + HANDLE_RIGHT) / 2}
-        y={knobY + 5}
+        y={knobY + 4}
         textAnchor="middle"
         fontFamily="JetBrains Mono, monospace"
-        fontSize="11"
+        fontSize="10"
         fill="#f4ecdc"
-        letterSpacing="0.05em"
+        letterSpacing="0.1em"
       >
         DRAG
       </text>

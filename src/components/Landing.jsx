@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getDailyPuzzle, getUtcDateString } from '../utils/dailyPuzzle';
+import { loadState, hasPlayedToday } from '../utils/dailyState';
+import { formatTime } from '../utils/bestTimes';
 
 export default function Landing() {
+  const puzzle = getDailyPuzzle();
+  const state = loadState();
+  const playedToday = hasPlayedToday();
+  const todayResult = playedToday ? state.lastResult : null;
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&family=Italiana&display=swap');
 
@@ -203,6 +210,117 @@ export default function Landing() {
     .landing-fade-in {
       animation: fadeIn 0.4s ease forwards;
     }
+
+    /* Daily card — sits in its own row above the trainer grid */
+    .daily-row {
+      margin-bottom: 1.5rem;
+    }
+    .daily-card {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      background: var(--paper-deep);
+      border: 1px solid var(--ink);
+      padding: 1.5rem 1.5rem;
+      box-shadow: 8px 8px 0 var(--gold);
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+    .daily-card:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 11px 11px 0 var(--accent);
+    }
+    .daily-card::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--ink);
+      opacity: 0.25;
+      pointer-events: none;
+    }
+    @media (min-width: 720px) {
+      .daily-card {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        padding: 1.75rem 2rem;
+      }
+    }
+    .daily-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 0.5rem;
+    }
+    .daily-title {
+      font-family: 'Italiana', serif;
+      font-size: clamp(2rem, 5.5vw, 3.25rem);
+      line-height: 0.95;
+      margin: 0 0 0.5rem;
+    }
+    .daily-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--accent);
+    }
+    .daily-meta {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .daily-stats {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .daily-stats strong {
+      font-family: 'Italiana', serif;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 1.1rem;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      margin-left: 0.35rem;
+    }
+    .daily-cta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--ink);
+      padding-top: 0.75rem;
+      border-top: 1px dotted var(--ink-soft);
+    }
+    @media (min-width: 720px) {
+      .daily-cta {
+        border-top: none;
+        padding-top: 0;
+        border-left: 1px dotted var(--ink-soft);
+        padding-left: 1.5rem;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.4rem;
+      }
+    }
+    .daily-cta-arrow {
+      font-family: 'Italiana', serif;
+      font-size: 1.6rem;
+      letter-spacing: normal;
+      color: var(--accent);
+    }
   `;
 
   return (
@@ -218,6 +336,35 @@ export default function Landing() {
           <div className="landing-rule"><span className="landing-rule-mark">❦</span></div>
           <div className="landing-subtitle">Studies for the daily practice</div>
         </header>
+
+        <div className="daily-row">
+          <Link to="/daily" className="daily-card">
+            <div>
+              <div className="daily-eyebrow">— Today's puzzle —</div>
+              <h2 className="daily-title">
+                Triad<em>le</em> · #{String(puzzle.number).padStart(3, '0')}
+              </h2>
+              <div className="daily-meta">
+                {puzzle.date} · 3 rounds · 15 cards
+              </div>
+              <div className="daily-stats">
+                {state.currentStreak > 0 && (
+                  <span>Streak <strong>🔥 {state.currentStreak}</strong></span>
+                )}
+                {state.bestTime != null && (
+                  <span>Best <strong>{formatTime(state.bestTime * 1000)}</strong></span>
+                )}
+                {todayResult && (
+                  <span>Today <strong>{formatTime(todayResult.time * 1000)}</strong></span>
+                )}
+              </div>
+            </div>
+            <div className="daily-cta">
+              <span>{playedToday ? 'See result' : 'Begin'}</span>
+              <span className="daily-cta-arrow">→</span>
+            </div>
+          </Link>
+        </div>
 
         <div className="landing-grid">
 

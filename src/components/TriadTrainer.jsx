@@ -508,7 +508,8 @@ export default function TriadTrainer() {
     }
     .tt-card-inner {
       position: relative;
-      min-height: 380px;
+      display: grid;
+      grid-template-areas: 'face';
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }
@@ -516,18 +517,18 @@ export default function TriadTrainer() {
       transform: rotateY(180deg);
     }
     .tt-card-face {
-      position: absolute;
-      inset: 0;
+      grid-area: face;
       backface-visibility: hidden;
       background: var(--paper-deep);
       border: 1px solid var(--ink);
-      padding: 2.25rem 1.5rem 1.75rem;
+      padding: 2rem 1.5rem 1.75rem;
       box-shadow: 8px 8px 0 var(--paper-shadow);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: center;
       align-items: center;
       transition: opacity 0.18s ease;
+      min-height: 240px;
     }
     /* Hide the question face quickly as the card crosses the midpoint */
     .tt-card-inner.flipped .tt-card-face:not(.tt-card-back) {

@@ -1,0 +1,44 @@
+# Daily rebuild — rolls scheduled chord/key reference pages live.
+#
+# Each entry in src/data/chordContent.js and src/data/keyContent.js carries a
+# `publishAt: 'YYYY-MM-DD'` UTC date. Vercel only redeploys on git push by
+# default, so a scheduled page wouldn't actually appear in production until
+# the next code push. This workflow fires Vercel's deploy hook every day at
+# 06:00 UTC, which rebuilds the site against today's date and publishes any
+# slugs whose date has arrived.
+#
+# Setup (one-time):
+#   1. In Vercel: Project → Settings → Git → Deploy Hooks. Create a hook
+#      named "Daily rebuild" pointing at the production branch (main).
+#      Copy the resulting URL.
+#   2. In GitHub: Settings → Secrets and variables → Actions → New
+#      repository secret. Name: VERCEL_DEPLOY_HOOK. Value: the URL.
+#
+# After that, the rebuild runs automatically. You can also trigger it
+# manually from the GitHub Actions tab.
+
+name: Daily rebuild
+
+on:
+  schedule:
+    # 06:00 UTC every day. Picks a low-traffic time and gives Search Console
+    # a stable daily-discoverable cadence.
+    - cron: '0 6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  trigger-vercel-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::VERCEL_DEPLOY_HOOK secret is not set. See .github/workflows/daily-rebuild.yml for setup."
+            exit 1
+          fi
+          curl -fsS -X POST "$HOOK" \
+            -H "Content-Type: application/json" \
+            -d '{}'
+          echo "Triggered Vercel rebuild."

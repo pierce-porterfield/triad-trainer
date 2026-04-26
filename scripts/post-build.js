@@ -4,28 +4,36 @@
 //
 // Sitemap covers:
 //   - The home + trainer routes (always live)
-//   - Every published chord/key reference page
+//   - Every chord/key reference page whose `publishAt` UTC date is today or
+//     earlier (matching what App.jsx routes will have rendered)
 //
-// Stub slugs (registered but `published: false`) are intentionally NOT in the
-// sitemap — they don't have a route yet. Phase rollout per seo-strategy.md.
+// We avoid importing the content modules directly because they pull in
+// triads.js, which uses extensionless relative imports that Node ESM
+// rejects. Instead we scrape `'slug': { publishAt: 'YYYY-MM-DD' }` pairs
+// out of source. Cheap and keeps Node loader-config-free.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-// Avoid importing chordContent.js directly — it imports triads.js, which uses
-// extensionless relative imports that Node ESM rejects. Instead, scrape the
-// published-slug list out of chordContent.js source. Cheap and keeps Node
-// loader-config-free.
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const contentSrc = readFileSync(
-  resolve(__dirname, '..', 'src/data/chordContent.js'),
-  'utf8',
-);
-const PUBLISHED_CHORD_SLUGS = [...contentSrc.matchAll(/'([a-z-]+)':\s*\{\s*published:\s*true/g)]
-  .map((m) => m[1]);
-
 const distDir = resolve(__dirname, '..', 'dist');
+
+const today = new Date().toISOString().slice(0, 10);
+
+// Pull every `'slug': { publishAt: 'YYYY-MM-DD' }` pair (multiline tolerant).
+const scrapeLiveSlugs = (path) => {
+  const src = readFileSync(resolve(__dirname, '..', path), 'utf8');
+  const re = /'([a-z][a-z0-9-]*)':\s*\{\s*publishAt:\s*'(\d{4}-\d{2}-\d{2})'/g;
+  const live = [];
+  for (const m of src.matchAll(re)) {
+    if (m[2] <= today) live.push(m[1]);
+  }
+  return live;
+};
+
+const liveChords = scrapeLiveSlugs('src/data/chordContent.js');
+const liveKeys = scrapeLiveSlugs('src/data/keyContent.js');
 
 const SITE = 'https://triadtrainer.org';
 
@@ -37,11 +45,14 @@ const STATIC_ROUTES = [
   { path: '/daily',            priority: '0.9', changefreq: 'daily' },
 ];
 
-const today = new Date().toISOString().slice(0, 10);
-
 const urls = [
   ...STATIC_ROUTES,
-  ...PUBLISHED_CHORD_SLUGS.map((slug) => ({
+  ...liveKeys.map((slug) => ({
+    path: `/keys/${slug}`,
+    priority: '0.8',
+    changefreq: 'monthly',
+  })),
+  ...liveChords.map((slug) => ({
     path: `/chords/${slug}`,
     priority: '0.8',
     changefreq: 'monthly',
@@ -68,4 +79,4 @@ Sitemap: ${SITE}/sitemap.xml
 writeFileSync(resolve(distDir, 'sitemap.xml'), sitemap);
 writeFileSync(resolve(distDir, 'robots.txt'), robots);
 
-console.log(`[post-build] wrote sitemap.xml (${urls.length} urls) + robots.txt`);
+console.log(`[post-build] wrote sitemap.xml (${urls.length} urls — ${liveKeys.length} keys, ${liveChords.length} chords) + robots.txt`);

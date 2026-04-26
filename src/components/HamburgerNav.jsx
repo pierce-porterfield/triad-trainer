@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { PUBLISHED_CHORD_SLUGS, slugToChord } from '../data/chordContent.js';
+import { PUBLISHED_KEY_SLUGS, slugToKey } from '../data/keyContent.js';
 
 // Site-wide nav. Mounts in RootLayout so every prerendered page links to
 // every other — kills orphan-page SEO penalties (seo-strategy.md "internal
@@ -33,6 +34,9 @@ export default function HamburgerNav() {
 
   const chordLinks = PUBLISHED_CHORD_SLUGS
     .map((slug) => ({ slug, meta: slugToChord(slug) }))
+    .filter((x) => x.meta);
+  const keyLinks = PUBLISHED_KEY_SLUGS
+    .map((slug) => ({ slug, meta: slugToKey(slug) }))
     .filter((x) => x.meta);
 
   return (
@@ -77,6 +81,19 @@ export default function HamburgerNav() {
             <li><Link to="/intervals">Interval Trainer</Link></li>
           </ul>
         </div>
+
+        {keyLinks.length > 0 && (
+          <div className="nav-section">
+            <h3 className="nav-section-title">Key library</h3>
+            <ul>
+              {keyLinks.map(({ slug, meta }) => (
+                <li key={slug}>
+                  <Link to={`/keys/${slug}`}>{meta.tonic} major</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {chordLinks.length > 0 && (
           <div className="nav-section">

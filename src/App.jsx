@@ -7,7 +7,9 @@ import CircleOfFifthsTrainer from './components/CircleOfFifthsTrainer.jsx';
 import IntervalTrainer from './components/IntervalTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import ChordPage from './components/ChordPage.jsx';
+import KeyPage from './components/KeyPage.jsx';
 import { PUBLISHED_CHORD_SLUGS } from './data/chordContent.js';
+import { PUBLISHED_KEY_SLUGS } from './data/keyContent.js';
 
 // Root layout. Renders the persistent hamburger nav on every route so the
 // chord library, trainers, and home all link to each other (kills SEO orphan
@@ -28,6 +30,12 @@ const makeChordRoute = (slug) => ({
   entry: 'src/components/ChordPage.jsx',
 });
 
+const makeKeyRoute = (slug) => ({
+  path: `keys/${slug}`,
+  Component: () => <KeyPage slug={slug} />,
+  entry: 'src/components/KeyPage.jsx',
+});
+
 export const routes = [
   {
     path: '/',
@@ -39,6 +47,7 @@ export const routes = [
       { path: 'intervals', Component: IntervalTrainer },
       { path: 'daily', Component: Daily },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
+      ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),
     ],
   },
 ];

@@ -521,12 +521,13 @@ export default function TriadTrainer() {
       backface-visibility: hidden;
       background: var(--paper-deep);
       border: 1px solid var(--ink);
-      padding: 2.5rem 2rem;
+      padding: 3rem 1.5rem 2rem;
       box-shadow: 8px 8px 0 var(--paper-shadow);
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
+      overflow: hidden;
     }
     .tt-card-face::before {
       content: '';

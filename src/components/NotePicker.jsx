@@ -52,8 +52,13 @@ export default function NotePicker({ value, onChange, slotLabels, slotNames, cou
   };
 
   const handleLetter = (letter) => {
-    const targetIdx = selectedIdx >= 0 ? selectedIdx : findNextEmpty();
-    if (targetIdx === -1) return; // every slot is full and none selected
+    // Priority: explicitly-selected slot → next empty slot → overwrite the
+    // most recently filled slot. The third fallback means a single-slot
+    // picker (Note Trainer, Interval Trainer) always replaces on a fresh
+    // tap, and a multi-slot picker lets you correct your last entry without
+    // hitting Clear first.
+    let targetIdx = selectedIdx >= 0 ? selectedIdx : findNextEmpty();
+    if (targetIdx === -1) targetIdx = lastFilled >= 0 ? lastFilled : 0;
     writeSlot(targetIdx, letter); // replace; accidental cleared
     setLastFilled(targetIdx);
     setSelectedIdx(-1);

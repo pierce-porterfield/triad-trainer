@@ -7,6 +7,7 @@ import CircleOfFifthsTrainer from './components/CircleOfFifthsTrainer.jsx';
 import IntervalTrainer from './components/IntervalTrainer.jsx';
 import NoteTrainer from './components/NoteTrainer.jsx';
 import Daily from './components/Daily.jsx';
+import Gauntlet from './components/Gauntlet.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import KeyPage from './components/KeyPage.jsx';
 import ScalePage from './components/ScalePage.jsx';
@@ -64,6 +65,7 @@ export const routes = [
       { path: 'intervals', Component: IntervalTrainer },
       { path: 'notes', Component: NoteTrainer },
       { path: 'daily', Component: Daily },
+      { path: 'gauntlet', Component: Gauntlet },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
       ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),
       ...PUBLISHED_SCALE_SLUGS.map(makeScaleRoute),

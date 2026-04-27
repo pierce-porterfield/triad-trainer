@@ -83,6 +83,7 @@ export default function HamburgerNav() {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/daily">Etudle <span className="nav-badge">daily</span></Link></li>
+            <li><Link to="/gauntlet">Practice Gauntlet</Link></li>
             <li><Link to="/triads">Chord Trainer</Link></li>
             <li><Link to="/circle-of-fifths">Circle of Fifths</Link></li>
             <li><Link to="/intervals">Interval Trainer</Link></li>

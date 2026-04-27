@@ -4,12 +4,15 @@ import { getDailyPuzzle, getUtcDateString } from '../utils/dailyPuzzle';
 import { loadState, hasPlayedToday } from '../utils/dailyState';
 import { formatTime } from '../utils/bestTimes';
 import { fetchDailyStats } from '../utils/leaderboard';
+import { loadGauntletState } from '../utils/gauntletState';
 
 export default function Landing() {
   const puzzle = getDailyPuzzle();
   const state = loadState();
   const playedToday = hasPlayedToday();
   const todayResult = playedToday ? state.lastResult : null;
+
+  const gauntletState = loadGauntletState();
 
   // Global stats from the leaderboard endpoint. Failure is silent — the
   // counter just doesn't render.
@@ -375,6 +378,74 @@ export default function Landing() {
       letter-spacing: normal;
       color: var(--gold);
     }
+
+    /* Gauntlet — sits between the daily and the trainer grid. Less
+       theatrical than the daily card so attention stays on Etudle, but
+       still gets its own row to feel distinct from the trainer grid. */
+    .gauntlet-row { margin-bottom: 2rem; }
+    .gauntlet-card {
+      display: block;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      border-left: 3px solid var(--gold);
+      padding: 1.1rem 1.35rem;
+      box-shadow: 5px 5px 0 var(--paper-shadow);
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+    .gauntlet-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 var(--paper-shadow);
+      border-left-color: var(--accent);
+    }
+    .gauntlet-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 0.4rem;
+    }
+    .gauntlet-title {
+      font-family: 'Italiana', serif;
+      font-size: 1.6rem;
+      line-height: 1.05;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+    .gauntlet-title em {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--accent);
+    }
+    .gauntlet-desc {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--ink-soft);
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: 0.85rem;
+    }
+    .gauntlet-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .gauntlet-cta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .gauntlet-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
   `;
 
   return (
@@ -426,6 +497,26 @@ export default function Landing() {
             <div className="daily-cta">
               <span>{playedToday ? 'See result' : 'Begin'}</span>
               <span className="daily-cta-arrow">→</span>
+            </div>
+          </Link>
+        </div>
+
+        <div className="gauntlet-row">
+          <Link to="/gauntlet" className="gauntlet-card">
+            <div className="gauntlet-eyebrow">— No setup, all reps —</div>
+            <div className="gauntlet-title">Run the practice <em>gauntlet</em></div>
+            <div className="gauntlet-desc">
+              Five-card rounds drilling one focused topic at a time —
+              chord, interval, note, or key. New round each time. Finish
+              one and keep going for as long as you want.
+            </div>
+            <div className="gauntlet-foot">
+              <span className="gauntlet-cta">Begin →</span>
+              {gauntletState.totalRounds > 0 && (
+                <span className="gauntlet-count">
+                  {gauntletState.totalRounds} {gauntletState.totalRounds === 1 ? 'round' : 'rounds'} run
+                </span>
+              )}
             </div>
           </Link>
         </div>

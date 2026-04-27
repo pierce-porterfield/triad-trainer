@@ -56,7 +56,7 @@ export const STATIC_PAGES = {
       { type: 'h2', text: 'How to remove your data' },
       { type: 'ul', items: [
         'Local data: clear your browser\'s site data for theory-trainer.com (Settings → Privacy → Clear data, or the equivalent on your browser).',
-        'Leaderboard data: email pierce@theory-trainer.com with your anonymous player ID (visible on the Etudle results screen as your tag, e.g., #K7P9XR) and we\'ll remove your row from the server within a week.',
+        'Leaderboard data: DM @pierce.engineer on Instagram with your anonymous tag (visible on the Etudle results screen, e.g., #K7P9XR) and we\'ll remove your row from the server within a week.',
       ] },
 
       { type: 'h2', text: 'Third parties' },
@@ -69,51 +69,64 @@ export const STATIC_PAGES = {
 
       { type: 'h2', text: 'Contact' },
       { type: 'p', text:
-        'Questions, removal requests, or anything else: pierce@theory-trainer.com.' },
+        'Questions, removal requests, or anything else — DM @pierce.engineer on Instagram.' },
+      { type: 'related', items: [
+        { label: 'Instagram · @pierce.engineer', to: 'https://instagram.com/pierce.engineer' },
+      ] },
     ],
   },
 
   about: {
     title: 'About Music Theory Trainer',
     description:
-      'Why this site exists, who built it, and what it\'s for.',
+      'Built by Pierce Porterfield, a self-taught musician trying to drill music theory fluency. Free, ad-free, no accounts, no tracking.',
     blocks: [
-      // INTERVIEW STUB — content gets filled in once we have the user's
-      // answers to the questions in the response. Leave a sensible
-      // placeholder so the route is live but readable.
       { type: 'p', text:
-        'Music Theory Trainer is a free, ad-free practice site for the fundamentals of Western music theory: chords, scales, key signatures, intervals, and note reading on the staff, piano, and guitar.' },
-      { type: 'p', text:
-        'It\'s built around the idea that fluency comes from spaced repetition, not memorisation — so every page is either a focused trainer (drill until it\'s reflexive), a daily puzzle (Etudle, fifteen cards every day at midnight UTC), or a reference page that links you back into the trainer when you\'re ready to drill.' },
+        'Music Theory Trainer is a free practice site for the fundamentals of Western music theory: chords, scales, key signatures, intervals, and note reading across the staff, piano, and guitar. Built around the idea that fluency in theory comes from drilling, not memorising — every reference page links into a trainer where you can practise the thing you just read about.' },
 
-      { type: 'h2', text: 'About the maker' },
+      { type: 'h2', text: 'Who I am' },
       { type: 'p', text:
-        'Hi — I\'m Pierce. I built Music Theory Trainer because I wanted a faster, mobile-friendly way to drill the fundamentals than what I could find elsewhere. Most reference sites have great diagrams but no practice tool; most practice tools are old-school and don\'t scale to phones. This site is my attempt to do both.' },
+        'Hey — I\'m Pierce. I\'m a self-taught musician with no formal training. I studied music briefly in high school and now study privately with a teacher as an adult, but most of what I know I taught myself. For a stretch I was posting short YouTube explainers about music theory; one of them about the circle of fifths is embedded in the explainer article on this site.' },
       { type: 'p', text:
-        'A more detailed bio is on the way — the page is being filled in as the site grows.' },
+        'I make music as Pierce Engineer (solo) and as one half of Bill Cole Collision (a duo with my friend). My day job is in advertising, which is unrelated to all this — Music Theory Trainer is a side project I build because I want it to exist.' },
+      { type: 'related', items: [
+        { label: 'Pierce Engineer on Spotify', to: 'https://open.spotify.com/artist/2CDxcdimckjXii3uHq9vXi' },
+        { label: 'Bill Cole Collision on Spotify', to: 'https://open.spotify.com/artist/0YffefgYcK1B5VtBjMFvKg' },
+      ] },
 
-      { type: 'h2', text: 'Why it exists' },
+      { type: 'h2', text: 'Why I built this' },
       { type: 'p', text:
-        'Music theory rewards repetition. The chord names, key signatures, interval shapes — they should be reflexive, the way letters in a word are reflexive when you read. Reflexes come from drilling, not from looking things up. Every reference page on this site has a path back into a trainer for exactly this reason.' },
+        'I was working with my teacher on jazz guitar and noticed that my recall for intervals and triads was painfully slow. Every time I tried to analyse a piece or work out a lick, I\'d be stuck wracking my brain trying to remember what a major sixth above F♯ was — and the cognitive load killed any chance of staying musical.' },
       { type: 'p', text:
-        'It\'s ad-free, account-free, and doesn\'t track you. Your progress lives in your browser; the only thing that goes to the server is the daily-puzzle leaderboard, and even that is anonymous by default. See the privacy policy for the full picture.' },
+        'I went looking for a flashcard tool that would let me drill this stuff repeatedly until it became reflexive. Nothing I found scaled to my phone or felt right for serious practice, so I built my own. The trainers and the daily puzzle on this site are the result. They\'re what I personally use to keep my recall sharp.' },
+
+      { type: 'h2', text: 'Where it\'s going' },
+      { type: 'p', text:
+        'The next steps I\'m thinking about: more practice tools for the things you should know without thinking — so when you sit down to play, you can spend your attention on the music rather than the theory. A mobile app version (the web version already works on a phone, but offline-capable would be a real upgrade) is on the list. Also: better on-ramps for total beginners. Most of my friends who want to learn music find theory daunting, and if I can make the path less intimidating through gamification and short, focused exercises, that\'s a real win.' },
+
+      { type: 'h2', text: 'No ads, no accounts, no tracking' },
+      { type: 'p', text:
+        'There are no ads on the site today. I might add some eventually if traffic gets serious — but I also like having a platform that\'s mine, where I can occasionally promote my own music or whatever else I think is worth pointing at. There are no user accounts, no email collection, and no analytics or tracking pixels. Your trainer progress lives in your browser; the only thing that goes to a server is your Etudle daily-puzzle result, and that\'s anonymous by default. Full details are on the ' },
+      { type: 'related', items: [
+        { label: 'Privacy policy', to: '/privacy' },
+      ] },
 
       { type: 'h2', text: 'What\'s here' },
       { type: 'ul', items: [
         'Etudle — a 15-card daily puzzle with a global leaderboard, refreshing at midnight UTC.',
         'Practice Gauntlet — focused 5-card rounds on a random topic, no setup.',
-        'Four trainers — Chord, Circle of Fifths, Interval, Note — with timer-based personal bests.',
-        'Reference pages — every chord, key, and scale explained with diagrams and links to the relevant trainer.',
+        'Four trainers — Chord, Circle of Fifths, Interval, Note — with timer-based personal bests across multiple input modes (tap, music staff, piano, guitar).',
+        'Reference pages — every chord, key, and scale explained with diagrams and links into the relevant trainer.',
         'Long-form guides — for the trickier topics (the circle of fifths, base triads, key signatures, major vs. minor).',
       ] },
 
       { type: 'h2', text: 'Get in touch' },
       { type: 'p', text:
-        'Suggestions, bugs, questions, or requests: pierce@theory-trainer.com. The site is actively developed; useful feedback gets shipped.' },
+        'Suggestions, bugs, requests, or anything else — DM me on Instagram at @pierce.engineer. The site is actively developed; useful feedback tends to get shipped pretty fast.' },
       { type: 'related', items: [
+        { label: 'Instagram · @pierce.engineer', to: 'https://instagram.com/pierce.engineer' },
         { label: 'Etudle (daily puzzle)', to: '/daily' },
         { label: 'Practice Gauntlet', to: '/gauntlet' },
-        { label: 'Privacy policy', to: '/privacy' },
       ] },
     ],
   },

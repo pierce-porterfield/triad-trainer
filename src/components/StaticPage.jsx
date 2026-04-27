@@ -69,9 +69,22 @@ function Block({ block }) {
     case 'callout': return <aside className="static-callout">{block.text}</aside>;
     case 'related': return (
       <div className="static-related">
-        {block.items.map(({ label, to }, i) => (
-          <Link key={i} to={to} className="static-related-link">{label}</Link>
-        ))}
+        {block.items.map(({ label, to }, i) => {
+          const isExternal = /^https?:\/\//.test(to);
+          return isExternal ? (
+            <a
+              key={i}
+              href={to}
+              className="static-related-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {label} ↗
+            </a>
+          ) : (
+            <Link key={i} to={to} className="static-related-link">{label}</Link>
+          );
+        })}
       </div>
     );
     default: return null;

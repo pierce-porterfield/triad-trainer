@@ -8,7 +8,7 @@ import { getPlayerId, getPlayerTag, getPlayerName, setPlayerName, sanitisePlayer
 import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch } from '../data/triads';
-import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, notesInKey } from '../data/keys';
+import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey } from '../data/keys';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
 import ChordPicker from './ChordPicker.jsx';
@@ -328,7 +328,8 @@ function gradeAnswer(round, card, answer) {
     return answersMatch(answer.letterAnswers || {}, card);
   }
   if (round.type === 'key' && round.direction === 'notes-to-key') {
-    return keyNameMatch(answer.keyAnswer || '', card);
+    // Same scale notes belong to both major and relative minor — accept either.
+    return keyNameMatchOrRelative(answer.keyAnswer || '', card);
   }
   if (round.type === 'interval') {
     if (round.inputMode === 'staff') {

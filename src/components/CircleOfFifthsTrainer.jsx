@@ -16,6 +16,7 @@ import {
   notesInKey,
   answersMatch,
   keyNameMatch,
+  keyNameMatchOrRelative,
 } from '../data/keys';
 
 // ============================================================================
@@ -99,7 +100,9 @@ export default function CircleOfFifthsTrainer() {
         .map((l) => l + (letterAnswers[l] === '#' ? '♯' : '♭'));
       userAnswerDisplay = marked.length ? marked.join(' · ') : '(none marked)';
     } else {
-      isCorrect = keyNameMatch(keyAnswer, current);
+      // notes-to-key direction: scale notes belong to both the major and
+      // its relative minor, so accept either correct answer.
+      isCorrect = keyNameMatchOrRelative(keyAnswer, current);
       userAnswerDisplay = keyAnswer.trim() || '(blank)';
     }
 

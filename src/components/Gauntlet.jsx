@@ -13,7 +13,7 @@ import { buildGauntletRound } from '../utils/gauntletRounds';
 import { loadGauntletState, recordGauntletRound } from '../utils/gauntletState';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch, QUALITIES } from '../data/triads';
-import { KEY_LETTERS, answersMatch, keyNameMatch, notesInKey } from '../data/keys';
+import { KEY_LETTERS, answersMatch, keyNameMatch, keyNameMatchOrRelative, relativeKeyOf, notesInKey } from '../data/keys';
 import { noteToPc } from '../data/pitchClass';
 
 const FEEDBACK_DELAY_MS = 1400;          // dwell after correct (auto-advances)
@@ -336,11 +336,20 @@ function CorrectAnswer({ round, card }) {
     );
   }
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
+    // Show both valid answers (major and its relative minor share the
+    // same scale notes, so either was correct).
+    const rel = relativeKeyOf(card);
     return (
       <>
         <div className="g-card-label">— Answer —</div>
-        <div className="g-card-prompt g-answer-prompt">{formatKey(card.tonic)}</div>
-        <div className="g-card-sub">{card.mode}</div>
+        <div className="g-card-prompt g-answer-prompt">
+          {formatKey(card.tonic)} {card.mode}
+        </div>
+        {rel && (
+          <div className="g-card-sub">
+            or {formatKey(rel.tonic)} {rel.mode} (relative)
+          </div>
+        )}
       </>
     );
   }
@@ -379,7 +388,9 @@ function gradeAnswer(round, card, answer) {
     return answersMatch(answer.letterAnswers || {}, card);
   }
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
-    return keyNameMatch(answer.keyAnswer || '', card);
+    // The same scale notes belong to both a major key and its relative
+    // minor — accept either answer.
+    return keyNameMatchOrRelative(answer.keyAnswer || '', card);
   }
   return false;
 }

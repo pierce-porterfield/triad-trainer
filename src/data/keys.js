@@ -96,3 +96,23 @@ export const keyNameMatch = (userInput, key) => {
   if (!u) return false;
   return u.root === key.tonic && u.mode === key.mode;
 };
+
+// Find the relative key — same key signature (same sharps + flats), opposite
+// mode. C major ↔ A minor, G major ↔ E minor, etc. Returns null if no
+// matching entry (shouldn't happen for the standard 14 + 14 we ship).
+const arraysEq = (a, b) =>
+  a.length === b.length && a.every((x, i) => x === b[i]);
+
+export const relativeKeyOf = (key) => {
+  if (!key) return null;
+  const pool = key.mode === 'major' ? MINOR_KEYS : MAJOR_KEYS;
+  return pool.find((k) => arraysEq(k.sharps, key.sharps) && arraysEq(k.flats, key.flats)) || null;
+};
+
+// Used when the prompt is a list of scale notes — those notes belong to
+// both the major and its relative minor, so either answer must count.
+export const keyNameMatchOrRelative = (userInput, key) => {
+  if (keyNameMatch(userInput, key)) return true;
+  const rel = relativeKeyOf(key);
+  return rel ? keyNameMatch(userInput, rel) : false;
+};

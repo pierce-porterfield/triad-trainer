@@ -36,8 +36,8 @@ export default async function handler(req, res) {
     const playsKey = `daily:plays:${puzzleNumber}`;
 
     // Top 10: zrange by score asc, fastest times first.
-    const topMembers = await redis.zrange(lbKey, 0, 9, { withScores: true });
-    // Upstash returns a flat array: [member, score, member, score, ...]
+    // ioredis returns a flat string[] for WITHSCORES: [member, score, member, score, ...]
+    const topMembers = await redis.zrange(lbKey, 0, 9, 'WITHSCORES');
     const top10 = [];
     for (let i = 0; i < topMembers.length; i += 2) {
       const memberId = topMembers[i];

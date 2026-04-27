@@ -1,33 +1,41 @@
 // Shared Redis client for the daily-game serverless functions.
 //
-// Vercel's Redis (Upstash) integration injects credentials as
-// KV_REST_API_URL / KV_REST_API_TOKEN. The @upstash/redis SDK's
-// Redis.fromEnv() looks for UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN
-// instead, so we pass them in explicitly. Both name pairs are checked so the
-// same code works whether you provisioned via Vercel's marketplace or a
-// stand-alone Upstash account.
+// Uses ioredis with a TCP connection string from REDIS_URL — the env var
+// Vercel's Redis integration injects (rebranded from KV in late 2024; the
+// new product no longer ships REST credentials, only a Redis-protocol URL).
+//
+// `lazyConnect: true` defers the actual TCP handshake until the first
+// command, which fits the serverless invocation pattern (cold start →
+// import → first request kicks the connection).
 
-import { Redis } from '@upstash/redis';
+import Redis from 'ioredis';
 
-const url   = process.env.KV_REST_API_URL   || process.env.UPSTASH_REDIS_REST_URL;
-const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+const url =
+  process.env.REDIS_URL ||
+  process.env.KV_URL ||
+  process.env.UPSTASH_REDIS_URL;
 
-if (!url || !token) {
-  // Fail loud at module load with a useful message — Vercel surfaces this
-  // verbatim in the Logs tab, replacing the opaque
-  // "Failed to parse URL from /pipeline" / FUNCTION_INVOCATION_FAILED that
-  // an unconfigured Redis client otherwise throws.
-  const have = {
-    KV_REST_API_URL:           !!process.env.KV_REST_API_URL,
-    KV_REST_API_TOKEN:         !!process.env.KV_REST_API_TOKEN,
-    UPSTASH_REDIS_REST_URL:    !!process.env.UPSTASH_REDIS_REST_URL,
-    UPSTASH_REDIS_REST_TOKEN:  !!process.env.UPSTASH_REDIS_REST_TOKEN,
-  };
+if (!url) {
+  const visible = Object.keys(process.env)
+    .filter((k) => /redis|kv|upstash/i.test(k))
+    .join(', ') || '(none)';
   throw new Error(
-    `Redis env vars not set. Connect the Redis store in Vercel: ` +
-    `Storage → your Redis → Projects → connect the project, then redeploy. ` +
-    `Currently visible: ${JSON.stringify(have)}`
+    `Redis connection string missing. Connect the Redis store in Vercel ` +
+    `(Storage → your Redis → Projects → connect this project, then redeploy). ` +
+    `Redis-related env vars currently visible: ${visible}`
   );
 }
 
-export const redis = new Redis({ url, token });
+export const redis = new Redis(url, {
+  lazyConnect: true,
+  maxRetriesPerRequest: 3,
+  // Vercel's Redis offering uses TLS on the rediss:// scheme; the URL itself
+  // carries that, but ioredis sometimes needs an explicit hint when the URL
+  // uses redis:// against a TLS-only host. Detect from the scheme.
+  ...(url.startsWith('rediss://') ? { tls: {} } : {}),
+});
+
+redis.on('error', (err) => {
+  // Surface to function logs without crashing the module on transient errors.
+  console.error('[redis] error', err.message);
+});

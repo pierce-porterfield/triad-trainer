@@ -86,17 +86,18 @@ export default async function handler(req, res) {
   // Already submitted? Return existing record's rank without mutating play
   // counts. We DO allow updating the display name on a duplicate submit so
   // a player who skipped the name prompt can come back and add one without
-  // losing their result.
+  // losing their result. ioredis returns {} (not null) for an unset hash,
+  // so we check a specific field rather than the wrapper object.
   const existing = await redis.hgetall(resultKey);
-  if (existing && existing.time != null) {
+  if (existing && existing.time) {
     const cleanNameForUpdate = sanitiseName(name);
     if (cleanNameForUpdate && cleanNameForUpdate !== existing.name) {
       await Promise.all([
-        redis.hset(resultKey, { name: cleanNameForUpdate }),
+        redis.hset(resultKey, 'name', cleanNameForUpdate),
         redis.set(nameKey, cleanNameForUpdate),
       ]);
     }
-    const rank = (await redis.zrank(lbKey, playerId)) ?? null;
+    const rank = await redis.zrank(lbKey, playerId);
     const todayPlays = Number(await redis.get(playsKey)) || 0;
     res.status(200).json({
       rank: rank == null ? null : rank + 1,
@@ -110,18 +111,18 @@ export default async function handler(req, res) {
   if (cleanName) {
     await redis.set(nameKey, cleanName);
   }
-  const displayName = cleanName || (await redis.get(nameKey)) || null;
+  const displayName = cleanName || (await redis.get(nameKey)) || '';
 
-  // Pipeline the writes for speed + atomicity-ish guarantees.
+  // Pipeline the writes — atomic-ish single round-trip.
   const pipe = redis.pipeline();
-  pipe.hset(resultKey, {
-    time,
-    totalGuesses,
-    name: displayName || '',
-    tag: cleanTag || '',
-    submittedAt: Date.now(),
-  });
-  pipe.zadd(lbKey, { score: time, member: playerId });
+  pipe.hset(resultKey,
+    'time',         String(time),
+    'totalGuesses', String(totalGuesses),
+    'name',         displayName,
+    'tag',          cleanTag || '',
+    'submittedAt',  String(Date.now()),
+  );
+  pipe.zadd(lbKey, time, playerId);
   pipe.incr('daily:total');
   pipe.incr(playsKey);
   pipe.sadd('daily:players', playerId);

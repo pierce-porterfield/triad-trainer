@@ -26,6 +26,9 @@ export default function IntervalTrainer() {
   );
   const [mode, setMode] = useState('menu'); // 'menu' | 'playing' | 'done'
   const [inputMode, setInputMode] = useState('tap'); // 'tap' | 'staff' | 'piano' | 'guitar'
+  // Forward ('find-note'): card shows a root + interval, user names the resulting note.
+  // Reverse ('find-root'): card shows a note + interval, user names the root it sits above.
+  const [direction, setDirection] = useState('find-note');
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
   const [answer, setAnswer] = useState('');
@@ -37,8 +40,8 @@ export default function IntervalTrainer() {
   const current = deck[idx];
 
   const settingsKey = useMemo(
-    () => `interval-${[...activeGroups].sort().join('_')}_${inputMode}`,
-    [activeGroups, inputMode]
+    () => `interval-${[...activeGroups].sort().join('_')}_${inputMode}_${direction}`,
+    [activeGroups, inputMode, direction]
   );
   const bestTime = getBestTime(settingsKey);
 
@@ -81,16 +84,21 @@ export default function IntervalTrainer() {
 
   const submit = () => {
     if (feedback || !current) return;
+    // The deck always stores the relationship as (root, note) where note =
+    // root + interval. In forward mode the prompt is the root and we grade
+    // against the note; in reverse mode the prompt is the note and we grade
+    // against the root.
+    const target = direction === 'find-root' ? current.root : current.note;
     let isCorrect = false;
     let userAnswer = '';
     if (inputMode === 'staff') {
       const tok = staffNotes[0];
       userAnswer = tok ? `${tok.letter}${tok.accidental || ''}` : '(blank)';
       // Staff: spelling matters
-      isCorrect = !!tok && `${tok.letter}${tok.accidental || ''}` === current.note;
+      isCorrect = !!tok && `${tok.letter}${tok.accidental || ''}` === target;
     } else {
       userAnswer = answer || '(blank)';
-      isCorrect = notesEqual(answer, current.note);
+      isCorrect = notesEqual(answer, target);
     }
     if (isCorrect) {
       setFeedback('correct');
@@ -279,6 +287,44 @@ export default function IntervalTrainer() {
       display: flex; gap: 0.5rem; justify-content: center;
       margin-bottom: 1.25rem;
     }
+    .it-direction-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .it-direction-btn {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0.7rem 0.85rem;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      color: var(--ink);
+      transition: all 0.15s ease;
+    }
+    .it-direction-btn:hover { background: #efe5cc; }
+    .it-direction-btn.on { background: var(--ink); color: var(--paper); }
+    .it-direction-label {
+      font-family: 'Italiana', serif;
+      font-size: 1.05rem;
+    }
+    .it-direction-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-soft);
+      opacity: 0.85;
+    }
+    .it-direction-btn.on .it-direction-sub { color: var(--gold); opacity: 1; }
+    .it-direction-sub em {
+      font-style: normal;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .it-direction-btn.on .it-direction-sub em { color: var(--gold); }
     .it-mini-btn {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -549,10 +595,16 @@ export default function IntervalTrainer() {
           controls={<>{inputInterface}{submitButton}</>}
         >
           <div className={`it-card ${feedback || ''}`} style={{ width: '100%', maxWidth: '480px' }}>
-            {!feedback && (
+            {!feedback && direction === 'find-note' && (
               <>
                 <div className="it-card-label">— A {current.interval.label} above —</div>
                 <div className="it-prompt-root">{formatNote(current.root)}</div>
+              </>
+            )}
+            {!feedback && direction === 'find-root' && (
+              <>
+                <div className="it-prompt-root">{formatNote(current.note)}</div>
+                <div className="it-card-label">— is the {current.interval.label} of —</div>
               </>
             )}
             {feedback === 'correct' && (
@@ -560,8 +612,17 @@ export default function IntervalTrainer() {
                 <div className="it-feedback-mark correct">✓</div>
                 <div className="it-card-label">— Correct —</div>
                 <div className="it-answer-row">
-                  {current.interval.label} above {formatNote(current.root)} is{' '}
-                  <strong>{formatNote(current.note)}</strong>
+                  {direction === 'find-note' ? (
+                    <>
+                      {current.interval.label} above {formatNote(current.root)} is{' '}
+                      <strong>{formatNote(current.note)}</strong>
+                    </>
+                  ) : (
+                    <>
+                      <strong>{formatNote(current.root)}</strong> + {current.interval.label} ={' '}
+                      {formatNote(current.note)}
+                    </>
+                  )}
                 </div>
               </>
             )}
@@ -573,7 +634,7 @@ export default function IntervalTrainer() {
                   Your answer · <strong>{lastWrongAnswer}</strong>
                 </div>
                 <div className="it-answer-row">
-                  Correct · <strong>{formatNote(current.note)}</strong>
+                  Correct · <strong>{formatNote(direction === 'find-root' ? current.root : current.note)}</strong>
                 </div>
               </>
             )}
@@ -643,6 +704,28 @@ export default function IntervalTrainer() {
             </div>
 
             <div style={{ marginBottom: '1.25rem' }}>
+              <div className="it-best-label" style={{ marginBottom: '0.5rem' }}>Direction</div>
+              <div className="it-direction-row">
+                <button
+                  type="button"
+                  className={`it-direction-btn ${direction === 'find-note' ? 'on' : ''}`}
+                  onClick={() => setDirection('find-note')}
+                >
+                  <span className="it-direction-label">Find the note</span>
+                  <span className="it-direction-sub">A 4th above C → <em>F</em></span>
+                </button>
+                <button
+                  type="button"
+                  className={`it-direction-btn ${direction === 'find-root' ? 'on' : ''}`}
+                  onClick={() => setDirection('find-root')}
+                >
+                  <span className="it-direction-label">Find the root</span>
+                  <span className="it-direction-sub">F is the 4th of → <em>C</em></span>
+                </button>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '1.25rem' }}>
               <div className="it-best-label" style={{ marginBottom: '0.5rem' }}>Input mode</div>
               <InputModeSelector value={inputMode} onChange={setInputMode} />
             </div>
@@ -665,7 +748,9 @@ export default function IntervalTrainer() {
             </div>
 
             <div className="it-deck-info">
-              Name the note that lies the chosen interval above the given root.
+              {direction === 'find-note'
+                ? 'Name the note that lies the chosen interval above the given root.'
+                : 'Given a note and an interval, name the root it sits above.'}
             </div>
           </div>
         )}

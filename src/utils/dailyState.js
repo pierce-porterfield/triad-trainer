@@ -1,19 +1,25 @@
 // localStorage-backed state for the daily puzzle. No server roundtrip.
 //
-// Schema (key: triadle:state:v1):
+// Schema (key: triadle:state:v2):
 //   {
 //     lastPlayed:    'YYYY-MM-DD' | null,
-//     lastResult:    { time, score, breakdown: number[], puzzleNumber } | null,
+//     lastResult:    { time, totalGuesses, breakdown: number[][], puzzleNumber } | null,
+//                    (breakdown is per-round per-card guess count, with each card's
+//                    final guess count being the number of submits to get it right)
 //     currentStreak: number,
 //     longestStreak: number,
 //     totalPlayed:   number,
 //     bestTime:      number | null,
-//     history:       [{ date, puzzleNumber, time, score, breakdown }]   // capped at 30
+//     history:       [{ date, puzzleNumber, time, totalGuesses, breakdown }]
 //   }
+//
+// v1 → v2: rules changed from "one shot per card, score = correct count" to
+// "keep guessing until correct, score = total guesses". Old state silently
+// dropped on the version bump because the breakdown shapes are incompatible.
 
 import { getUtcDateString } from './dailyPuzzle';
 
-const STORAGE_KEY = 'triadle:state:v1';
+const STORAGE_KEY = 'triadle:state:v2';
 const HISTORY_CAP = 30;
 
 const empty = () => ({
@@ -62,7 +68,7 @@ const daysBetween = (a, b) => {
 
 // Record a completed puzzle. Updates streak / best time / history.
 // Returns the new state so the caller can use derived fields.
-export const markCompleted = ({ time, score, breakdown, puzzleNumber }, now = new Date()) => {
+export const markCompleted = ({ time, totalGuesses, breakdown, puzzleNumber }, now = new Date()) => {
   const today = getUtcDateString(now);
   const prev = loadState();
 
@@ -79,12 +85,12 @@ export const markCompleted = ({ time, score, breakdown, puzzleNumber }, now = ne
 
   const bestTime = prev.bestTime == null ? time : Math.min(prev.bestTime, time);
 
-  const entry = { date: today, puzzleNumber, time, score, breakdown };
+  const entry = { date: today, puzzleNumber, time, totalGuesses, breakdown };
   const history = [entry, ...prev.history].slice(0, HISTORY_CAP);
 
   const next = {
     lastPlayed: today,
-    lastResult: { time, score, breakdown, puzzleNumber },
+    lastResult: { time, totalGuesses, breakdown, puzzleNumber },
     currentStreak,
     longestStreak,
     totalPlayed: prev.totalPlayed + 1,

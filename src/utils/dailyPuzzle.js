@@ -131,13 +131,15 @@ const pickRoundOptions = (round, dayNumber, roundIndex) => {
   }
 
   // Input mode applies to the whole round (all 5 cards). Keys always use tap.
+  // Guitar is intentionally excluded from the daily — fretboard reading is
+  // less universal than staff/piano, and the daily should welcome any music
+  // student. Trainers still offer guitar for those who want it.
   const inputMode = round.type === 'key'
     ? 'tap'
     : choice(rng, [
-        ['tap',    30],
-        ['staff',  25],
-        ['piano',  25],
-        ['guitar', 20],
+        ['tap',    40],
+        ['staff',  30],
+        ['piano',  30],
       ]);
 
   return { qualities, keyPool, groups, inputMode };

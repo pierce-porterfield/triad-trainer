@@ -16,8 +16,8 @@ import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
 import { QUALITIES } from '../data/triads';
 
-const FEEDBACK_DELAY_MS = 1100;
-const WRONG_FEEDBACK_DELAY_MS = 2400;
+const FEEDBACK_DELAY_MS = 1100;          // dwell after a correct submit
+const RETRY_FEEDBACK_DELAY_MS = 750;     // dwell after a wrong submit before re-arming input
 const ROUND_TRANSITION_MS = 1400;
 
 const formatChord = (c) => c.replace('#', '\u266F').replace('b', '\u266D');
@@ -360,8 +360,13 @@ export default function Daily() {
   const [answer, setAnswer] = useState({});
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [transitioning, setTransitioning] = useState(false);
-  const [roundResults, setRoundResults] = useState([]); // correct count per round
-  const [currentRoundCorrect, setCurrentRoundCorrect] = useState(0);
+  // Guess tracking for the new "keep guessing until correct" rules:
+  //   currentCardGuesses          — submits made on the active card so far
+  //   currentRoundCardGuesses     — banked per-card counts for the active round
+  //   allRoundCardGuesses         — finished rounds' per-card counts (number[][])
+  const [currentCardGuesses, setCurrentCardGuesses] = useState(0);
+  const [currentRoundCardGuesses, setCurrentRoundCardGuesses] = useState([]);
+  const [allRoundCardGuesses, setAllRoundCardGuesses] = useState([]);
   const [startedAt, setStartedAt] = useState(null);
   const [elapsed, setElapsed] = useState(0);
 
@@ -379,11 +384,19 @@ export default function Daily() {
     return () => clearInterval(id);
   }, [phase, startedAt]);
 
-  // After feedback shows, briefly delay then advance
+  // After feedback shows: correct → advance to next card; wrong → re-arm input
+  // for another guess on the same card. Don't reveal the right answer; the
+  // user has to figure it out.
   useEffect(() => {
     if (!feedback) return;
-    const delay = feedback === 'wrong' ? WRONG_FEEDBACK_DELAY_MS : FEEDBACK_DELAY_MS;
-    const timer = setTimeout(() => advance(), delay);
+    if (feedback === 'correct') {
+      const timer = setTimeout(() => advance(), FEEDBACK_DELAY_MS);
+      return () => clearTimeout(timer);
+    }
+    const timer = setTimeout(() => {
+      setFeedback(null);
+      setAnswer({});
+    }, RETRY_FEEDBACK_DELAY_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback]);
@@ -400,8 +413,9 @@ export default function Daily() {
     setCardIdx(0);
     setAnswer({});
     setFeedback(null);
-    setRoundResults([]);
-    setCurrentRoundCorrect(0);
+    setCurrentCardGuesses(0);
+    setCurrentRoundCardGuesses([]);
+    setAllRoundCardGuesses([]);
     setStartedAt(Date.now());
     setElapsed(0);
     setTransitioning(true);
@@ -410,9 +424,12 @@ export default function Daily() {
 
   const submit = () => {
     if (feedback) return;
+    // Every submit counts — even wrong ones. The user keeps guessing until
+    // the card is right; total guess count is the "score" alongside time.
+    const guessNum = currentCardGuesses + 1;
+    setCurrentCardGuesses(guessNum);
     const isCorrect = gradeAnswer(round, card, answer);
     if (isCorrect) {
-      setCurrentRoundCorrect((n) => n + 1);
       hapticCorrect();
     } else {
       hapticWrong();
@@ -420,43 +437,50 @@ export default function Daily() {
     setFeedback(isCorrect ? 'correct' : 'wrong');
   };
 
+  // Called only after a CORRECT submit. Banks the card's guess count and
+  // advances to the next card / round / done.
   const advance = () => {
     setFeedback(null);
     setAnswer({});
+
+    const cardGuesses = currentCardGuesses; // captured before reset
+    const updatedRound = [...currentRoundCardGuesses, cardGuesses];
+    setCurrentCardGuesses(0);
 
     const isLastCardOfRound = cardIdx + 1 >= round.cards.length;
     const isLastRound = roundIdx + 1 >= puzzle.rounds.length;
 
     if (!isLastCardOfRound) {
+      setCurrentRoundCardGuesses(updatedRound);
       setCardIdx(cardIdx + 1);
       return;
     }
 
-    // Round done — bank the per-round correct count
-    const finalCorrectThisRound = currentRoundCorrect + (feedback === 'correct' ? 0 : 0);
-    // currentRoundCorrect was already incremented in submit() before feedback set
-    const updatedResults = [...roundResults, currentRoundCorrect];
-    setRoundResults(updatedResults);
-    setCurrentRoundCorrect(0);
+    // Round done — bank it
+    const updatedAllRounds = [...allRoundCardGuesses, updatedRound];
+    setAllRoundCardGuesses(updatedAllRounds);
+    setCurrentRoundCardGuesses([]);
 
     if (isLastRound) {
-      finishPuzzle(updatedResults);
+      finishPuzzle(updatedAllRounds);
       return;
     }
 
-    // Move to next round with transition
     setRoundIdx(roundIdx + 1);
     setCardIdx(0);
     setTransitioning(true);
   };
 
-  const finishPuzzle = (allRoundResults) => {
-    const totalScore = allRoundResults.reduce((a, b) => a + b, 0);
+  const finishPuzzle = (breakdown) => {
+    const totalGuesses = breakdown.reduce(
+      (acc, row) => acc + row.reduce((a, b) => a + b, 0),
+      0
+    );
     const time = Math.round((Date.now() - startedAt) / 1000); // seconds
     const result = {
       time,
-      score: totalScore,
-      breakdown: allRoundResults,
+      totalGuesses,
+      breakdown, // number[][]
       puzzleNumber: puzzle.number,
     };
     const newState = markCompleted(result);
@@ -585,19 +609,16 @@ export default function Daily() {
         }
       >
         <div className={`d-card ${feedback || ''}`}>
-          {!feedback && <CardFront round={round} card={card} />}
-          {feedback === 'correct' && (
-            <>
-              <div className="d-feedback correct">✓</div>
-              <div className="d-feedback-label">Correct</div>
-            </>
-          )}
-          {feedback === 'wrong' && (
-            <>
-              <div className="d-feedback wrong">✗</div>
-              <div className="d-feedback-label">Not quite</div>
-              <CorrectAnswer round={round} card={card} />
-            </>
+          <CardFront round={round} card={card} />
+          {feedback && (
+            <div className={`d-feedback-overlay ${feedback}`}>
+              <div className={`d-feedback ${feedback}`}>
+                {feedback === 'correct' ? '✓' : '✗'}
+              </div>
+              <div className="d-feedback-label">
+                {feedback === 'correct' ? 'Correct' : 'Try again'}
+              </div>
+            </div>
           )}
         </div>
       </TrainerLayout>
@@ -611,17 +632,27 @@ export default function Daily() {
 function ResultsScreen({ puzzle, result, state }) {
   const [copied, setCopied] = useState(false);
 
+  // Map a per-card guess count to a coloured square for the share grid.
+  // 1 → green (perfect), 2 → yellow, 3 → orange, 4+ → red.
+  const guessSquare = (g) => {
+    if (g <= 1) return '\uD83D\uDFE9';
+    if (g === 2) return '\uD83D\uDFE8';
+    if (g === 3) return '\uD83D\uDFE7';
+    return '\uD83D\uDFE5';
+  };
+
   const buildShareString = () => {
     if (!result) return '';
-    const blocks = (result.breakdown || []).map((correct) => {
-      const filled = '\u25CF'.repeat(correct);
-      const empty = '\u25CB'.repeat(5 - correct);
-      return filled + empty;
-    });
+    const breakdown = result.breakdown || [];
+    const totalGuesses = result.totalGuesses
+      ?? breakdown.reduce((acc, row) => acc + row.reduce((a, b) => a + b, 0), 0);
+    const rows = breakdown.map((roundCounts) =>
+      roundCounts.map(guessSquare).join('')
+    );
     const lines = [
       `Etudle #${String(result.puzzleNumber).padStart(3, '0')} \u00B7 ${formatTime(result.time * 1000)}`,
-      ...blocks,
-      `${result.score}/15 \u00B7 etudle.com`,
+      ...rows,
+      `${totalGuesses} guesses \u00B7 etudle.com`,
     ];
     if (state.currentStreak > 1) {
       lines[0] += `  \uD83D\uDD25 ${state.currentStreak}`;
@@ -658,6 +689,11 @@ function ResultsScreen({ puzzle, result, state }) {
   }
 
   const isPersonalBest = state.bestTime === result.time;
+  const totalGuesses = result.totalGuesses
+    ?? (result.breakdown || []).reduce(
+      (acc, row) => acc + row.reduce((a, b) => a + b, 0),
+      0
+    );
 
   return (
     <div className="d-pre-root">
@@ -667,19 +703,24 @@ function ResultsScreen({ puzzle, result, state }) {
         <div className="d-pre-eyebrow">— Etudle #{String(result.puzzleNumber).padStart(3, '0')} —</div>
         <h1 className="d-pre-title">{formatTime(result.time * 1000)}</h1>
         <div className="d-pre-date">
-          {result.score} / 15 correct
+          {totalGuesses} guesses
           {isPersonalBest && <span className="d-new-best"> — new personal best!</span>}
         </div>
         <div className="d-pre-rule">❦</div>
 
         <div className="d-pre-template">
-          {result.breakdown.map((correct, i) => {
+          {(result.breakdown || []).map((roundCounts, i) => {
             const round = puzzle.rounds[i];
+            const roundGuesses = roundCounts.reduce((a, b) => a + b, 0);
+            const perfect = roundCounts.every((g) => g === 1);
             return (
               <div key={i} className="d-pre-round">
                 <span className="d-pre-round-num">{i + 1}</span>
                 <span className="d-pre-round-label">{roundTypeLabel(round)}</span>
-                <span className="d-pre-round-count">{correct} / {round.cards.length}</span>
+                <span className="d-pre-round-count">
+                  {roundGuesses} guess{roundGuesses === 1 ? '' : 'es'}
+                  {perfect && ' \u2728'}
+                </span>
               </div>
             );
           })}
@@ -872,6 +913,7 @@ const dailyCss = `
 
   /* Playing card */
   .d-card {
+    position: relative;
     background: var(--paper-deep);
     border: 1px solid var(--ink);
     padding: 2rem 1.5rem;
@@ -887,7 +929,27 @@ const dailyCss = `
     gap: 0.5rem;
   }
   .d-card.correct { border-color: var(--green); }
-  .d-card.wrong { border-color: var(--accent); }
+  .d-card.wrong  { border-color: var(--accent); }
+  /* Brief overlay flashed on submit. Sits on top of the card prompt so the
+     user can still read what the puzzle is asking after the wrong overlay
+     dismisses. */
+  .d-feedback-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    backdrop-filter: blur(2px);
+    animation: dailyFeedbackFlash 0.18s ease forwards;
+  }
+  .d-feedback-overlay.correct { background: rgba(232, 236, 212, 0.92); }
+  .d-feedback-overlay.wrong   { background: rgba(240, 220, 213, 0.92); }
+  @keyframes dailyFeedbackFlash {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
   .d-card-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.65rem;

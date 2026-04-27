@@ -71,7 +71,14 @@ export default async function handler(req, res) {
     today = { puzzleNumber, plays, top10, me };
   }
 
-  res.setHeader('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+  // Personalised responses (with playerId) must not be CDN-cached — otherwise
+  // a player who just saved a display name would see stale leaderboard rows
+  // for up to the cache TTL. Only the anonymous path gets a public cache.
+  if (playerId) {
+    res.setHeader('Cache-Control', 'private, no-store');
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=120');
+  }
   res.status(200).json({
     lifetimeTotal: Number(lifetimeTotal) || 0,
     lifetimePlayers: Number(lifetimePlayers) || 0,

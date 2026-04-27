@@ -648,6 +648,9 @@ export default function Daily() {
 // ============================================================================
 function ResultsScreen({ puzzle, result, state }) {
   const [copied, setCopied] = useState(false);
+  // Bumped whenever the player saves/edits their name, so the Leaderboard
+  // re-fetches and shows the new label on their row.
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Map a per-card guess count to a coloured square for the share grid.
   // 1 → green (perfect), 2 → yellow, 3 → orange, 4+ → red.
@@ -758,13 +761,21 @@ function ResultsScreen({ puzzle, result, state }) {
           </div>
         </div>
 
-        <NameForm puzzleNumber={result.puzzleNumber} result={result} />
+        <NameForm
+          puzzleNumber={result.puzzleNumber}
+          result={result}
+          onChanged={() => setRefreshKey((k) => k + 1)}
+        />
 
         <button className="d-pre-start" onClick={share}>
           {copied ? 'Copied to clipboard ✓' : 'Share result →'}
         </button>
 
-        <Leaderboard puzzleNumber={result.puzzleNumber} variant="full" />
+        <Leaderboard
+          puzzleNumber={result.puzzleNumber}
+          variant="full"
+          refreshKey={refreshKey}
+        />
 
         <div className="d-pre-footer">
           New training at midnight UTC. Practice in the trainers to improve.
@@ -777,7 +788,7 @@ function ResultsScreen({ puzzle, result, state }) {
 // ============================================================================
 // NAME FORM — independent of leaderboard fetch so it renders immediately
 // ============================================================================
-function NameForm({ puzzleNumber, result }) {
+function NameForm({ puzzleNumber, result, onChanged }) {
   const [name, setName] = useState(getPlayerName() || '');
   const [savedName, setSavedName] = useState(getPlayerName());
   const [savingName, setSavingName] = useState(false);
@@ -800,6 +811,7 @@ function NameForm({ puzzleNumber, result }) {
       });
     }
     setSavingName(false);
+    if (onChanged) onChanged();
   };
 
   if (savedName) {
@@ -852,7 +864,7 @@ function NameForm({ puzzleNumber, result }) {
 //   variant='full'    — used on results screen. Highlights the player's row.
 //   variant='preview' — used on pre-play screen. Read-only, hides "you're
 //                       first" until a row exists; shorter list.
-function Leaderboard({ puzzleNumber, variant = 'full', limit = 10 }) {
+function Leaderboard({ puzzleNumber, variant = 'full', limit = 10, refreshKey = 0 }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const playerId = variant === 'full' ? getPlayerId() : null;
@@ -866,7 +878,7 @@ function Leaderboard({ puzzleNumber, variant = 'full', limit = 10 }) {
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [puzzleNumber, playerId]);
+  }, [puzzleNumber, playerId, refreshKey]);
 
   const me = stats?.today?.me;
   const top = (stats?.today?.top10 || []).slice(0, limit);

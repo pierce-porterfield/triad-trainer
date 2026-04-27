@@ -19,6 +19,7 @@ export const ALL_LEARN_SLUGS = [
 const CONTENT = {
   'how-does-the-circle-of-fifths-work': {
     publishAt: '2020-01-01',
+    updatedAt: '2026-04-27',
     title: 'How does the circle of fifths work?',
     description:
       'A plain-English guide to the circle of fifths — what it is, how to read it, and why it makes key signatures, chord progressions, and modulation easier to understand.',
@@ -101,6 +102,7 @@ const CONTENT = {
 
   'how-to-remember-base-triads': {
     publishAt: '2020-01-01',
+    updatedAt: '2026-04-27',
     title: 'How to remember base triads',
     description:
       'Memorise the four basic triads — major, minor, diminished, augmented — by the interval pattern between their three notes, not by rote memorisation of every chord.',
@@ -170,6 +172,7 @@ const CONTENT = {
 
   'how-to-read-a-key-signature': {
     publishAt: '2020-01-01',
+    updatedAt: '2026-04-27',
     title: 'How to read a key signature',
     description:
       'A practical guide to identifying any key signature in seconds — the order of sharps and flats, the two simple rules that decode them, and the shortcuts that make sight-reading effortless.',
@@ -248,6 +251,7 @@ const CONTENT = {
 
   'major-vs-minor': {
     publishAt: '2020-01-01',
+    updatedAt: '2026-04-27',
     title: 'Major vs. minor: what makes them sound different',
     description:
       'Major sounds bright. Minor sounds dark. But why? A look at the one interval that separates them, the cultural conditioning behind "happy" and "sad," and the moments where the rule breaks.',

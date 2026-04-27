@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getDailyPuzzle, getUtcDateString } from '../utils/dailyPuzzle';
 import { loadState, hasPlayedToday } from '../utils/dailyState';
 import { formatTime } from '../utils/bestTimes';
+import { fetchDailyStats } from '../utils/leaderboard';
 
 export default function Landing() {
   const puzzle = getDailyPuzzle();
   const state = loadState();
   const playedToday = hasPlayedToday();
   const todayResult = playedToday ? state.lastResult : null;
+
+  // Global stats from the leaderboard endpoint. Failure is silent — the
+  // counter just doesn't render.
+  const [globalStats, setGlobalStats] = useState(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchDailyStats({ puzzleNumber: puzzle.number }).then((s) => {
+      if (cancelled) return;
+      setGlobalStats(s);
+    });
+    return () => { cancelled = true; };
+  }, [puzzle.number]);
   const css = `
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&family=Italiana&display=swap');
 
@@ -384,6 +397,15 @@ export default function Landing() {
               </div>
               <div className="daily-meta">
                 {puzzle.date} · 3 rounds · 15 cards
+                {globalStats && globalStats.lifetimeTotal > 0 && (
+                  <>
+                    {' · '}
+                    {globalStats.lifetimeTotal.toLocaleString()} trained
+                    {globalStats.today && globalStats.today.plays > 0 && (
+                      <> · {globalStats.today.plays.toLocaleString()} today</>
+                    )}
+                  </>
+                )}
               </div>
               <div className="daily-stats">
                 {state.currentStreak > 0 && (

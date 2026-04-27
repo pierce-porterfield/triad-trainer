@@ -4,6 +4,8 @@ import { getDailyPuzzle } from '../utils/dailyPuzzle';
 import { loadState, hasPlayedToday, markCompleted } from '../utils/dailyState';
 import { formatTime } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
+import { getPlayerId, getPlayerName, setPlayerName, sanitisePlayerName, PLAYER_NAME_RULES } from '../utils/player';
+import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch } from '../data/triads';
 import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, notesInKey } from '../data/keys';
@@ -487,6 +489,18 @@ export default function Daily() {
     setLatestResult(result);
     setFinalState(newState);
     setPhase('done');
+
+    // Fire-and-forget: ship the result to the leaderboard. Failures are
+    // silent — the local result is the source of truth.
+    const playerId = getPlayerId();
+    const name = getPlayerName();
+    if (playerId) {
+      submitDailyResult({
+        puzzleNumber: puzzle.number,
+        playerId, name,
+        time, totalGuesses, breakdown,
+      }).catch(() => {});
+    }
   };
 
   const totalCards = puzzle.rounds.reduce((sum, r) => sum + r.cards.length, 0);
@@ -745,10 +759,154 @@ function ResultsScreen({ puzzle, result, state }) {
           {copied ? 'Copied to clipboard ✓' : 'Share result →'}
         </button>
 
+        <Leaderboard puzzleNumber={result.puzzleNumber} result={result} />
+
         <div className="d-pre-footer">
           New training at midnight UTC. Practice in the trainers to improve.
         </div>
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// LEADERBOARD (today-only)
+// ============================================================================
+function Leaderboard({ puzzleNumber, result }) {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [name, setName] = useState(getPlayerName() || '');
+  const [savedName, setSavedName] = useState(getPlayerName());
+  const [savingName, setSavingName] = useState(false);
+  const playerId = getPlayerId();
+
+  // Load (and re-load when name changes so the user's row shows their name).
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetchDailyStats({ puzzleNumber, playerId }).then((s) => {
+      if (cancelled) return;
+      setStats(s);
+      setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [puzzleNumber, playerId, savedName]);
+
+  const onSaveName = async () => {
+    const clean = sanitisePlayerName(name);
+    if (!clean) return;
+    setSavingName(true);
+    setPlayerName(clean);
+    setSavedName(clean);
+    // Re-submit so the server learns the new name. The first submit was
+    // idempotent on (playerId, puzzleNumber), so this won't double-count —
+    // but it WILL update the stored name on the leaderboard row. We
+    // explicitly write the name through the SET key as a fallback in case
+    // dedupe blocks the name update on resubmit.
+    if (result && playerId) {
+      await submitDailyResult({
+        puzzleNumber,
+        playerId,
+        name: clean,
+        time: result.time,
+        totalGuesses: result.totalGuesses,
+        breakdown: result.breakdown,
+      });
+    }
+    setSavingName(false);
+    // Re-fetch leaderboard.
+    fetchDailyStats({ puzzleNumber, playerId }).then(setStats);
+  };
+
+  const me = stats?.today?.me;
+  const top10 = stats?.today?.top10 || [];
+  const inTop10 = me && me.rank <= 10;
+
+  return (
+    <div className="d-leaderboard">
+      <div className="d-leaderboard-header">
+        <span className="d-leaderboard-title">Today's leaderboard</span>
+        {stats?.today && (
+          <span className="d-leaderboard-count">
+            {stats.today.plays.toLocaleString()} {stats.today.plays === 1 ? 'player' : 'players'}
+          </span>
+        )}
+      </div>
+
+      {loading && <div className="d-leaderboard-loading">Loading…</div>}
+
+      {!loading && top10.length === 0 && (
+        <div className="d-leaderboard-empty">
+          You're the first to finish today's puzzle.
+        </div>
+      )}
+
+      {!loading && top10.length > 0 && (
+        <ol className="d-leaderboard-list">
+          {top10.map((row) => (
+            <li
+              key={row.rank}
+              className={`d-leaderboard-row ${me && row.rank === me.rank ? 'is-me' : ''}`}
+            >
+              <span className="d-leaderboard-rank">{row.rank}</span>
+              <span className="d-leaderboard-name">{row.name}</span>
+              <span className="d-leaderboard-time">{formatTime(row.time * 1000)}</span>
+            </li>
+          ))}
+          {me && !inTop10 && (
+            <>
+              <li className="d-leaderboard-gap">…</li>
+              <li className="d-leaderboard-row is-me">
+                <span className="d-leaderboard-rank">{me.rank}</span>
+                <span className="d-leaderboard-name">{me.name}</span>
+                <span className="d-leaderboard-time">{formatTime(me.time * 1000)}</span>
+              </li>
+            </>
+          )}
+        </ol>
+      )}
+
+      {!loading && !savedName && (
+        <form
+          className="d-name-form"
+          onSubmit={(e) => { e.preventDefault(); onSaveName(); }}
+        >
+          <label className="d-name-label">
+            Set a display name? Anonymous players show as "Anonymous".
+          </label>
+          <div className="d-name-row">
+            <input
+              type="text"
+              className="d-name-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+              maxLength={PLAYER_NAME_RULES.maxLen}
+            />
+            <button
+              type="submit"
+              className="d-name-save"
+              disabled={!sanitisePlayerName(name) || savingName}
+            >
+              {savingName ? 'Saving…' : 'Save'}
+            </button>
+          </div>
+          <div className="d-name-rules">{PLAYER_NAME_RULES.description}</div>
+        </form>
+      )}
+
+      {!loading && savedName && (
+        <div className="d-name-saved">
+          Playing as <strong>{savedName}</strong>{' '}
+          <button
+            type="button"
+            className="d-name-edit"
+            onClick={() => { setSavedName(null); setName(savedName); }}
+          >
+            edit
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -895,6 +1053,167 @@ const dailyCss = `
     margin-bottom: 1rem;
   }
   .d-pre-start:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* Leaderboard panel on the results screen */
+  .d-leaderboard {
+    margin-top: 2rem;
+    padding: 1.25rem 1.25rem 1.5rem;
+    background: var(--paper-deep);
+    border: 1px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--paper-shadow);
+    text-align: left;
+  }
+  .d-leaderboard-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 0.85rem;
+    border-bottom: 1px dotted var(--ink-soft);
+    padding-bottom: 0.5rem;
+  }
+  .d-leaderboard-title {
+    font-family: 'Italiana', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+  }
+  .d-leaderboard-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .d-leaderboard-loading,
+  .d-leaderboard-empty {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+  .d-leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .d-leaderboard-row {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr auto;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px dotted rgba(61, 52, 43, 0.2);
+  }
+  .d-leaderboard-row:last-child { border-bottom: none; }
+  .d-leaderboard-row.is-me {
+    background: var(--paper);
+    border: 1px solid var(--accent);
+    margin: 0.2rem -0.25rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .d-leaderboard-rank {
+    font-family: 'Italiana', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    text-align: right;
+  }
+  .d-leaderboard-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .d-leaderboard-row.is-me .d-leaderboard-name {
+    font-weight: 600;
+  }
+  .d-leaderboard-time {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  .d-leaderboard-gap {
+    list-style: none;
+    text-align: center;
+    color: var(--ink-soft);
+    padding: 0.2rem 0;
+    font-family: 'Italiana', serif;
+    letter-spacing: 0.5em;
+  }
+  .d-name-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dotted var(--ink-soft);
+  }
+  .d-name-label {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  .d-name-row {
+    display: flex; gap: 0.4rem;
+  }
+  .d-name-input {
+    flex: 1; min-width: 0;
+    padding: 0.5rem 0.65rem;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .d-name-input:focus { border-color: var(--accent); }
+  .d-name-save {
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 0.5rem 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .d-name-save:hover:not(:disabled) { background: var(--accent); border-color: var(--accent); }
+  .d-name-save:disabled { opacity: 0.5; cursor: not-allowed; }
+  .d-name-rules {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 0.4rem;
+    opacity: 0.7;
+  }
+  .d-name-saved {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dotted var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .d-name-saved strong {
+    font-style: normal;
+    font-family: 'Italiana', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+  .d-name-edit {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    text-decoration: underline;
+    font-family: inherit;
+    font-style: italic;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.4rem;
+  }
   .d-pre-start-arrow {
     font-family: 'Italiana', serif;
     font-size: 1.5rem;

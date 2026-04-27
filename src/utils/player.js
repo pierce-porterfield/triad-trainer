@@ -1,0 +1,61 @@
+// Anonymous-but-stable player identity for the Etudle leaderboard.
+//
+// On first interaction we mint a UUID and persist it in localStorage. The
+// player can optionally set a display name, which is also persisted locally
+// AND on the server (so it appears on the leaderboard).
+
+const ID_KEY = 'etudle:playerId';
+const NAME_KEY = 'etudle:playerName';
+
+const randomId = () => {
+  // crypto.randomUUID is widely available; fall back to a 24-char hex if not.
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  const bytes = new Uint8Array(16);
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < 16; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  return [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
+};
+
+export const getPlayerId = () => {
+  if (typeof localStorage === 'undefined') return null;
+  let id = localStorage.getItem(ID_KEY);
+  if (!id) {
+    id = randomId();
+    try { localStorage.setItem(ID_KEY, id); } catch {}
+  }
+  return id;
+};
+
+export const getPlayerName = () => {
+  if (typeof localStorage === 'undefined') return null;
+  return localStorage.getItem(NAME_KEY) || null;
+};
+
+const NAME_MAX_LEN = 20;
+const NAME_REGEX = /^[\p{L}\p{N}\s._-]+$/u;
+
+// Returns null if the name is invalid.
+export const sanitisePlayerName = (raw) => {
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim().slice(0, NAME_MAX_LEN);
+  if (!trimmed) return null;
+  if (!NAME_REGEX.test(trimmed)) return null;
+  return trimmed;
+};
+
+export const setPlayerName = (raw) => {
+  const clean = sanitisePlayerName(raw);
+  if (!clean) return null;
+  try { localStorage.setItem(NAME_KEY, clean); } catch {}
+  return clean;
+};
+
+export const PLAYER_NAME_RULES = {
+  maxLen: NAME_MAX_LEN,
+  description: 'Up to 20 letters, numbers, spaces, or . _ -',
+};

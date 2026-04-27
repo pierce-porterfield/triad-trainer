@@ -315,6 +315,13 @@ export default function Landing() {
       text-transform: uppercase;
       color: var(--paper);
       opacity: 0.6;
+      margin-bottom: 0.4rem;
+    }
+    .daily-today-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      color: var(--gold);
+      font-size: 0.9rem;
       margin-bottom: 0.85rem;
     }
     .daily-stats {
@@ -397,16 +404,13 @@ export default function Landing() {
               </div>
               <div className="daily-meta">
                 {puzzle.date} · 3 rounds · 15 cards
-                {globalStats && globalStats.lifetimeTotal > 0 && (
-                  <>
-                    {' · '}
-                    {globalStats.lifetimeTotal.toLocaleString()} trained
-                    {globalStats.today && globalStats.today.plays > 0 && (
-                      <> · {globalStats.today.plays.toLocaleString()} today</>
-                    )}
-                  </>
-                )}
               </div>
+              {globalStats?.today && (
+                <div className="daily-today-count">
+                  {globalStats.today.plays.toLocaleString()}{' '}
+                  {globalStats.today.plays === 1 ? 'player has' : 'players have'} finished today
+                </div>
+              )}
               <div className="daily-stats">
                 {state.currentStreak > 0 && (
                   <span>Streak <strong>🔥 {state.currentStreak}</strong></span>

@@ -555,6 +555,8 @@ export default function Daily() {
             Start today's training <span className="d-pre-start-arrow">→</span>
           </button>
 
+          <Leaderboard puzzleNumber={puzzle.number} variant="preview" limit={5} />
+
           <div className="d-pre-footer">
             Timer starts when you tap Start · one attempt per day
           </div>
@@ -756,11 +758,13 @@ function ResultsScreen({ puzzle, result, state }) {
           </div>
         </div>
 
+        <NameForm puzzleNumber={result.puzzleNumber} result={result} />
+
         <button className="d-pre-start" onClick={share}>
           {copied ? 'Copied to clipboard ✓' : 'Share result →'}
         </button>
 
-        <Leaderboard puzzleNumber={result.puzzleNumber} result={result} />
+        <Leaderboard puzzleNumber={result.puzzleNumber} variant="full" />
 
         <div className="d-pre-footer">
           New training at midnight UTC. Practice in the trainers to improve.
@@ -771,17 +775,88 @@ function ResultsScreen({ puzzle, result, state }) {
 }
 
 // ============================================================================
-// LEADERBOARD (today-only)
+// NAME FORM — independent of leaderboard fetch so it renders immediately
 // ============================================================================
-function Leaderboard({ puzzleNumber, result }) {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+function NameForm({ puzzleNumber, result }) {
   const [name, setName] = useState(getPlayerName() || '');
   const [savedName, setSavedName] = useState(getPlayerName());
   const [savingName, setSavingName] = useState(false);
   const playerId = getPlayerId();
+  const tag = getPlayerTag();
 
-  // Load (and re-load when name changes so the user's row shows their name).
+  const onSaveName = async (e) => {
+    if (e) e.preventDefault();
+    const clean = sanitisePlayerName(name);
+    if (!clean) return;
+    setSavingName(true);
+    setPlayerName(clean);
+    setSavedName(clean);
+    if (result && playerId) {
+      await submitDailyResult({
+        puzzleNumber, playerId, tag, name: clean,
+        time: result.time,
+        totalGuesses: result.totalGuesses,
+        breakdown: result.breakdown,
+      });
+    }
+    setSavingName(false);
+  };
+
+  if (savedName) {
+    return (
+      <div className="d-name-saved">
+        Playing as <strong>{savedName}</strong>{' '}
+        <span className="d-leaderboard-tag">#{tag}</span>{' '}
+        <button
+          type="button"
+          className="d-name-edit"
+          onClick={() => { setSavedName(null); setName(savedName); }}
+        >
+          edit
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="d-name-form" onSubmit={onSaveName}>
+      <label className="d-name-label">
+        Set a display name? Otherwise the leaderboard shows your tag{' '}
+        <span className="d-leaderboard-tag">#{tag}</span>.
+      </label>
+      <div className="d-name-row">
+        <input
+          type="text"
+          className="d-name-input"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Your name"
+          maxLength={PLAYER_NAME_RULES.maxLen}
+        />
+        <button
+          type="submit"
+          className="d-name-save"
+          disabled={!sanitisePlayerName(name) || savingName}
+        >
+          {savingName ? 'Saving…' : 'Save'}
+        </button>
+      </div>
+      <div className="d-name-rules">{PLAYER_NAME_RULES.description}</div>
+    </form>
+  );
+}
+
+// ============================================================================
+// LEADERBOARD (today-only)
+// ============================================================================
+//   variant='full'    — used on results screen. Highlights the player's row.
+//   variant='preview' — used on pre-play screen. Read-only, hides "you're
+//                       first" until a row exists; shorter list.
+function Leaderboard({ puzzleNumber, variant = 'full', limit = 10 }) {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const playerId = variant === 'full' ? getPlayerId() : null;
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -791,41 +866,18 @@ function Leaderboard({ puzzleNumber, result }) {
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [puzzleNumber, playerId, savedName]);
-
-  const onSaveName = async () => {
-    const clean = sanitisePlayerName(name);
-    if (!clean) return;
-    setSavingName(true);
-    setPlayerName(clean);
-    setSavedName(clean);
-    // Re-submit so the server learns the new name. The first submit was
-    // idempotent on (playerId, puzzleNumber) and the duplicate branch
-    // updates the stored name.
-    if (result && playerId) {
-      await submitDailyResult({
-        puzzleNumber,
-        playerId,
-        tag: getPlayerTag(),
-        name: clean,
-        time: result.time,
-        totalGuesses: result.totalGuesses,
-        breakdown: result.breakdown,
-      });
-    }
-    setSavingName(false);
-    // Re-fetch leaderboard.
-    fetchDailyStats({ puzzleNumber, playerId }).then(setStats);
-  };
+  }, [puzzleNumber, playerId]);
 
   const me = stats?.today?.me;
-  const top10 = stats?.today?.top10 || [];
-  const inTop10 = me && me.rank <= 10;
+  const top = (stats?.today?.top10 || []).slice(0, limit);
+  const inTop = me && me.rank <= limit;
 
   return (
     <div className="d-leaderboard">
       <div className="d-leaderboard-header">
-        <span className="d-leaderboard-title">Today's leaderboard</span>
+        <span className="d-leaderboard-title">
+          {variant === 'preview' ? "Today's leaders" : "Today's leaderboard"}
+        </span>
         {stats?.today && (
           <span className="d-leaderboard-count">
             {stats.today.plays.toLocaleString()} {stats.today.plays === 1 ? 'player' : 'players'}
@@ -835,15 +887,20 @@ function Leaderboard({ puzzleNumber, result }) {
 
       {loading && <div className="d-leaderboard-loading">Loading…</div>}
 
-      {!loading && top10.length === 0 && (
+      {!loading && top.length === 0 && variant === 'full' && (
         <div className="d-leaderboard-empty">
           You're the first to finish today's puzzle.
         </div>
       )}
+      {!loading && top.length === 0 && variant === 'preview' && (
+        <div className="d-leaderboard-empty">
+          No finishers yet — beat the field.
+        </div>
+      )}
 
-      {!loading && top10.length > 0 && (
+      {!loading && top.length > 0 && (
         <ol className="d-leaderboard-list">
-          {top10.map((row) => (
+          {top.map((row) => (
             <li
               key={row.rank}
               className={`d-leaderboard-row ${me && row.rank === me.rank ? 'is-me' : ''}`}
@@ -853,7 +910,7 @@ function Leaderboard({ puzzleNumber, result }) {
               <span className="d-leaderboard-time">{formatTime(row.time * 1000)}</span>
             </li>
           ))}
-          {me && !inTop10 && (
+          {variant === 'full' && me && !inTop && (
             <>
               <li className="d-leaderboard-gap">…</li>
               <li className="d-leaderboard-row is-me">
@@ -864,55 +921,6 @@ function Leaderboard({ puzzleNumber, result }) {
             </>
           )}
         </ol>
-      )}
-
-      {!loading && !savedName && (
-        <form
-          className="d-name-form"
-          onSubmit={(e) => { e.preventDefault(); onSaveName(); }}
-        >
-          <label className="d-name-label">
-            Set a display name? Anonymous players show as "Anonymous".
-          </label>
-          <div className="d-name-row">
-            <input
-              type="text"
-              className="d-name-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              maxLength={PLAYER_NAME_RULES.maxLen}
-            />
-            <button
-              type="submit"
-              className="d-name-save"
-              disabled={!sanitisePlayerName(name) || savingName}
-            >
-              {savingName ? 'Saving…' : 'Save'}
-            </button>
-          </div>
-          <div className="d-name-rules">{PLAYER_NAME_RULES.description}</div>
-        </form>
-      )}
-
-      {!loading && savedName && (
-        <div className="d-name-saved">
-          Playing as <strong>{savedName}</strong>{' '}
-          <span className="d-leaderboard-tag">#{getPlayerTag()}</span>{' '}
-          <button
-            type="button"
-            className="d-name-edit"
-            onClick={() => { setSavedName(null); setName(savedName); }}
-          >
-            edit
-          </button>
-        </div>
-      )}
-
-      {!loading && !savedName && (
-        <div className="d-name-tag-hint">
-          Your tag: <span className="d-leaderboard-tag">#{getPlayerTag()}</span>
-        </div>
       )}
     </div>
   );

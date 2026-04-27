@@ -4,7 +4,7 @@ import { getDailyPuzzle, getUtcDateString } from '../utils/dailyPuzzle';
 import { loadState, hasPlayedToday } from '../utils/dailyState';
 import { formatTime } from '../utils/bestTimes';
 import { fetchDailyStats } from '../utils/leaderboard';
-import { loadGauntletState } from '../utils/gauntletState';
+import { loadGauntletState, getGauntletRank } from '../utils/gauntletState';
 
 export default function Landing() {
   const puzzle = getDailyPuzzle();
@@ -13,6 +13,7 @@ export default function Landing() {
   const todayResult = playedToday ? state.lastResult : null;
 
   const gauntletState = loadGauntletState();
+  const gauntletRank = getGauntletRank(gauntletState.totalRounds);
 
   // Global stats from the leaderboard endpoint. Failure is silent — the
   // counter just doesn't render.
@@ -379,25 +380,66 @@ export default function Landing() {
       color: var(--gold);
     }
 
-    /* Gauntlet — sits between the daily and the trainer grid. Less
-       theatrical than the daily card so attention stays on Etudle, but
-       still gets its own row to feel distinct from the trainer grid. */
+    /* Gauntlet — sits between the daily and the trainer grid. Quieter than
+       the daily but the lifetime counter is the visual anchor: a big
+       Italiana number in a featured slab on the left, with a tier label
+       and progress bar so the user has a target to push toward. */
     .gauntlet-row { margin-bottom: 2rem; }
     .gauntlet-card {
-      display: block;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem;
+      align-items: stretch;
       background: var(--paper);
       border: 1px solid var(--ink);
-      border-left: 3px solid var(--gold);
-      padding: 1.1rem 1.35rem;
-      box-shadow: 5px 5px 0 var(--paper-shadow);
+      box-shadow: 6px 6px 0 var(--paper-shadow);
       text-decoration: none;
       color: inherit;
       transition: all 0.2s ease;
+      overflow: hidden;
+      position: relative;
     }
     .gauntlet-card:hover {
       transform: translate(-2px, -2px);
-      box-shadow: 8px 8px 0 var(--paper-shadow);
-      border-left-color: var(--accent);
+      box-shadow: 9px 9px 0 var(--accent);
+    }
+    .gauntlet-card:hover .gauntlet-counter {
+      background: var(--accent);
+    }
+
+    /* Big-number slab on the left */
+    .gauntlet-counter {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      min-width: 110px;
+      background: var(--ink);
+      color: var(--paper);
+      transition: background 0.15s ease;
+    }
+    .gauntlet-counter-num {
+      font-family: 'Italiana', serif;
+      font-size: clamp(3rem, 9vw, 4.5rem);
+      line-height: 1;
+      color: var(--gold);
+      letter-spacing: -0.01em;
+    }
+    .gauntlet-counter-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--paper);
+      opacity: 0.75;
+      margin-top: 0.4rem;
+    }
+
+    .gauntlet-body {
+      padding: 1rem 1.35rem 1.1rem 0;
+      display: flex;
+      flex-direction: column;
     }
     .gauntlet-eyebrow {
       font-family: 'JetBrains Mono', monospace;
@@ -405,11 +447,11 @@ export default function Landing() {
       letter-spacing: 0.35em;
       text-transform: uppercase;
       color: var(--ink-soft);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
     }
     .gauntlet-title {
       font-family: 'Italiana', serif;
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       line-height: 1.05;
       margin-bottom: 0.5rem;
       color: var(--ink);
@@ -422,29 +464,65 @@ export default function Landing() {
     .gauntlet-desc {
       font-family: 'Cormorant Garamond', serif;
       color: var(--ink-soft);
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.4;
       margin-bottom: 0.85rem;
     }
-    .gauntlet-foot {
+
+    /* Tier + milestone progress */
+    .gauntlet-rank {
+      margin-bottom: 0.85rem;
+    }
+    .gauntlet-rank-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
+      margin-bottom: 0.35rem;
+    }
+    .gauntlet-rank-name {
+      font-family: 'Italiana', serif;
+      font-size: 1.05rem;
+      color: var(--accent);
+    }
+    .gauntlet-rank-next {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .gauntlet-rank-bar {
+      height: 5px;
+      background: var(--paper-shadow);
+      overflow: hidden;
+      position: relative;
+    }
+    .gauntlet-rank-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--accent));
+      transition: width 0.4s ease;
+    }
+
+    .gauntlet-foot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
       gap: 0.6rem;
-      flex-wrap: wrap;
+      margin-top: auto;
     }
     .gauntlet-cta {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       letter-spacing: 0.3em;
       text-transform: uppercase;
       color: var(--accent);
     }
-    .gauntlet-count {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 0.85rem;
-      color: var(--ink-soft);
+
+    /* Tighten on small screens — counter slab shrinks rather than wraps. */
+    @media (max-width: 480px) {
+      .gauntlet-card { gap: 0.85rem; }
+      .gauntlet-counter { padding: 0.85rem 0.75rem; min-width: 88px; }
+      .gauntlet-body { padding-right: 1rem; }
     }
   `;
 
@@ -503,20 +581,41 @@ export default function Landing() {
 
         <div className="gauntlet-row">
           <Link to="/gauntlet" className="gauntlet-card">
-            <div className="gauntlet-eyebrow">— No setup, all reps —</div>
-            <div className="gauntlet-title">Run the practice <em>gauntlet</em></div>
-            <div className="gauntlet-desc">
-              Five-card rounds drilling one focused topic at a time —
-              chord, interval, note, or key. New round each time. Finish
-              one and keep going for as long as you want.
+            <div className="gauntlet-counter">
+              <div className="gauntlet-counter-num">{gauntletState.totalRounds}</div>
+              <div className="gauntlet-counter-label">
+                {gauntletState.totalRounds === 1 ? 'round' : 'rounds'}
+              </div>
             </div>
-            <div className="gauntlet-foot">
-              <span className="gauntlet-cta">Begin →</span>
-              {gauntletState.totalRounds > 0 && (
-                <span className="gauntlet-count">
-                  {gauntletState.totalRounds} {gauntletState.totalRounds === 1 ? 'round' : 'rounds'} run
-                </span>
-              )}
+
+            <div className="gauntlet-body">
+              <div className="gauntlet-eyebrow">— Practice gauntlet —</div>
+              <div className="gauntlet-title">Run the <em>gauntlet</em></div>
+              <div className="gauntlet-desc">
+                Five-card rounds drilling one focused topic at a time —
+                chord, interval, note, or key. New round each time.
+              </div>
+
+              <div className="gauntlet-rank">
+                <div className="gauntlet-rank-row">
+                  <span className="gauntlet-rank-name">{gauntletRank.name}</span>
+                  {gauntletRank.next != null && (
+                    <span className="gauntlet-rank-next">
+                      {gauntletRank.toNext} to {gauntletRank.next}
+                    </span>
+                  )}
+                </div>
+                <div className="gauntlet-rank-bar">
+                  <div
+                    className="gauntlet-rank-fill"
+                    style={{ width: `${Math.round(gauntletRank.progress01 * 100)}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="gauntlet-foot">
+                <span className="gauntlet-cta">Begin →</span>
+              </div>
             </div>
           </Link>
         </div>

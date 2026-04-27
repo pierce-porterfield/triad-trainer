@@ -154,12 +154,17 @@ export default function GuitarInput({
       emitPositions(positions.filter((_, i) => i !== idx));
       return;
     }
-    if (positions.length >= maxNotes) {
-      // At capacity — drop the oldest position to make room
-      emitPositions([...positions.slice(1), { stringIdx, fret }]);
+    // One note per string — drop any existing dot on this string first.
+    // Mirrors how a real guitarist plays: a string can only sound one note
+    // at a time. Without this, tapping fret 7 on the G string after fret 5
+    // on the same string would leave both lit.
+    const filtered = positions.filter((p) => p.stringIdx !== stringIdx);
+    if (filtered.length >= maxNotes) {
+      // At capacity — drop the oldest of the remaining to make room.
+      emitPositions([...filtered.slice(1), { stringIdx, fret }]);
       return;
     }
-    emitPositions([...positions, { stringIdx, fret }]);
+    emitPositions([...filtered, { stringIdx, fret }]);
   };
 
   return (

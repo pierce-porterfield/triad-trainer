@@ -39,14 +39,12 @@ const COF_DIRECTIONS = ['key-to-accidentals', 'notes-to-key'];
 
 // ---------- Per-trainer round builders ----------------------------------
 
-const buildChordRound = () => {
-  const qualityKey = pickOne(CHORD_QUALITIES);
+// Pull a single (root, quality) chord card with a clean (no double-accidental)
+// spelling. Returns null if the chosen quality doesn't have any clean root,
+// which lets the caller resample.
+const tryBuildChordCard = (qualityKey) => {
   const quality = QUALITIES[qualityKey];
-  const direction = pickOne(['chord-to-notes', 'notes-to-chord']);
-  const inputMode = pickOne(['tap', 'staff', 'piano', 'guitar']);
-
-  // Pick 5 distinct roots that don't require double-accidental spellings
-  // for this quality. Iterate ROOTS and filter.
+  if (!quality) return null;
   const validRoots = ROOTS.filter((root) => {
     try {
       const notes = buildChord(root, qualityKey);
@@ -55,28 +53,45 @@ const buildChordRound = () => {
       return false;
     }
   });
-  const roots = sampleN(validRoots, 5);
+  if (validRoots.length === 0) return null;
+  const root = pickOne(validRoots);
+  const notes = buildChord(root, qualityKey);
+  return {
+    id: `${root}-${qualityKey}`,
+    root,
+    quality: qualityKey,
+    qualityLabel: quality.label,
+    chordName: `${root}${quality.symbol}`,
+    notes,
+  };
+};
 
-  const cards = roots.map((root) => {
-    const notes = buildChord(root, qualityKey);
-    return {
-      id: `${root}-${qualityKey}`,
-      root,
-      quality: qualityKey,
-      qualityLabel: quality.label,
-      chordName: `${root}${quality.symbol}`,
-      notes,
-    };
-  });
+const buildChordRound = () => {
+  // Mix chord types within a round so the user can't lock in one shape and
+  // coast through the remaining four cards. We pick 5 distinct qualities
+  // and pair each with a random root.
+  const direction = pickOne(['chord-to-notes', 'notes-to-chord']);
+  const inputMode = pickOne(['tap', 'staff', 'piano', 'guitar']);
+
+  const qualities = sampleN(CHORD_QUALITIES, 5);
+  const cards = qualities.map(tryBuildChordCard).filter(Boolean);
+  // If any of the picked qualities had no valid roots (rare), backfill
+  // until we have 5 cards.
+  while (cards.length < 5) {
+    const fallback = tryBuildChordCard(pickOne(CHORD_QUALITIES));
+    if (fallback && !cards.some((c) => c.id === fallback.id)) cards.push(fallback);
+  }
+
+  const inputModeLabel = ({
+    tap: 'Tap selector', staff: 'Music staff', piano: 'Piano keys', guitar: 'Guitar fretboard',
+  })[inputMode];
 
   return {
     type: 'chord',
-    qualityKey,
-    qualityLabel: quality.label,
     direction,
     inputMode,
-    subject: humanQualityLabel(qualityKey),
-    subjectExtra: direction === 'chord-to-notes' ? 'spell the chord' : 'name the chord',
+    subject: direction === 'chord-to-notes' ? 'Spell the chord' : 'Name the chord',
+    subjectExtra: inputModeLabel,
     cards,
   };
 };

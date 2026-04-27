@@ -16,8 +16,10 @@ import { chordNameMatch, QUALITIES } from '../data/triads';
 import { KEY_LETTERS, answersMatch, keyNameMatch, notesInKey } from '../data/keys';
 import { noteToPc } from '../data/pitchClass';
 
-const FEEDBACK_DELAY_MS = 1400;          // dwell after correct
-const WRONG_FEEDBACK_DELAY_MS = 2200;    // dwell after wrong (longer; we show the answer)
+const FEEDBACK_DELAY_MS = 1400;          // dwell after correct (auto-advances)
+// Wrong answers no longer auto-advance — the user clicks Next when ready,
+// so they can study the correct answer at their own pace. Time was already
+// captured at submit time so the review phase doesn't penalise them.
 const ROUND_TRANSITION_MS = 600;
 
 const formatChord = (c) => c.replace('#', '\u266F').replace('b', '\u266D');
@@ -409,14 +411,27 @@ export default function Gauntlet() {
     setCardStartedAt(Date.now());
   }, [round, cardIdx]);
 
-  // Auto-advance after feedback dwell
+  // Auto-advance only after a correct submit. Wrong answers wait for a tap
+  // on the Next button so the user can read the revealed answer.
   useEffect(() => {
-    if (!feedback) return;
-    const delay = feedback === 'wrong' ? WRONG_FEEDBACK_DELAY_MS : FEEDBACK_DELAY_MS;
-    const t = setTimeout(() => advance(), delay);
+    if (feedback !== 'correct') return;
+    const t = setTimeout(() => advance(), FEEDBACK_DELAY_MS);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback]);
+
+  // Enter triggers submit (no feedback) or advance (wrong feedback).
+  useEffect(() => {
+    if (phase !== 'playing') return;
+    const onKey = (e) => {
+      if (e.key !== 'Enter') return;
+      if (!feedback) submit();
+      else if (feedback === 'wrong') advance();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, feedback, answer, cardIdx, round]);
 
   const submit = () => {
     if (feedback) return;
@@ -563,6 +578,11 @@ export default function Gauntlet() {
             )}
             {!feedback && (
               <button className="trainer-submit" onClick={submit}>Submit ⏎</button>
+            )}
+            {feedback === 'wrong' && (
+              <button className="trainer-submit" onClick={advance}>
+                {cardIdx + 1 >= round.cards.length ? 'Finish round ⏎' : 'Next ⏎'}
+              </button>
             )}
           </>
         }

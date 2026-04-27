@@ -601,7 +601,7 @@ export default function Landing() {
                   <span className="gauntlet-rank-name">{gauntletRank.name}</span>
                   {gauntletRank.next != null && (
                     <span className="gauntlet-rank-next">
-                      {gauntletRank.toNext} to {gauntletRank.next}
+                      {gauntletRank.toNext} more {gauntletRank.toNext === 1 ? 'round' : 'rounds'}
                     </span>
                   )}
                 </div>

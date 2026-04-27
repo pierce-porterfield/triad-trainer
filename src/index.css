@@ -351,6 +351,21 @@ input {
   opacity: 0.35;
   cursor: not-allowed;
 }
+.kp-mode-locked {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px dashed var(--ink-soft);
+  background: var(--paper);
+}
+.kp-mode-locked strong {
+  font-style: normal;
+  color: var(--accent);
+  font-weight: 600;
+}
 
 /* ============================================================================
  * Input mode selector — icon buttons

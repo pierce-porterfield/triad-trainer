@@ -115,7 +115,7 @@ function CardFront({ round, card }) {
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
     return (
       <>
-        <div className="g-card-label">— Notes of the scale —</div>
+        <div className="g-card-label">— Notes of the {card.mode} scale —</div>
         <div className="g-card-notes">
           {card.scaleNotes.map((n, i) => (
             <React.Fragment key={i}>
@@ -261,12 +261,16 @@ function CardInput({ round, card, answer, setAnswer }) {
     );
   }
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
+    // Lock the picker to the card's mode — the user knows from the prompt
+    // which mode is being asked for, so they only need to choose root +
+    // accidental.
+    const isMinorCard = card.mode === 'minor';
     return (
       <KeyPicker
         value={answer.keyAnswer || ''}
         onChange={(next) => setAnswer({ ...answer, keyAnswer: next })}
-        allowMajor
-        allowMinor
+        allowMajor={!isMinorCard}
+        allowMinor={isMinorCard}
       />
     );
   }
@@ -336,20 +340,11 @@ function CorrectAnswer({ round, card }) {
     );
   }
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
-    // Show both valid answers (major and its relative minor share the
-    // same scale notes, so either was correct).
-    const rel = relativeKeyOf(card);
     return (
       <>
         <div className="g-card-label">— Answer —</div>
-        <div className="g-card-prompt g-answer-prompt">
-          {formatKey(card.tonic)} {card.mode}
-        </div>
-        {rel && (
-          <div className="g-card-sub">
-            or {formatKey(rel.tonic)} {rel.mode} (relative)
-          </div>
-        )}
+        <div className="g-card-prompt g-answer-prompt">{formatKey(card.tonic)}</div>
+        <div className="g-card-sub">{card.mode}</div>
       </>
     );
   }
@@ -388,9 +383,7 @@ function gradeAnswer(round, card, answer) {
     return answersMatch(answer.letterAnswers || {}, card);
   }
   if (round.type === 'cof' && round.direction === 'notes-to-key') {
-    // The same scale notes belong to both a major key and its relative
-    // minor — accept either answer.
-    return keyNameMatchOrRelative(answer.keyAnswer || '', card);
+    return keyNameMatch(answer.keyAnswer || '', card);
   }
   return false;
 }

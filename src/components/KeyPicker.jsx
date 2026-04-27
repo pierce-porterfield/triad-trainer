@@ -22,9 +22,21 @@ const parseKey = (s) => {
   return { letter, accidental: acc, isMinor };
 };
 
-// allowMajor / allowMinor: which mode toggles to show
+// allowMajor / allowMinor: which modes are valid answers.
+//   both true  → user picks Major or Minor via toggles below
+//   only one   → mode is locked; user picks letter + accidental only,
+//                and a small read-only label tells them which mode
+//                this card is asking for.
 export default function KeyPicker({ value, onChange, allowMajor, allowMinor }) {
-  const { letter, accidental, isMinor } = parseKey(value);
+  const { letter, accidental, isMinor: parsedMinor } = parseKey(value);
+
+  // If exactly one mode is allowed, force that mode regardless of what's
+  // already in `value`. Otherwise honour whatever the user has selected.
+  const lockedMinor =
+    allowMajor && !allowMinor ? false :
+    allowMinor && !allowMajor ? true  :
+    null;
+  const isMinor = lockedMinor != null ? lockedMinor : parsedMinor;
 
   const compose = (l, a, m) => l ? l + a + (m ? 'm' : '') : '';
 
@@ -39,8 +51,8 @@ export default function KeyPicker({ value, onChange, allowMajor, allowMinor }) {
   };
   const clear = () => onChange('');
 
-  // Show mode toggles only when both are available
-  const showModes = allowMajor && allowMinor;
+  const showModeToggles = allowMajor && allowMinor;
+  const showLockedLabel = lockedMinor != null;
 
   return (
     <div className="np-wrapper">
@@ -72,7 +84,7 @@ export default function KeyPicker({ value, onChange, allowMajor, allowMinor }) {
         <button type="button" className="np-clear" onClick={clear}>Clear</button>
       </div>
 
-      {showModes && (
+      {showModeToggles && (
         <div className="kp-mode-row">
           <button
             type="button"
@@ -90,6 +102,11 @@ export default function KeyPicker({ value, onChange, allowMajor, allowMinor }) {
           >
             Minor
           </button>
+        </div>
+      )}
+      {showLockedLabel && (
+        <div className="kp-mode-locked">
+          Answering for a <strong>{lockedMinor ? 'minor' : 'major'}</strong> key
         </div>
       )}
     </div>

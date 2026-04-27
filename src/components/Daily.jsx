@@ -73,7 +73,7 @@ function CardFront({ round, card }) {
     const notes = notesInKey(card);
     return (
       <>
-        <div className="d-card-label">— Notes of the scale —</div>
+        <div className="d-card-label">— Notes of the {card.mode} scale —</div>
         <div className="d-card-notes">
           {notes.map((n, i) => (
             <React.Fragment key={i}>
@@ -255,14 +255,17 @@ function CardInput({ round, card, answer, setAnswer }) {
     );
   }
   if (round.type === 'key' && round.direction === 'notes-to-key') {
-    const allowMajor = round.keyPool !== 'minor';
-    const allowMinor = round.keyPool === 'minor' || round.keyPool === 'mixed';
+    // Lock the picker to this card's mode so the user only chooses
+    // root + accidental. Scale notes alone don't disambiguate
+    // major vs. its relative minor — the prompt label tells them
+    // which mode this card is asking for.
+    const isMinorCard = card.mode === 'minor';
     return (
       <KeyPicker
         value={answer.keyAnswer || ''}
         onChange={(next) => setAnswer({ ...answer, keyAnswer: next })}
-        allowMajor={allowMajor}
-        allowMinor={allowMinor}
+        allowMajor={!isMinorCard}
+        allowMinor={isMinorCard}
       />
     );
   }
@@ -328,8 +331,7 @@ function gradeAnswer(round, card, answer) {
     return answersMatch(answer.letterAnswers || {}, card);
   }
   if (round.type === 'key' && round.direction === 'notes-to-key') {
-    // Same scale notes belong to both major and relative minor — accept either.
-    return keyNameMatchOrRelative(answer.keyAnswer || '', card);
+    return keyNameMatch(answer.keyAnswer || '', card);
   }
   if (round.type === 'interval') {
     if (round.inputMode === 'staff') {

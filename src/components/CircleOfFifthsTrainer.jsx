@@ -16,7 +16,6 @@ import {
   notesInKey,
   answersMatch,
   keyNameMatch,
-  keyNameMatchOrRelative,
 } from '../data/keys';
 
 // ============================================================================
@@ -100,9 +99,7 @@ export default function CircleOfFifthsTrainer() {
         .map((l) => l + (letterAnswers[l] === '#' ? '♯' : '♭'));
       userAnswerDisplay = marked.length ? marked.join(' · ') : '(none marked)';
     } else {
-      // notes-to-key direction: scale notes belong to both the major and
-      // its relative minor, so accept either correct answer.
-      isCorrect = keyNameMatchOrRelative(keyAnswer, current);
+      isCorrect = keyNameMatch(keyAnswer, current);
       userAnswerDisplay = keyAnswer.trim() || '(blank)';
     }
 
@@ -896,11 +893,14 @@ export default function CircleOfFifthsTrainer() {
         <div className="cof-hint">Tap again to deselect · leave blank for naturals</div>
       </>
     ) : !feedback && direction === 'notes-to-key' ? (
+      // Lock the picker to this card's mode. The same scale notes belong
+      // to a major key AND its relative minor, so the prompt label tells
+      // the user which mode they're identifying.
       <KeyPicker
         value={keyAnswer}
         onChange={setKeyAnswer}
-        allowMajor={options.major}
-        allowMinor={options.minor}
+        allowMajor={current.mode === 'major'}
+        allowMinor={current.mode === 'minor'}
       />
     ) : null;
 
@@ -944,7 +944,7 @@ export default function CircleOfFifthsTrainer() {
                   </>
                 ) : (
                   <>
-                    <div className="cof-card-label">— Notes of the scale —</div>
+                    <div className="cof-card-label">— Notes of the {current.mode} scale —</div>
                     <div className="cof-notes-display">
                       {notesInKey(current).map((n, i, arr) => (
                         <React.Fragment key={i}>

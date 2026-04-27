@@ -7,6 +7,7 @@ import NotePicker from './NotePicker.jsx';
 import Staff from './Staff.jsx';
 import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
+import InputModeSelector, { INPUT_MODES } from './InputModeSelector.jsx';
 import { shuffle, formatNote, notesEqual } from '../data/notes';
 import { noteToPc } from '../data/pitchClass';
 
@@ -28,11 +29,8 @@ const PCS = [
   { pc: 11, natural: { letter: 'B', accidental: '' } },
 ];
 
-const MODE_DEFS = [
-  { id: 'staff',  label: 'Music staff' },
-  { id: 'piano',  label: 'Piano keys' },
-  { id: 'guitar', label: 'Guitar fretboard' },
-];
+// Re-use the trainer-wide icon set; tap isn't a "display" so we drop it.
+const DISPLAY_MODES = INPUT_MODES.filter((m) => m.id !== 'tap');
 
 // Pick a spelling for a pitch class. Naturals are deterministic; accidentals
 // flip sharp/flat by the seed to keep deck variety while staying reproducible.
@@ -306,23 +304,12 @@ export default function NoteTrainer() {
             <div className="nt-panel-label">— Choose your displays —</div>
             <div className="nt-panel-q">Toggle the input forms to study</div>
 
-            <div className="nt-toggle-grid">
-              {MODE_DEFS.map((m) => {
-                const on = activeModes.includes(m.id);
-                return (
-                  <div
-                    key={m.id}
-                    className={`nt-toggle ${on ? 'on' : ''}`}
-                    onClick={() => toggleMode(m.id)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleMode(m.id); }}
-                  >
-                    <span>{m.label}</span>
-                    <span className="nt-toggle-check">{on ? '●' : '○'}</span>
-                  </div>
-                );
-              })}
+            <div className="nt-mode-row">
+              <InputModeSelector
+                value={activeModes}
+                onChange={toggleMode}
+                modes={DISPLAY_MODES}
+              />
             </div>
 
             <button
@@ -483,21 +470,7 @@ const css = `
     text-align: center; margin-bottom: 1.25rem;
   }
 
-  .nt-toggle-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 0.5rem; margin-bottom: 1.25rem;
-  }
-  .nt-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.7rem 0.95rem;
-    background: var(--paper); border: 1px solid var(--ink);
-    cursor: pointer; font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem; transition: all 0.15s ease; user-select: none;
-  }
-  .nt-toggle:hover { background: #efe5cc; }
-  .nt-toggle.on { background: var(--ink); color: var(--paper); }
-  .nt-toggle-check { font-size: 1rem; opacity: 0.7; }
+  .nt-mode-row { margin-bottom: 1.25rem; }
 
   .nt-start-btn {
     display: flex; align-items: center; justify-content: space-between;

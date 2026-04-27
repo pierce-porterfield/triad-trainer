@@ -17,6 +17,7 @@ import GuitarInput from './GuitarInput.jsx';
 import { QUALITIES } from '../data/triads';
 
 const FEEDBACK_DELAY_MS = 1100;
+const WRONG_FEEDBACK_DELAY_MS = 2400;
 const ROUND_TRANSITION_MS = 1400;
 
 const formatChord = (c) => c.replace('#', '\u266F').replace('b', '\u266D');
@@ -87,6 +88,78 @@ function CardFront({ round, card }) {
       <>
         <div className="d-card-label">— A {card.interval.label} above —</div>
         <div className="d-card-prompt">{formatNote(card.root)}</div>
+      </>
+    );
+  }
+  return null;
+}
+
+// Show the correct answer when the user got a card wrong. Layout depends
+// on the round type / direction — in every case we surface the specific
+// fact they missed, not just a generic "the chord was X".
+function CorrectAnswer({ round, card }) {
+  if (round.type === 'triad' && round.direction === 'chord-to-notes') {
+    return (
+      <>
+        <div className="d-card-label">— Answer —</div>
+        <div className="d-card-notes">
+          {card.notes.map((n, i) => (
+            <React.Fragment key={i}>
+              <span className="d-note-chip">{formatNote(n)}</span>
+              {i < card.notes.length - 1 && <span className="d-note-sep">·</span>}
+            </React.Fragment>
+          ))}
+        </div>
+      </>
+    );
+  }
+  if (round.type === 'triad' && round.direction === 'notes-to-chord') {
+    return (
+      <>
+        <div className="d-card-label">— Answer —</div>
+        <div className="d-card-prompt d-answer-prompt">{formatChord(card.chordName)}</div>
+        <div className="d-card-sub">{card.qualityLabel}</div>
+      </>
+    );
+  }
+  if (round.type === 'key' && round.direction === 'key-to-accidentals') {
+    const list = card.type === 'sharp' ? card.sharps : card.flats;
+    const symbol = card.type === 'sharp' ? '\u266F' : '\u266D';
+    return (
+      <>
+        <div className="d-card-label">— Answer —</div>
+        {card.count === 0 ? (
+          <div className="d-card-prompt d-answer-prompt">No sharps or flats</div>
+        ) : (
+          <div className="d-card-notes">
+            {list.map((letter, i) => (
+              <span key={i} className="d-note-chip">{letter}{symbol}</span>
+            ))}
+          </div>
+        )}
+        <div className="d-card-sub">
+          {card.count} {card.type}{card.count === 1 ? '' : 's'}
+        </div>
+      </>
+    );
+  }
+  if (round.type === 'key' && round.direction === 'notes-to-key') {
+    return (
+      <>
+        <div className="d-card-label">— Answer —</div>
+        <div className="d-card-prompt d-answer-prompt">{formatKey(card.tonic)}</div>
+        <div className="d-card-sub">{card.mode}</div>
+      </>
+    );
+  }
+  if (round.type === 'interval') {
+    return (
+      <>
+        <div className="d-card-label">— Answer —</div>
+        <div className="d-card-prompt d-answer-prompt">{formatNote(card.note)}</div>
+        <div className="d-card-sub">
+          {card.interval.label} above {formatNote(card.root)}
+        </div>
       </>
     );
   }
@@ -309,7 +382,8 @@ export default function Daily() {
   // After feedback shows, briefly delay then advance
   useEffect(() => {
     if (!feedback) return;
-    const timer = setTimeout(() => advance(), FEEDBACK_DELAY_MS);
+    const delay = feedback === 'wrong' ? WRONG_FEEDBACK_DELAY_MS : FEEDBACK_DELAY_MS;
+    const timer = setTimeout(() => advance(), delay);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedback]);
@@ -522,6 +596,7 @@ export default function Daily() {
             <>
               <div className="d-feedback wrong">✗</div>
               <div className="d-feedback-label">Not quite</div>
+              <CorrectAnswer round={round} card={card} />
             </>
           )}
         </div>
@@ -851,7 +926,11 @@ const dailyCss = `
     line-height: 1;
   }
   .d-feedback.correct { color: var(--green); }
-  .d-feedback.wrong { color: var(--accent); }
+  .d-feedback.wrong { color: var(--accent); font-size: 3rem; }
+  .d-answer-prompt {
+    font-size: clamp(1.8rem, 6vw, 2.6rem) !important;
+    margin-top: 0.25rem;
+  }
   .d-feedback-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;

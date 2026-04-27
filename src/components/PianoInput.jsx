@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
 import { cyrb53 } from '../utils/seededRandom';
 
@@ -89,9 +89,18 @@ export default function PianoInput({
   maxNotes = 6,
   chordSeed,
 }) {
-  const selectedPcs = new Set(
-    value.map(noteToPc).filter((pc) => pc >= 0)
-  );
+  // Input mode tracks exact (pc, octave) positions internally so a tap on a
+  // specific C lights only THAT C, not the C an octave away. The parent only
+  // ever sees pitch-class strings, derived from positions in emitPositions.
+  const [positions, setPositions] = useState([]); // {pc, octave}[]
+
+  // Reset internal positions when the parent clears `value`.
+  useEffect(() => {
+    if (mode === 'input' && value.length === 0 && positions.length > 0) {
+      setPositions([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, value.length]);
 
   // Display mode: pick one (octave, pc) per note so notes don't repeat across octaves.
   const displayPositions = useMemo(
@@ -99,34 +108,42 @@ export default function PianoInput({
     [mode, value, chordSeed]
   );
 
-  const positionIndexAt = (pc, octave) =>
-    displayPositions.findIndex((p) => p.pc === pc && p.octave === octave);
-
-  const isKeyLit = (pc, octave) => {
-    if (mode === 'display') return positionIndexAt(pc, octave) !== -1;
-    return selectedPcs.has(pc);
+  const positionAt = (pc, octave) => {
+    const pool = mode === 'input' ? positions : displayPositions;
+    return pool.findIndex((p) => p.pc === pc && p.octave === octave);
   };
+
+  const isKeyLit = (pc, octave) => positionAt(pc, octave) !== -1;
 
   const colorForKey = (pc, octave) => {
     if (mode === 'display') {
-      const idx = positionIndexAt(pc, octave);
+      const idx = positionAt(pc, octave);
       return idx >= 0 ? DOT_COLORS[idx % DOT_COLORS.length] : 'var(--accent)';
     }
     return 'var(--accent)';
   };
 
-  const handlePcTap = (pc) => {
+  const emitPositions = (next) => {
+    setPositions(next);
+    if (onChange) {
+      onChange(next.map((p) => pcToNote(p.pc)));
+    }
+  };
+
+  const handleKeyTap = (pc, octave) => {
     if (mode !== 'input' || !onChange) return;
-    if (selectedPcs.has(pc)) {
-      onChange(value.filter((n) => noteToPc(n) !== pc));
+    const idx = positionAt(pc, octave);
+    if (idx !== -1) {
+      // Toggle off this exact key.
+      emitPositions(positions.filter((_, i) => i !== idx));
       return;
     }
-    if (value.length >= maxNotes) {
-      // At capacity — drop the oldest to make room.
-      onChange([...value.slice(1), pcToNote(pc)]);
+    if (positions.length >= maxNotes) {
+      // At capacity — drop the oldest position to make room.
+      emitPositions([...positions.slice(1), { pc, octave }]);
       return;
     }
-    onChange([...value, pcToNote(pc)]);
+    emitPositions([...positions, { pc, octave }]);
   };
 
   return (
@@ -147,7 +164,7 @@ export default function PianoInput({
               <g
                 key={`w-${oct}-${k.idx}`}
                 style={{ cursor: mode === 'input' ? 'pointer' : 'default' }}
-                onClick={() => handlePcTap(k.pc)}
+                onClick={() => handleKeyTap(k.pc, oct)}
               >
                 <rect
                   x={x}
@@ -180,7 +197,7 @@ export default function PianoInput({
                 stroke="#1a1410"
                 strokeWidth="1"
                 style={{ cursor: mode === 'input' ? 'pointer' : 'default' }}
-                onClick={() => handlePcTap(b.pc)}
+                onClick={() => handleKeyTap(b.pc, oct)}
               />
             );
           })

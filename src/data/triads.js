@@ -1,12 +1,18 @@
 import { ROOTS, LETTERS, parseNote, spellForLetter, normalizeNote } from './notes';
 
 // All chord qualities supported. Intervals are stacked thirds in semitones.
-// 13ths follow the no-11 convention (1·3·5·7·9·13).
+// 13ths follow the no-11 convention (1·3·5·7·9·13). 11ths include all six
+// stacked thirds (1·3·5·7·9·11).
+//
+// "add" chords are triads with a single non-stacked extension (no 7th):
+//   add9 = 1·3·5·9, madd9 = 1·♭3·5·9, etc.
 export const QUALITIES = {
   maj:    { label: 'major',           symbol: '',      intervals: [0, 4, 7],             group: 'base' },
   min:    { label: 'minor',           symbol: 'm',     intervals: [0, 3, 7],             group: 'base' },
   dim:    { label: 'diminished',      symbol: '\u00B0', intervals: [0, 3, 6],            group: 'dim' },
   aug:    { label: 'augmented',       symbol: '+',     intervals: [0, 4, 8],             group: 'aug' },
+  maj6:   { label: 'major 6th',       symbol: '6',     intervals: [0, 4, 7, 9],          group: 'sixths' },
+  min6:   { label: 'minor 6th',       symbol: 'm6',    intervals: [0, 3, 7, 9],          group: 'sixths' },
   maj7:   { label: 'major 7th',       symbol: 'maj7',  intervals: [0, 4, 7, 11],         group: 'sevenths' },
   dom7:   { label: 'dominant 7th',    symbol: '7',     intervals: [0, 4, 7, 10],         group: 'sevenths' },
   min7:   { label: 'minor 7th',       symbol: 'm7',    intervals: [0, 3, 7, 10],         group: 'sevenths' },
@@ -15,20 +21,33 @@ export const QUALITIES = {
   maj9:   { label: 'major 9th',       symbol: 'maj9',  intervals: [0, 4, 7, 11, 14],     group: 'ninths' },
   dom9:   { label: 'dominant 9th',    symbol: '9',     intervals: [0, 4, 7, 10, 14],     group: 'ninths' },
   min9:   { label: 'minor 9th',       symbol: 'm9',    intervals: [0, 3, 7, 10, 14],     group: 'ninths' },
+  add9:   { label: 'add 9',           symbol: 'add9',  intervals: [0, 4, 7, 14],         degrees: [0, 2, 4, 8],   group: 'add' },
+  madd9:  { label: 'minor add 9',     symbol: 'm(add9)', intervals: [0, 3, 7, 14],       degrees: [0, 2, 4, 8],   group: 'add' },
+  maj11:  { label: 'major 11th',      symbol: 'maj11', intervals: [0, 4, 7, 11, 14, 17], group: 'elevenths' },
+  dom11:  { label: 'dominant 11th',   symbol: '11',    intervals: [0, 4, 7, 10, 14, 17], group: 'elevenths' },
+  min11:  { label: 'minor 11th',      symbol: 'm11',   intervals: [0, 3, 7, 10, 14, 17], group: 'elevenths' },
+  add11:  { label: 'add 11',          symbol: 'add11', intervals: [0, 4, 7, 17],         degrees: [0, 2, 4, 10],  group: 'add' },
+  madd11: { label: 'minor add 11',    symbol: 'm(add11)', intervals: [0, 3, 7, 17],      degrees: [0, 2, 4, 10],  group: 'add' },
   maj13:  { label: 'major 13th',      symbol: 'maj13', intervals: [0, 4, 7, 11, 14, 21], group: 'thirteenths' },
   dom13:  { label: 'dominant 13th',   symbol: '13',    intervals: [0, 4, 7, 10, 14, 21], group: 'thirteenths' },
   min13:  { label: 'minor 13th',      symbol: 'm13',   intervals: [0, 3, 7, 10, 14, 21], group: 'thirteenths' },
 };
 
-// Spell a chord by stacking thirds. Each interval index advances the letter
-// name by 2 (root → 3rd → 5th → 7th → 9th → 13th), wrapping mod 7.
+// Spell a chord. By default each interval index advances the letter name
+// by 2 (root → 3rd → 5th → 7th → 9th → 11th → 13th), which works for
+// stacked-thirds chords. Chords that skip a third (add9, add11) supply an
+// explicit `degrees` array giving the letter-step distance for each note —
+// e.g., add9 = [0, 2, 4, 8] hops from the 5th to the 9th without writing a
+// 7th in between.
 export const buildChord = (root, qualityKey) => {
   const { letter: rootLetter, semitone: rootSemi } = parseNote(root);
   const rootLetterIdx = LETTERS.indexOf(rootLetter);
-  const intervals = QUALITIES[qualityKey].intervals;
+  const q = QUALITIES[qualityKey];
+  const { intervals, degrees } = q;
   return intervals.map((iv, i) => {
     if (i === 0) return root; // preserve root spelling
-    const targetLetter = LETTERS[(rootLetterIdx + i * 2) % 7];
+    const letterStep = degrees ? degrees[i] : i * 2;
+    const targetLetter = LETTERS[(rootLetterIdx + letterStep) % 7];
     const targetSemi = (rootSemi + iv) % 12;
     return spellForLetter(targetLetter, targetSemi);
   });

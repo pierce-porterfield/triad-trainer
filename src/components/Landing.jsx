@@ -340,13 +340,14 @@ export default function Landing() {
       opacity: 0.7;
     }
     .daily-stats strong {
-      font-family: 'Italiana', serif;
-      font-weight: 400;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
       font-style: normal;
-      font-size: 1.2rem;
-      color: var(--gold);
+      font-size: 1rem;
+      color: #ffffff;
       letter-spacing: 0.05em;
       margin-left: 0.4rem;
+      text-transform: none;
     }
     .daily-cta {
       display: flex;

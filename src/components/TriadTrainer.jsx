@@ -510,6 +510,12 @@ export default function TriadTrainer() {
       position: relative;
       display: grid;
       grid-template-areas: 'face';
+      /* Clamp the auto grid column to the container width — without this,
+         a wide child like the GuitarInput SVG (intrinsic 968px) makes the
+         cell size to max-content and pushes the back-face content off
+         the right edge of the viewport. */
+      grid-template-columns: minmax(0, 1fr);
+      width: 100%;
       transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }

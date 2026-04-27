@@ -92,16 +92,38 @@ export default function GuitarInput({
     [mode, value, chordSeed]
   );
 
-  // Auto-scroll the fretboard so the placed chord centres in view
+  // Auto-scroll the fretboard so the placed chord centres in view.
+  //
+  // Two failure modes the naive version hit:
+  //   1. The effect ran before the container had laid out (clientWidth=0),
+  //      especially during a card-flip animation, so scrollLeft was set to 0
+  //      and never corrected.
+  //   2. When the container width changed *after* placement (flip reveal,
+  //      viewport rotate), the effect didn't re-fire because deps were stable.
+  // Fix: wait one frame, and re-run on every container resize via
+  // ResizeObserver until unmount.
   const scrollRef = useRef(null);
   useEffect(() => {
     if (mode !== 'display' || !scrollRef.current || displayPositions.length === 0) return;
-    const xs = displayPositions.map((p) => p.fret === 0 ? openX : xForFret(p.fret));
-    const minX = Math.min(...xs);
-    const maxX = Math.max(...xs);
-    const centreX = (minX + maxX) / 2;
-    const containerW = scrollRef.current.clientWidth;
-    scrollRef.current.scrollLeft = Math.max(0, centreX - containerW / 2);
+
+    const centreOnNotes = () => {
+      if (!scrollRef.current) return;
+      const containerW = scrollRef.current.clientWidth;
+      if (containerW <= 0) return; // container not laid out yet — try again later
+      const xs = displayPositions.map((p) => p.fret === 0 ? openX : xForFret(p.fret));
+      const minX = Math.min(...xs);
+      const maxX = Math.max(...xs);
+      const centreX = (minX + maxX) / 2;
+      scrollRef.current.scrollLeft = Math.max(0, centreX - containerW / 2);
+    };
+
+    const rafId = requestAnimationFrame(centreOnNotes);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(centreOnNotes) : null;
+    if (ro) ro.observe(scrollRef.current);
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (ro) ro.disconnect();
+    };
   }, [mode, displayPositions]);
 
   const positionAt = (stringIdx, fret) => {

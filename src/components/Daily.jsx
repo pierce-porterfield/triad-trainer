@@ -340,7 +340,7 @@ function gradeAnswer(round, card, answer) {
 
 // What the round-type label looks like
 const roundTypeLabel = (round) => {
-  if (round.type === 'triad') return 'Triads';
+  if (round.type === 'triad') return 'Chords';
   if (round.type === 'key') return 'Keys';
   if (round.type === 'interval') return 'Intervals';
   return '';

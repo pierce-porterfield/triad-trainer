@@ -61,10 +61,20 @@ const buildDeck = (selectedModes) => {
 
 export default function NoteTrainer() {
   const [activeModes, setActiveModes] = useState(['staff', 'piano', 'guitar']);
-  const [phase, setPhase] = useState('menu'); // 'menu' | 'playing' | 'done'
+  // Two-step setup mirrors Chord/Interval Trainer: pick displays, then
+  // pick direction.
+  const [phase, setPhase] = useState('options'); // 'options' | 'menu' | 'playing' | 'done'
+  // 'identify' — show a note on the chosen display, user types/picks the
+  //              note name via NotePicker. (original behaviour)
+  // 'place'    — show a note name as text, user clicks/places it on the
+  //              chosen display in input mode.
+  const [direction, setDirection] = useState('identify');
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
-  const [answer, setAnswer] = useState('');
+  // Object-shaped so we can hold either a plain note string (for NotePicker
+  // and piano/guitar input) or an array of staff-note tokens (for Staff
+  // input).
+  const [answer, setAnswer] = useState({});
   const [feedback, setFeedback] = useState(null); // null | 'correct' | 'wrong'
   const [score, setScore] = useState(0);
   const [lastWrongAnswer, setLastWrongAnswer] = useState('');
@@ -72,10 +82,12 @@ export default function NoteTrainer() {
   const current = deck[idx];
 
   const settingsKey = useMemo(
-    () => `note-${[...activeModes].sort().join('_')}`,
-    [activeModes]
+    () => `note-${[...activeModes].sort().join('_')}_${direction}`,
+    [activeModes, direction]
   );
   const bestTime = getBestTime(settingsKey);
+  const bestForDirection = (dir) =>
+    getBestTime(`note-${[...activeModes].sort().join('_')}_${dir}`);
 
   const [startedAt, setStartedAt] = useState(null);
   const [elapsed, setElapsed] = useState(0);
@@ -94,11 +106,12 @@ export default function NoteTrainer() {
     );
   };
 
-  const startGame = () => {
+  const startGame = (dir) => {
     if (activeModes.length === 0) return;
+    if (dir) setDirection(dir);
     setDeck(buildDeck(activeModes));
     setIdx(0);
-    setAnswer('');
+    setAnswer({});
     setFeedback(null);
     setScore(0);
     setLastWrongAnswer('');
@@ -111,15 +124,31 @@ export default function NoteTrainer() {
 
   const submit = () => {
     if (feedback || !current) return;
-    const userAnswer = answer || '(blank)';
     let isCorrect = false;
-    if (current.displayMode === 'staff') {
-      // Staff shows a specific spelling — answer must match it exactly.
-      isCorrect = answer === current.note;
+    let userAnswer = '(blank)';
+
+    if (direction === 'identify') {
+      userAnswer = answer.note || '(blank)';
+      if (current.displayMode === 'staff') {
+        // Staff display — spelling matters.
+        isCorrect = answer.note === current.note;
+      } else {
+        // Piano + guitar are pitch-class only.
+        isCorrect = !!answer.note && noteToPc(answer.note) === current.pc;
+      }
     } else {
-      // Piano + guitar are pitch-class only; accept enharmonic equivalents.
-      isCorrect = !!answer && noteToPc(answer) === current.pc;
+      // 'place' direction — user clicks/places on the chosen display
+      // in input mode. Grade against what they placed.
+      if (current.displayMode === 'staff') {
+        const tok = (answer.staffNotes || [])[0];
+        userAnswer = tok ? `${tok.letter}${tok.accidental || ''}` : '(blank)';
+        isCorrect = !!tok && `${tok.letter}${tok.accidental || ''}` === current.note;
+      } else {
+        userAnswer = answer.note || '(blank)';
+        isCorrect = !!answer.note && noteToPc(answer.note) === current.pc;
+      }
     }
+
     if (isCorrect) {
       setFeedback('correct');
       setScore((s) => s + 1);
@@ -141,7 +170,7 @@ export default function NoteTrainer() {
       setPhase('done');
     } else {
       setIdx((i) => i + 1);
-      setAnswer('');
+      setAnswer({});
       setFeedback(null);
       setLastWrongAnswer('');
     }
@@ -159,9 +188,9 @@ export default function NoteTrainer() {
     return () => window.removeEventListener('keydown', onKey);
   }, [phase, feedback, answer, idx, deck]);
 
-  // Render the prompt for the current card — staff / piano / guitar with the
-  // pitch shown in display mode.
-  const renderPrompt = () => {
+  // Identify-direction prompt: show the note in display mode on the chosen
+  // surface (staff / piano / guitar). User answers via NotePicker.
+  const renderIdentifyPrompt = () => {
     if (!current) return null;
     if (current.displayMode === 'staff') {
       return (
@@ -193,21 +222,62 @@ export default function NoteTrainer() {
     );
   };
 
-  const promptLabel = current && (
+  // Place-direction input: the chosen surface in INPUT mode so the user
+  // can click/place the prompted note.
+  const renderPlaceInput = () => {
+    if (!current) return null;
+    if (current.displayMode === 'staff') {
+      return (
+        <Staff
+          mode="input"
+          inputNotes={answer.staffNotes || []}
+          onInputChange={(next) => setAnswer({ ...answer, staffNotes: next })}
+          maxNotes={1}
+        />
+      );
+    }
+    if (current.displayMode === 'piano') {
+      return (
+        <PianoInput
+          value={answer.note ? [answer.note] : []}
+          onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
+          maxNotes={1}
+        />
+      );
+    }
+    return (
+      <GuitarInput
+        value={answer.note ? [answer.note] : []}
+        onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
+        maxNotes={1}
+      />
+    );
+  };
+
+  const identifyLabel = current && (
     current.displayMode === 'staff'  ? '— Name the note on the staff —' :
     current.displayMode === 'piano'  ? '— Name the highlighted key —' :
     /* guitar */                       '— Name the note on the fretboard —'
   );
+  const placeLabel = current && (
+    current.displayMode === 'staff'  ? '— Place this note on the staff —' :
+    current.displayMode === 'piano'  ? '— Tap this note on the piano —' :
+    /* guitar */                       '— Find this note on the fretboard —'
+  );
 
   if (phase === 'playing' && current) {
     const inputInterface = !feedback ? (
-      <NotePicker
-        count={1}
-        value={[answer]}
-        onChange={(next) => setAnswer(next[0] || '')}
-        slotLabels={['?']}
-        slotNames={['ANSWER']}
-      />
+      direction === 'identify' ? (
+        <NotePicker
+          count={1}
+          value={[answer.note || '']}
+          onChange={(next) => setAnswer({ ...answer, note: next[0] || '' })}
+          slotLabels={['?']}
+          slotNames={['ANSWER']}
+        />
+      ) : (
+        renderPlaceInput()
+      )
     ) : null;
 
     const submitButton = !feedback ? (
@@ -238,10 +308,16 @@ export default function NoteTrainer() {
           controls={<>{inputInterface}{submitButton}</>}
         >
           <div className={`nt-card ${feedback || ''}`}>
-            {!feedback && (
+            {!feedback && direction === 'identify' && (
               <>
-                <div className="nt-card-label">{promptLabel}</div>
-                <div className="nt-prompt-area">{renderPrompt()}</div>
+                <div className="nt-card-label">{identifyLabel}</div>
+                <div className="nt-prompt-area">{renderIdentifyPrompt()}</div>
+              </>
+            )}
+            {!feedback && direction === 'place' && (
+              <>
+                <div className="nt-card-label">{placeLabel}</div>
+                <div className="nt-place-prompt">{formatNote(current.note)}</div>
               </>
             )}
             {feedback === 'correct' && (
@@ -258,7 +334,7 @@ export default function NoteTrainer() {
                 <div className="nt-feedback-mark wrong">✗</div>
                 <div className="nt-card-label">— Not quite —</div>
                 <div className="nt-answer-row was-wrong">
-                  Your answer · <strong>{lastWrongAnswer}</strong>
+                  Your answer · <strong>{formatNote(lastWrongAnswer)}</strong>
                 </div>
                 <div className="nt-answer-row">
                   Correct · <strong>{formatNote(current.note)}</strong>
@@ -299,7 +375,7 @@ export default function NoteTrainer() {
           </div>
         </header>
 
-        {phase === 'menu' && (
+        {phase === 'options' && (
           <div className="nt-panel nt-fade-in">
             <div className="nt-panel-label">— Choose your displays —</div>
             <div className="nt-panel-q">Toggle the input forms to study</div>
@@ -314,26 +390,67 @@ export default function NoteTrainer() {
 
             <button
               className="nt-start-btn"
-              onClick={startGame}
+              onClick={() => setPhase('menu')}
               disabled={activeModes.length === 0}
             >
-              <span>Begin study · 12 notes</span>
+              <span>Continue · {activeModes.length} {activeModes.length === 1 ? 'display' : 'displays'}</span>
               <span className="nt-start-btn-arrow">→</span>
             </button>
 
+            <div className="nt-deck-info">
+              Pick which displays to drill, then choose a direction on the next screen.
+            </div>
+          </div>
+        )}
+
+        {phase === 'menu' && (
+          <div className="nt-panel nt-fade-in">
+            <div className="nt-panel-label">— Select a study —</div>
+            <div className="nt-panel-q">Which direction shall we begin?</div>
+
+            <button
+              className="nt-mode-btn"
+              onClick={() => startGame('identify')}
+            >
+              <span>
+                <span className="nt-mode-btn-num">I. </span>
+                Display → <em>name the note</em>
+              </span>
+              <span className="nt-mode-btn-arrow">→</span>
+            </button>
+            <button
+              className="nt-mode-btn"
+              onClick={() => startGame('place')}
+            >
+              <span>
+                <span className="nt-mode-btn-num">II. </span>
+                Note name → <em>place it on the display</em>
+              </span>
+              <span className="nt-mode-btn-arrow">→</span>
+            </button>
+
+            <div className="nt-deck-info">12 notes per round</div>
+
             <div className="nt-best-row">
-              <div className="nt-best-label">Best time for this selection · +20s per wrong</div>
+              <div className="nt-best-label">Best times for this selection · +20s per wrong</div>
               <div className="nt-best-line">
-                <span>Time to beat</span>
-                <strong>{formatTime(bestTime)}</strong>
+                <span>Identify</span>
+                <strong>{formatTime(bestForDirection('identify'))}</strong>
+              </div>
+              <div className="nt-best-line">
+                <span>Place</span>
+                <strong>{formatTime(bestForDirection('place'))}</strong>
               </div>
             </div>
 
-            <div className="nt-deck-info">
-              Each card shows a single note on one of your chosen displays —
-              guitar fret position and staff octave randomise per card. Tap the
-              letter (and accidental, if any) to answer.
-            </div>
+            <button
+              className="nt-start-btn"
+              style={{ background: 'transparent', color: 'var(--ink)', marginTop: '1rem' }}
+              onClick={() => setPhase('options')}
+            >
+              <span>← Change displays</span>
+              <span></span>
+            </button>
           </div>
         )}
 
@@ -366,8 +483,9 @@ export default function NoteTrainer() {
               );
             })()}
             <div className="nt-action-row">
-              <button className="nt-btn" onClick={startGame}>Again</button>
-              <button className="nt-btn ghost" onClick={() => setPhase('menu')}>Change displays</button>
+              <button className="nt-btn" onClick={() => startGame()}>Again</button>
+              <button className="nt-btn ghost" onClick={() => setPhase('menu')}>Change direction</button>
+              <button className="nt-btn ghost" onClick={() => setPhase('options')}>Change displays</button>
             </div>
           </div>
         )}
@@ -471,6 +589,51 @@ const css = `
   }
 
   .nt-mode-row { margin-bottom: 1.25rem; }
+
+  /* Direction-picker buttons (chord/interval-trainer parity). */
+  .nt-mode-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .nt-mode-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+  .nt-mode-btn em { font-style: italic; color: var(--accent); }
+  .nt-mode-btn:hover em { color: var(--gold); }
+  .nt-mode-btn-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    opacity: 0.6;
+    letter-spacing: 0.15em;
+  }
+  .nt-mode-btn-arrow {
+    font-family: 'Italiana', serif;
+    font-size: 1.4rem;
+  }
+
+  /* Big note-name prompt for the place direction. */
+  .nt-place-prompt {
+    font-family: 'Italiana', serif;
+    font-size: clamp(3rem, 10vw, 5rem);
+    line-height: 1;
+    color: var(--ink);
+    margin-top: 0.25rem;
+  }
 
   .nt-start-btn {
     display: flex; align-items: center; justify-content: space-between;

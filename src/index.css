@@ -417,9 +417,17 @@ input {
 /* ============================================================================
  * Guitar input
  * ========================================================================= */
-.guitar-wrapper { display: flex; flex-direction: column; align-items: stretch; width: 100%; }
+.guitar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0; /* allow shrinking when nested in a flex parent */
+}
 .guitar-scroll {
   width: 100%;
+  min-width: 0; /* without this, flex defaults min-width:auto to the SVG's
+                   intrinsic 968px and the card stretches off-screen */
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;

@@ -20,27 +20,63 @@ const buildDeck = buildTriadDeck;
 // ============================================================================
 export default function TriadTrainer() {
   const [options, setOptions] = useState({
-    base: true,
+    // Qualities — drive the underlying triad quality of each chord
+    maj: true,
+    min: true,
     dim: true,
     aug: true,
+    // Chord types — drive how many notes are stacked on top
+    base: true,
     sevenths: false,
     ninths: false,
     thirteenths: false,
     inputMode: 'tap', // 'tap' | 'staff' | 'piano' | 'guitar'
   });
 
+  // Cross-product of (quality × chord-type). Each cell lists the QUALITY
+  // keys (from data/triads.js) that match. dom7/dom9/dom13 are "major-rooted"
+  // (they sit on a major triad) so they live in the maj column. Half-dim and
+  // dim7 sit on a diminished triad → dim column. Augmented base triads are
+  // the only aug entry; the QUALITIES table doesn't ship aug7/aug9 chords.
+  const FAMILIES = {
+    maj: {
+      base:        ['maj'],
+      sevenths:    ['maj7', 'dom7'],
+      ninths:      ['maj9', 'dom9'],
+      thirteenths: ['maj13', 'dom13'],
+    },
+    min: {
+      base:        ['min'],
+      sevenths:    ['min7'],
+      ninths:      ['min9'],
+      thirteenths: ['min13'],
+    },
+    dim: {
+      base:        ['dim'],
+      sevenths:    ['m7b5', 'dim7'],
+      ninths:      [],
+      thirteenths: [],
+    },
+    aug: {
+      base:        ['aug'],
+      sevenths:    [],
+      ninths:      [],
+      thirteenths: [],
+    },
+  };
+
   const enabledQualities = useMemo(() => {
-    const enabled = [];
-    if (options.base) enabled.push('maj', 'min');
-    if (options.dim) enabled.push('dim');
-    if (options.aug) enabled.push('aug');
-    if (options.sevenths) {
-      enabled.push('maj7', 'dom7', 'min7');
-      if (options.dim) enabled.push('m7b5', 'dim7');
-    }
-    if (options.ninths) enabled.push('maj9', 'dom9', 'min9');
-    if (options.thirteenths) enabled.push('maj13', 'dom13', 'min13');
-    return enabled;
+    const qs = ['maj', 'min', 'dim', 'aug'];
+    const ts = ['base', 'sevenths', 'ninths', 'thirteenths'];
+    const out = [];
+    qs.forEach((q) => {
+      if (!options[q]) return;
+      ts.forEach((t) => {
+        if (!options[t]) return;
+        FAMILIES[q][t].forEach((id) => out.push(id));
+      });
+    });
+    return out;
   }, [options]);
 
   const filteredDeck = useMemo(() => buildDeck(enabledQualities), [enabledQualities]);
@@ -60,7 +96,9 @@ export default function TriadTrainer() {
   const [isNewBest, setIsNewBest] = useState(false);
 
   const optionsKey = useMemo(() =>
-    `b${options.base ? 1 : 0}d${options.dim ? 1 : 0}a${options.aug ? 1 : 0}_7${options.sevenths ? 1 : 0}_9${options.ninths ? 1 : 0}_13${options.thirteenths ? 1 : 0}_${options.inputMode}`,
+    `q${options.maj ? 1 : 0}${options.min ? 1 : 0}${options.dim ? 1 : 0}${options.aug ? 1 : 0}` +
+    `_t${options.base ? 1 : 0}${options.sevenths ? 1 : 0}${options.ninths ? 1 : 0}${options.thirteenths ? 1 : 0}` +
+    `_${options.inputMode}`,
     [options]
   );
   const keyFor = (dir) => `triad-${dir}-${optionsKey}`;
@@ -1050,16 +1088,25 @@ export default function TriadTrainer() {
             <div className="tt-menu-q">Which qualities to include?</div>
 
             <div className="tt-options-section">
-              <div className="tt-options-section-label">Triad qualities</div>
+              <div className="tt-options-section-label">Qualities</div>
               <div className="tt-toggle-grid">
                 <div
-                  className={`tt-toggle ${options.base ? 'on' : ''}`}
-                  onClick={() => toggleOption('base')}
+                  className={`tt-toggle ${options.maj ? 'on' : ''}`}
+                  onClick={() => toggleOption('maj')}
                   role="button" tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('base'); }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('maj'); }}
                 >
-                  <span>Major + minor</span>
-                  <span className="tt-toggle-detail">base</span>
+                  <span>Major</span>
+                  <span className="tt-toggle-detail">M</span>
+                </div>
+                <div
+                  className={`tt-toggle ${options.min ? 'on' : ''}`}
+                  onClick={() => toggleOption('min')}
+                  role="button" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('min'); }}
+                >
+                  <span>Minor</span>
+                  <span className="tt-toggle-detail">m</span>
                 </div>
                 <div
                   className={`tt-toggle ${options.dim ? 'on' : ''}`}
@@ -1083,8 +1130,17 @@ export default function TriadTrainer() {
             </div>
 
             <div className="tt-options-section">
-              <div className="tt-options-section-label">Extended chords</div>
+              <div className="tt-options-section-label">Chords</div>
               <div className="tt-toggle-grid">
+                <div
+                  className={`tt-toggle ${options.base ? 'on' : ''}`}
+                  onClick={() => toggleOption('base')}
+                  role="button" tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('base'); }}
+                >
+                  <span>Base triads</span>
+                  <span className="tt-toggle-detail">1·3·5</span>
+                </div>
                 <div
                   className={`tt-toggle ${options.sevenths ? 'on' : ''}`}
                   onClick={() => toggleOption('sevenths')}
@@ -1092,9 +1148,7 @@ export default function TriadTrainer() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('sevenths'); }}
                 >
                   <span>7ths</span>
-                  <span className="tt-toggle-detail">
-                    maj7 · 7 · m7{options.dim ? ' · m7♭5 · °7' : ''}
-                  </span>
+                  <span className="tt-toggle-detail">+7</span>
                 </div>
                 <div
                   className={`tt-toggle ${options.ninths ? 'on' : ''}`}
@@ -1103,7 +1157,7 @@ export default function TriadTrainer() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('ninths'); }}
                 >
                   <span>9ths</span>
-                  <span className="tt-toggle-detail">maj9 · 9 · m9</span>
+                  <span className="tt-toggle-detail">+9</span>
                 </div>
                 <div
                   className={`tt-toggle ${options.thirteenths ? 'on' : ''}`}
@@ -1112,7 +1166,7 @@ export default function TriadTrainer() {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') toggleOption('thirteenths'); }}
                 >
                   <span>13ths</span>
-                  <span className="tt-toggle-detail">maj13 · 13 · m13</span>
+                  <span className="tt-toggle-detail">+13</span>
                 </div>
               </div>
             </div>

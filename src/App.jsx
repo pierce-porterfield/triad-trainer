@@ -5,6 +5,7 @@ import Landing from './components/Landing.jsx';
 import TriadTrainer from './components/TriadTrainer.jsx';
 import CircleOfFifthsTrainer from './components/CircleOfFifthsTrainer.jsx';
 import IntervalTrainer from './components/IntervalTrainer.jsx';
+import NoteTrainer from './components/NoteTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import KeyPage from './components/KeyPage.jsx';
@@ -61,6 +62,7 @@ export const routes = [
       { path: 'triads', Component: TriadTrainer },
       { path: 'circle-of-fifths', Component: CircleOfFifthsTrainer },
       { path: 'intervals', Component: IntervalTrainer },
+      { path: 'notes', Component: NoteTrainer },
       { path: 'daily', Component: Daily },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
       ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),

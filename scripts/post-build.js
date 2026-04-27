@@ -44,6 +44,7 @@ const STATIC_ROUTES = [
   { path: '/triads',           priority: '0.9', changefreq: 'monthly' },
   { path: '/circle-of-fifths', priority: '0.9', changefreq: 'monthly' },
   { path: '/intervals',        priority: '0.9', changefreq: 'monthly' },
+  { path: '/notes',            priority: '0.9', changefreq: 'monthly' },
   { path: '/daily',            priority: '0.9', changefreq: 'daily' },
 ];
 

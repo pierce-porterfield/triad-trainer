@@ -464,6 +464,25 @@ export default function Landing() {
             </div>
           </Link>
 
+          <Link to="/notes" className="landing-card">
+            <div className="landing-card-num">— Opus IV —</div>
+            <div className="landing-card-title">
+              Note <em>Trainer</em>
+            </div>
+            <div className="landing-card-desc">
+              A single note shown on a music staff, piano keyboard, or guitar fretboard.
+              Identify the letter and accidental — fret position and octave randomise per card.
+            </div>
+            <div className="landing-card-modes">
+              I. Choose your displays<br />
+              II. Display → name the note
+            </div>
+            <div className="landing-card-cta">
+              <span>Begin</span>
+              <span className="landing-card-arrow">→</span>
+            </div>
+          </Link>
+
         </div>
 
         <div className="landing-footer">Created by Pierce Porterfield</div>

@@ -86,6 +86,7 @@ export default function HamburgerNav() {
             <li><Link to="/triads">Chord Trainer</Link></li>
             <li><Link to="/circle-of-fifths">Circle of Fifths</Link></li>
             <li><Link to="/intervals">Interval Trainer</Link></li>
+            <li><Link to="/notes">Note Trainer</Link></li>
           </ul>
         </div>
 

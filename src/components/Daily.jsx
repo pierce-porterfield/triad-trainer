@@ -652,6 +652,30 @@ function ResultsScreen({ puzzle, result, state }) {
   // re-fetches and shows the new label on their row.
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Backfill: if the original POST in finishPuzzle failed (API was down,
+  // network blip, whatever) the local result is correct but the server has
+  // no row for this player. Re-fire on every results-screen mount. The
+  // submit endpoint is idempotent on (playerId, puzzleNumber), so this is
+  // a no-op when the row already exists.
+  useEffect(() => {
+    if (!result) return;
+    const playerId = getPlayerId();
+    if (!playerId) return;
+    submitDailyResult({
+      puzzleNumber: result.puzzleNumber,
+      playerId,
+      tag: getPlayerTag(),
+      name: getPlayerName(),
+      time: result.time,
+      totalGuesses: result.totalGuesses,
+      breakdown: result.breakdown,
+    }).then((resp) => {
+      // Only bump the leaderboard if the server returned a non-null response
+      // (i.e. our row is actually there now), so we re-fetch with fresh data.
+      if (resp) setRefreshKey((k) => k + 1);
+    }).catch(() => {});
+  }, [result]);
+
   // Map a per-card guess count to a coloured square for the share grid.
   // 1 → green (perfect), 2 → yellow, 3 → orange, 4+ → red.
   const guessSquare = (g) => {

@@ -45,7 +45,8 @@ export default async function handler(req, res) {
       const result = await redis.hgetall(`daily:result:${puzzleNumber}:${memberId}`);
       top10.push({
         rank: top10.length + 1,
-        name: (result && result.name) || 'Anonymous',
+        name: (result && result.name) || '',
+        tag: (result && result.tag) || '',
         time,
         totalGuesses: Number(result?.totalGuesses) || null,
       });
@@ -58,7 +59,8 @@ export default async function handler(req, res) {
         const result = await redis.hgetall(`daily:result:${puzzleNumber}:${playerId}`);
         me = {
           rank: myRank + 1,
-          name: (result && result.name) || 'Anonymous',
+          name: (result && result.name) || '',
+          tag: (result && result.tag) || '',
           time: Number(result?.time) || null,
           totalGuesses: Number(result?.totalGuesses) || null,
         };

@@ -17,6 +17,7 @@ import { redis } from '../_redis.js';
 
 const NAME_MAX_LEN = 20;
 const NAME_REGEX = /^[\p{L}\p{N}\s._-]+$/u; // letters, digits, space, dot, underscore, hyphen
+const TAG_REGEX = /^[A-Z0-9]{4,8}$/;
 
 const sanitiseName = (raw) => {
   if (typeof raw !== 'string') return null;
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { puzzleNumber, playerId, name, time, totalGuesses, breakdown } = req.body || {};
+  const { puzzleNumber, playerId, tag, name, time, totalGuesses, breakdown } = req.body || {};
 
   if (!isValidPuzzleNumber(puzzleNumber)) {
     res.status(400).json({ error: 'invalid-puzzle-number' });
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
   }
 
   const cleanName = sanitiseName(name);
+  const cleanTag = typeof tag === 'string' && TAG_REGEX.test(tag) ? tag : null;
 
   const lbKey = `daily:lb:${puzzleNumber}`;
   const resultKey = `daily:result:${puzzleNumber}:${playerId}`;
@@ -116,6 +118,7 @@ export default async function handler(req, res) {
     time,
     totalGuesses,
     name: displayName || '',
+    tag: cleanTag || '',
     submittedAt: Date.now(),
   });
   pipe.zadd(lbKey, { score: time, member: playerId });

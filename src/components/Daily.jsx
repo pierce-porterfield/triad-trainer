@@ -4,7 +4,7 @@ import { getDailyPuzzle } from '../utils/dailyPuzzle';
 import { loadState, hasPlayedToday, markCompleted } from '../utils/dailyState';
 import { formatTime } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
-import { getPlayerId, getPlayerName, setPlayerName, sanitisePlayerName, PLAYER_NAME_RULES } from '../utils/player';
+import { getPlayerId, getPlayerTag, getPlayerName, setPlayerName, sanitisePlayerName, PLAYER_NAME_RULES } from '../utils/player';
 import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch } from '../data/triads';
@@ -493,11 +493,12 @@ export default function Daily() {
     // Fire-and-forget: ship the result to the leaderboard. Failures are
     // silent — the local result is the source of truth.
     const playerId = getPlayerId();
+    const tag = getPlayerTag();
     const name = getPlayerName();
     if (playerId) {
       submitDailyResult({
         puzzleNumber: puzzle.number,
-        playerId, name,
+        playerId, tag, name,
         time, totalGuesses, breakdown,
       }).catch(() => {});
     }
@@ -799,14 +800,13 @@ function Leaderboard({ puzzleNumber, result }) {
     setPlayerName(clean);
     setSavedName(clean);
     // Re-submit so the server learns the new name. The first submit was
-    // idempotent on (playerId, puzzleNumber), so this won't double-count —
-    // but it WILL update the stored name on the leaderboard row. We
-    // explicitly write the name through the SET key as a fallback in case
-    // dedupe blocks the name update on resubmit.
+    // idempotent on (playerId, puzzleNumber) and the duplicate branch
+    // updates the stored name.
     if (result && playerId) {
       await submitDailyResult({
         puzzleNumber,
         playerId,
+        tag: getPlayerTag(),
         name: clean,
         time: result.time,
         totalGuesses: result.totalGuesses,
@@ -849,7 +849,7 @@ function Leaderboard({ puzzleNumber, result }) {
               className={`d-leaderboard-row ${me && row.rank === me.rank ? 'is-me' : ''}`}
             >
               <span className="d-leaderboard-rank">{row.rank}</span>
-              <span className="d-leaderboard-name">{row.name}</span>
+              <PlayerNameCell name={row.name} tag={row.tag} />
               <span className="d-leaderboard-time">{formatTime(row.time * 1000)}</span>
             </li>
           ))}
@@ -858,7 +858,7 @@ function Leaderboard({ puzzleNumber, result }) {
               <li className="d-leaderboard-gap">…</li>
               <li className="d-leaderboard-row is-me">
                 <span className="d-leaderboard-rank">{me.rank}</span>
-                <span className="d-leaderboard-name">{me.name}</span>
+                <PlayerNameCell name={me.name} tag={me.tag} />
                 <span className="d-leaderboard-time">{formatTime(me.time * 1000)}</span>
               </li>
             </>
@@ -898,6 +898,7 @@ function Leaderboard({ puzzleNumber, result }) {
       {!loading && savedName && (
         <div className="d-name-saved">
           Playing as <strong>{savedName}</strong>{' '}
+          <span className="d-leaderboard-tag">#{getPlayerTag()}</span>{' '}
           <button
             type="button"
             className="d-name-edit"
@@ -907,7 +908,32 @@ function Leaderboard({ puzzleNumber, result }) {
           </button>
         </div>
       )}
+
+      {!loading && !savedName && (
+        <div className="d-name-tag-hint">
+          Your tag: <span className="d-leaderboard-tag">#{getPlayerTag()}</span>
+        </div>
+      )}
     </div>
+  );
+}
+
+// Renders a leaderboard row's identity. If a display name is set, shows
+// `Name #TAG` with the tag styled small + gray. If not, shows only `#TAG`.
+function PlayerNameCell({ name, tag }) {
+  const safeTag = tag || '??????';
+  if (name && name.trim()) {
+    return (
+      <span className="d-leaderboard-name">
+        {name}
+        <span className="d-leaderboard-tag">#{safeTag}</span>
+      </span>
+    );
+  }
+  return (
+    <span className="d-leaderboard-name">
+      <span className="d-leaderboard-tag d-leaderboard-tag-only">#{safeTag}</span>
+    </span>
   );
 }
 
@@ -1125,6 +1151,31 @@ const dailyCss = `
   }
   .d-leaderboard-row.is-me .d-leaderboard-name {
     font-weight: 600;
+  }
+  /* Anonymous tag chip — small, monospaced, neutral grey. Sits next to a
+     display name, or stands alone when no name has been set. */
+  .d-leaderboard-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: #8a7e6b;
+    margin-left: 0.45rem;
+    font-weight: 400;
+  }
+  .d-leaderboard-tag.d-leaderboard-tag-only {
+    margin-left: 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+  }
+  .d-name-tag-hint {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 1px dotted var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
   }
   .d-leaderboard-time {
     font-family: 'JetBrains Mono', monospace;

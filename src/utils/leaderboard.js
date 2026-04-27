@@ -2,12 +2,12 @@
 // Errors don't throw — leaderboard is a "nice-to-have" overlay; the local
 // game state is always the source of truth for "did I play today?".
 
-export const submitDailyResult = async ({ puzzleNumber, playerId, name, time, totalGuesses, breakdown }) => {
+export const submitDailyResult = async ({ puzzleNumber, playerId, tag, name, time, totalGuesses, breakdown }) => {
   try {
     const r = await fetch('/api/daily/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ puzzleNumber, playerId, name, time, totalGuesses, breakdown }),
+      body: JSON.stringify({ puzzleNumber, playerId, tag, name, time, totalGuesses, breakdown }),
     });
     if (!r.ok) return null;
     return await r.json();

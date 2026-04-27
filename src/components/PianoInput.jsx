@@ -12,16 +12,37 @@ const DOT_COLORS = [
 ];
 
 // For display mode: pick one (octave, pitch-class) per note so the same note
-// doesn't light up across both octaves. Notes ascend; octave varied by seed.
+// doesn't light up across both octaves. Notes ascend (root → 3rd → 5th → 7th
+// → 9th → 13th); octave-of-root varied by seed for visual variety.
+//
+// The piano shows 2 octaves (24 semitones). 9th and 13th chords span more
+// than 12 semitones from root to top extension, so they only fit when the
+// root starts in octave 0. We compute the chord's chromatic span up front
+// and clamp startOctave accordingly — without this clamp, starting in
+// octave 1 caused the algorithm to fail-back to octave 1 for the topmost
+// extensions, putting them BELOW the 7th and breaking voicing order.
 const placeChordOnPiano = (notes, seed) => {
   const seedNum = cyrb53(String(seed || ''));
+  const validPcs = notes.map(noteToPc).filter((pc) => pc >= 0);
+  if (validPcs.length === 0) return [];
+
+  // Walk the chord at oct=0 to find its total span; that tells us the highest
+  // possible startOctave that still fits in 24 semitones.
+  let abs = -1;
+  let span = 0;
+  for (const pc of validPcs) {
+    let o = 0;
+    while (o * 12 + pc <= abs && o < 2) o++;
+    abs = o * 12 + pc;
+    span = abs;
+  }
+  const maxStartOctave = span <= 11 ? 1 : 0; // 11 because 12+span must be ≤ 23
+  const startOctave = (seedNum % 2) > maxStartOctave ? maxStartOctave : (seedNum % 2);
+
   const positions = [];
   let prevAbs = -1;
-  let startOctave = seedNum % 2; // 0 or 1
-  notes.forEach((note) => {
-    const pc = noteToPc(note);
-    if (pc < 0) return;
-    let oct = positions.length === 0 ? startOctave : 0;
+  validPcs.forEach((pc, i) => {
+    let oct = i === 0 ? startOctave : 0;
     while (oct * 12 + pc <= prevAbs && oct < 2) oct++;
     if (oct >= 2) oct = 1;
     positions.push({ pc, octave: oct });

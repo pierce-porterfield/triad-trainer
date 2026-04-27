@@ -8,6 +8,7 @@ import IntervalTrainer from './components/IntervalTrainer.jsx';
 import NoteTrainer from './components/NoteTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import Gauntlet from './components/Gauntlet.jsx';
+import StaticPage from './components/StaticPage.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import KeyPage from './components/KeyPage.jsx';
 import ScalePage from './components/ScalePage.jsx';
@@ -66,6 +67,8 @@ export const routes = [
       { path: 'notes', Component: NoteTrainer },
       { path: 'daily', Component: Daily },
       { path: 'gauntlet', Component: Gauntlet },
+      { path: 'about',    Component: () => <StaticPage slug="about" />,    entry: 'src/components/StaticPage.jsx' },
+      { path: 'privacy',  Component: () => <StaticPage slug="privacy" />,  entry: 'src/components/StaticPage.jsx' },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
       ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),
       ...PUBLISHED_SCALE_SLUGS.map(makeScaleRoute),

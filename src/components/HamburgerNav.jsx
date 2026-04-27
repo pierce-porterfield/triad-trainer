@@ -145,6 +145,14 @@ export default function HamburgerNav() {
           </div>
         )}
 
+        <div className="nav-section">
+          <h3 className="nav-section-title">Site</h3>
+          <ul>
+            <li><Link to="/about">About</Link></li>
+            <li><Link to="/privacy">Privacy</Link></li>
+          </ul>
+        </div>
+
         <div className="nav-footer">
           Created by Pierce Porterfield
         </div>

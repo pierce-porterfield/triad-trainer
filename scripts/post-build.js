@@ -46,6 +46,8 @@ const STATIC_ROUTES = [
   { path: '/intervals',        priority: '0.9', changefreq: 'monthly' },
   { path: '/notes',            priority: '0.9', changefreq: 'monthly' },
   { path: '/daily',            priority: '0.9', changefreq: 'daily' },
+  { path: '/about',            priority: '0.5', changefreq: 'yearly' },
+  { path: '/privacy',          priority: '0.3', changefreq: 'yearly' },
 ];
 
 const urls = [

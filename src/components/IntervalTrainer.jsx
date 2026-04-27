@@ -24,7 +24,9 @@ export default function IntervalTrainer() {
     () => activeGroups.flatMap((gid) => GROUPS.find((g) => g.id === gid).intervalIds),
     [activeGroups]
   );
-  const [mode, setMode] = useState('menu'); // 'menu' | 'playing' | 'done'
+  // Flow: options (interval + input mode setup) → menu (direction picker)
+  // → playing → done. Mirrors Chord Trainer's two-step setup.
+  const [mode, setMode] = useState('options'); // 'options' | 'menu' | 'playing' | 'done'
   const [inputMode, setInputMode] = useState('tap'); // 'tap' | 'staff' | 'piano' | 'guitar'
   // Forward ('find-note'): card shows a root + interval, user names the resulting note.
   // Reverse ('find-root'): card shows a note + interval, user names the root it sits above.
@@ -44,6 +46,11 @@ export default function IntervalTrainer() {
     [activeGroups, inputMode, direction]
   );
   const bestTime = getBestTime(settingsKey);
+  // Look up the best time for a specific direction without changing the
+  // currently-selected `direction`. Used on the menu screen to show both
+  // direction's bests next to their buttons.
+  const bestForDirection = (dir) =>
+    getBestTime(`interval-${[...activeGroups].sort().join('_')}_${inputMode}_${dir}`);
 
   const [startedAt, setStartedAt] = useState(null);
   const [elapsed, setElapsed] = useState(0);
@@ -65,8 +72,9 @@ export default function IntervalTrainer() {
   const allOn = () => setActiveGroups(GROUPS.map((g) => g.id));
   const allOff = () => setActiveGroups([]);
 
-  const startGame = () => {
+  const startGame = (dir) => {
     if (activeIntervalIds.length === 0) return;
+    if (dir) setDirection(dir);
     const newDeck = shuffle(buildDeck(activeIntervalIds));
     setDeck(newDeck);
     setIdx(0);
@@ -287,6 +295,45 @@ export default function IntervalTrainer() {
       display: flex; gap: 0.5rem; justify-content: center;
       margin-bottom: 1.25rem;
     }
+    /* Chord-trainer-style mode buttons used on the direction-picker screen. */
+    .it-mode-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.75rem;
+      background: var(--paper);
+      border: 1px solid var(--ink);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .it-mode-btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--accent);
+    }
+    .it-mode-btn em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .it-mode-btn:hover em { color: var(--gold); }
+    .it-mode-btn-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      opacity: 0.6;
+      letter-spacing: 0.15em;
+    }
+    .it-mode-btn-arrow {
+      font-family: 'Italiana', serif;
+      font-size: 1.4rem;
+    }
+
     .it-direction-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -670,8 +717,8 @@ export default function IntervalTrainer() {
           <div className="it-eyebrow" style={{ opacity: 0.7 }}>Name the note based on the root and interval</div>
         </header>
 
-        {/* MENU */}
-        {mode === 'menu' && (
+        {/* OPTIONS — interval selection + input mode */}
+        {mode === 'options' && (
           <div className="it-panel it-fade-in">
             <div className="it-panel-label">— Choose your intervals —</div>
             <div className="it-panel-q">Toggle the intervals to study</div>
@@ -704,54 +751,76 @@ export default function IntervalTrainer() {
             </div>
 
             <div style={{ marginBottom: '1.25rem' }}>
-              <div className="it-best-label" style={{ marginBottom: '0.5rem' }}>Direction</div>
-              <div className="it-direction-row">
-                <button
-                  type="button"
-                  className={`it-direction-btn ${direction === 'find-note' ? 'on' : ''}`}
-                  onClick={() => setDirection('find-note')}
-                >
-                  <span className="it-direction-label">Find the note</span>
-                  <span className="it-direction-sub">A 4th above C → <em>F</em></span>
-                </button>
-                <button
-                  type="button"
-                  className={`it-direction-btn ${direction === 'find-root' ? 'on' : ''}`}
-                  onClick={() => setDirection('find-root')}
-                >
-                  <span className="it-direction-label">Find the root</span>
-                  <span className="it-direction-sub">F is the 4th of → <em>C</em></span>
-                </button>
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '1.25rem' }}>
               <div className="it-best-label" style={{ marginBottom: '0.5rem' }}>Input mode</div>
               <InputModeSelector value={inputMode} onChange={setInputMode} />
             </div>
 
             <button
               className="it-start-btn"
-              onClick={startGame}
+              onClick={() => setMode('menu')}
               disabled={activeIntervalIds.length === 0}
             >
-              <span>Begin study · {activeIntervalIds.length} intervals</span>
+              <span>Continue · {activeIntervalIds.length} intervals</span>
               <span className="it-start-btn-arrow">→</span>
             </button>
 
+            <div className="it-deck-info">
+              Pick which intervals to drill, then choose a direction on the next screen.
+            </div>
+          </div>
+        )}
+
+        {/* MENU — direction picker */}
+        {mode === 'menu' && (
+          <div className="it-panel it-fade-in">
+            <div className="it-panel-label">— Select a study —</div>
+            <div className="it-panel-q">Which direction shall we begin?</div>
+
+            <button
+              className="it-mode-btn"
+              onClick={() => startGame('find-note')}
+            >
+              <span>
+                <span className="it-mode-btn-num">I. </span>
+                Root + interval → <em>find the note</em>
+              </span>
+              <span className="it-mode-btn-arrow">→</span>
+            </button>
+            <button
+              className="it-mode-btn"
+              onClick={() => startGame('find-root')}
+            >
+              <span>
+                <span className="it-mode-btn-num">II. </span>
+                Note + interval → <em>find the root</em>
+              </span>
+              <span className="it-mode-btn-arrow">→</span>
+            </button>
+
+            <div className="it-deck-info">
+              <strong>{activeIntervalIds.length}</strong> intervals in deck
+            </div>
+
             <div className="it-best-row">
-              <div className="it-best-label">Best time for this selection · +20s per wrong</div>
+              <div className="it-best-label">Best times for this selection · +20s per wrong</div>
               <div className="it-best-line">
-                <span>Time to beat</span>
-                <strong>{formatTime(bestTime)}</strong>
+                <span>Find the note</span>
+                <strong>{formatTime(bestForDirection('find-note'))}</strong>
+              </div>
+              <div className="it-best-line">
+                <span>Find the root</span>
+                <strong>{formatTime(bestForDirection('find-root'))}</strong>
               </div>
             </div>
 
-            <div className="it-deck-info">
-              {direction === 'find-note'
-                ? 'Name the note that lies the chosen interval above the given root.'
-                : 'Given a note and an interval, name the root it sits above.'}
-            </div>
+            <button
+              className="it-start-btn"
+              style={{ background: 'transparent', color: 'var(--ink)', marginTop: '1rem' }}
+              onClick={() => setMode('options')}
+            >
+              <span>← Change interval selection</span>
+              <span></span>
+            </button>
           </div>
         )}
 
@@ -785,8 +854,9 @@ export default function IntervalTrainer() {
               );
             })()}
             <div className="it-action-row">
-              <button className="it-btn" onClick={startGame}>Again</button>
-              <button className="it-btn ghost" onClick={() => setMode('menu')}>Change intervals</button>
+              <button className="it-btn" onClick={() => startGame()}>Again</button>
+              <button className="it-btn ghost" onClick={() => setMode('menu')}>Change direction</button>
+              <button className="it-btn ghost" onClick={() => setMode('options')}>Change intervals</button>
             </div>
           </div>
         )}

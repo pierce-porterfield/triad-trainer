@@ -34,6 +34,14 @@ export default function LearnPage({ slug }) {
   const canonical = `https://theory-trainer.com/learn/${slug}`;
 
   // JSON-LD: Article + FAQPage.
+  //
+  // datePublished comes from the entry's publishAt. dateModified defaults to
+  // publishAt unless an explicit updatedAt is set on the entry — that way
+  // editing an article later can advance dateModified to today (signals
+  // "maintained" to Google, helps E-E-A-T) without invalidating the original
+  // publish date.
+  const datePublished = data.publishAt;
+  const dateModified  = data.updatedAt || data.publishAt;
   const articleLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -42,6 +50,8 @@ export default function LearnPage({ slug }) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     author: { '@type': 'Person', name: 'Pierce Porterfield' },
     publisher: { '@type': 'Organization', name: 'Music Theory Trainer' },
+    datePublished,
+    dateModified,
   };
   const faqLd = faq && faq.length > 0 ? {
     '@context': 'https://schema.org',

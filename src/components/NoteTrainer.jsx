@@ -47,7 +47,9 @@ const pickSpelling = (entry, seed) => {
 // random position metadata for staff (octave) / piano + guitar (seed for
 // chordSeed-driven octave or fret).
 const buildDeck = (selectedModes) => {
-  return PCS.map((entry, i) => {
+  // PCS is in fixed C → C# → ... order. Build the cards then shuffle so
+  // each round visits the 12 pitch classes in a fresh sequence.
+  const cards = PCS.map((entry, i) => {
     const spelling = pickSpelling(entry, Math.floor(Math.random() * 1000) + i);
     const note = `${spelling.letter}${spelling.accidental}`;
     const displayMode = selectedModes[Math.floor(Math.random() * selectedModes.length)];
@@ -57,6 +59,7 @@ const buildDeck = (selectedModes) => {
     const seed = `note-${i}-${note}-${Math.floor(Math.random() * 1e6)}`;
     return { id: `${i}-${note}`, pc: entry.pc, note, spelling, displayMode, octave, seed };
   });
+  return shuffle(cards);
 };
 
 export default function NoteTrainer() {

@@ -28,9 +28,14 @@ export const QUALITIES = {
   min11:  { label: 'minor 11th',      symbol: 'm11',   intervals: [0, 3, 7, 10, 14, 17], group: 'elevenths' },
   add11:  { label: 'add 11',          symbol: 'add11', intervals: [0, 4, 7, 17],         degrees: [0, 2, 4, 10],  group: 'add' },
   madd11: { label: 'minor add 11',    symbol: 'm(add11)', intervals: [0, 3, 7, 17],      degrees: [0, 2, 4, 10],  group: 'add' },
-  maj13:  { label: 'major 13th',      symbol: 'maj13', intervals: [0, 4, 7, 11, 14, 21], group: 'thirteenths' },
-  dom13:  { label: 'dominant 13th',   symbol: '13',    intervals: [0, 4, 7, 10, 14, 21], group: 'thirteenths' },
-  min13:  { label: 'minor 13th',      symbol: 'm13',   intervals: [0, 3, 7, 10, 14, 21], group: 'thirteenths' },
+  // 13th chords skip the 11 (1·3·5·7·9·13), so the 6th note in the array
+  // sits on letter+12 (the 13th's letter slot = root letter + 5 mod 7), NOT
+  // letter+10 (the 11th's slot). Without this override, default `i * 2`
+  // letter-stepping spelled the 13th onto the wrong letter — e.g. E♭maj13
+  // returned "A" instead of "C".
+  maj13:  { label: 'major 13th',      symbol: 'maj13', intervals: [0, 4, 7, 11, 14, 21], degrees: [0, 2, 4, 6, 8, 12], group: 'thirteenths' },
+  dom13:  { label: 'dominant 13th',   symbol: '13',    intervals: [0, 4, 7, 10, 14, 21], degrees: [0, 2, 4, 6, 8, 12], group: 'thirteenths' },
+  min13:  { label: 'minor 13th',      symbol: 'm13',   intervals: [0, 3, 7, 10, 14, 21], degrees: [0, 2, 4, 6, 8, 12], group: 'thirteenths' },
 };
 
 // Spell a chord. By default each interval index advances the letter name

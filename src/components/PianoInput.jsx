@@ -12,39 +12,41 @@ const DOT_COLORS = [
 ];
 
 // For display mode: pick one (octave, pitch-class) per note so the same note
-// doesn't light up across both octaves. Notes ascend (root → 3rd → 5th → 7th
-// → 9th → 13th); octave-of-root varied by seed for visual variety.
+// doesn't light up across multiple octaves. Notes ascend (root → 3rd → 5th
+// → 7th → 9th → 13th); octave-of-root varied by seed for visual variety.
 //
-// The piano shows 2 octaves (24 semitones). 9th and 13th chords span more
-// than 12 semitones from root to top extension, so they only fit when the
-// root starts in octave 0. We compute the chord's chromatic span up front
-// and clamp startOctave accordingly — without this clamp, starting in
-// octave 1 caused the algorithm to fail-back to octave 1 for the topmost
-// extensions, putting them BELOW the 7th and breaking voicing order.
+// The piano shows OCTAVES octaves (12 * OCTAVES semitones). 13th chords span
+// up to 21 semitones from root to top extension; with 2 octaves there wasn't
+// enough room when the root sat high in its octave (B-rooted chords had the
+// 13th forced below the 7th). 3 octaves gives 36 semitones of headroom — any
+// 13th chord fits with the root anywhere in the lower two octaves.
 const placeChordOnPiano = (notes, seed) => {
   const seedNum = cyrb53(String(seed || ''));
   const validPcs = notes.map(noteToPc).filter((pc) => pc >= 0);
   if (validPcs.length === 0) return [];
 
-  // Walk the chord at oct=0 to find its total span; that tells us the highest
-  // possible startOctave that still fits in 24 semitones.
+  // Walk at oct=0 to find the chord's chromatic span (root to highest note).
   let abs = -1;
   let span = 0;
   for (const pc of validPcs) {
     let o = 0;
-    while (o * 12 + pc <= abs && o < 2) o++;
+    while (o * 12 + pc <= abs && o < OCTAVES) o++;
     abs = o * 12 + pc;
     span = abs;
   }
-  const maxStartOctave = span <= 11 ? 1 : 0; // 11 because 12+span must be ≤ 23
-  const startOctave = (seedNum % 2) > maxStartOctave ? maxStartOctave : (seedNum % 2);
+  // Highest legal startOctave such that the topmost note still fits in
+  // OCTAVES * 12 - 1 semitones. Floor of ((max - span) / 12).
+  const maxAbs = OCTAVES * 12 - 1;
+  const maxStartOctave = Math.max(0, Math.floor((maxAbs - span) / 12));
+  const desired = seedNum % OCTAVES;
+  const startOctave = Math.min(desired, maxStartOctave);
 
   const positions = [];
   let prevAbs = -1;
   validPcs.forEach((pc, i) => {
     let oct = i === 0 ? startOctave : 0;
-    while (oct * 12 + pc <= prevAbs && oct < 2) oct++;
-    if (oct >= 2) oct = 1;
+    while (oct * 12 + pc <= prevAbs && oct < OCTAVES) oct++;
+    if (oct >= OCTAVES) oct = OCTAVES - 1; // fallback (shouldn't trigger now)
     positions.push({ pc, octave: oct });
     prevAbs = oct * 12 + pc;
   });
@@ -75,10 +77,16 @@ const BLACK_KEYS = [
   { pc: 10, afterIdx: 5 }, // A#
 ];
 
-const OCTAVES = 2;
-const W = 700;
+const OCTAVES = 3;
+// W scales with OCTAVES so each key occupies the same SVG-coord width
+// regardless of how many octaves are shown; the SVG itself "meet"-scales to
+// fill its container, so on mobile the piano becomes denser (each key
+// renders narrower) but every chord — including 13ths from any root — fits
+// without dropping notes back an octave.
+const WHITE_W_VB = 50;          // SVG-coord width per white key
+const W = 7 * OCTAVES * WHITE_W_VB;
 const H = 220;
-const WHITE_W = W / (7 * OCTAVES);
+const WHITE_W = WHITE_W_VB;
 const BLACK_W = WHITE_W * 0.6;
 const BLACK_H = H * 0.62;
 

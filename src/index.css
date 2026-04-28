@@ -239,9 +239,13 @@ input {
   margin-bottom: 0.15rem;
 }
 .np-slot-value {
-  font-family: 'Italiana', serif;
-  font-size: 1.6rem;
+  /* JetBrains Mono Bold reads cleanly at button sizes — Italiana's thin
+     verticals made E/F/B hard to distinguish at a glance. */
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1.4rem;
   line-height: 1;
+  letter-spacing: 0.02em;
 }
 .np-acc-row {
   display: flex;
@@ -291,8 +295,12 @@ input {
   background: var(--paper);
   border: 1px solid var(--ink);
   color: var(--ink);
-  font-family: 'Italiana', serif;
-  font-size: 1.3rem;
+  /* JetBrains Mono Bold for readability — Italiana's thin verticals
+     made E vs. F vs. B hard to read at this size. */
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
   cursor: pointer;
   line-height: 1;
 }

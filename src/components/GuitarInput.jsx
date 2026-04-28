@@ -72,6 +72,11 @@ export default function GuitarInput({
   onChange,
   maxNotes = 6,
   chordSeed,
+  // Optional: explicit list of {stringIdx, fret} positions to display.
+  // When provided, overrides the algorithmic placeChordOnNeck — used by
+  // chord-id rounds to show real-world fingerings (open chords, barre
+  // shapes) instead of the abstract nearest-note layout.
+  fingering,
 }) {
   // For input mode, track each placed dot at its specific (string, fret) position
   // so two same-pitch frets aren't both auto-lit. The pitch-class array fed to
@@ -86,11 +91,13 @@ export default function GuitarInput({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, value.length]);
 
-  // For display mode, place exactly one dot per note, varied by chord seed.
-  const displayPositions = useMemo(
-    () => mode === 'display' ? placeChordOnNeck(value, chordSeed) : [],
-    [mode, value, chordSeed]
-  );
+  // For display mode, prefer the curated `fingering` prop when given;
+  // otherwise fall back to algorithmic placement (placeChordOnNeck).
+  const displayPositions = useMemo(() => {
+    if (mode !== 'display') return [];
+    if (fingering && fingering.length > 0) return fingering;
+    return placeChordOnNeck(value, chordSeed);
+  }, [mode, value, chordSeed, fingering]);
 
   // Auto-scroll the fretboard so the placed chord centres in view.
   //

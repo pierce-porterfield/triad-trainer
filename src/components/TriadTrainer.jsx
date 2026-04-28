@@ -11,6 +11,7 @@ import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector from './InputModeSelector.jsx';
 import { pcSetsEqual, pcSetMatchWithOptional, spellInContext } from '../data/pitchClass';
 import { guitarOptionalPcs } from '../data/triads';
+import { pickFingering } from '../data/guitarFingerings';
 import { shuffle, notesMatch } from '../data/notes';
 import { QUALITIES, buildTriadDeck, chordNameMatch } from '../data/triads';
 
@@ -1044,7 +1045,12 @@ export default function TriadTrainer() {
                     ) : options.inputMode === 'piano' ? (
                       <PianoInput mode="display" value={current.notes} chordSeed={current.chordName} />
                     ) : options.inputMode === 'guitar' ? (
-                      <GuitarInput mode="display" value={current.notes} chordSeed={current.chordName} />
+                      <GuitarInput
+                        mode="display"
+                        value={current.notes}
+                        chordSeed={current.chordName}
+                        fingering={pickFingering(current.quality, current.root, current.chordName)}
+                      />
                     ) : (
                       <div className="tt-notes-display">
                         {current.notes.map((n, i) => (

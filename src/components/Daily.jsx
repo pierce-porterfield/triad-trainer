@@ -8,6 +8,7 @@ import { getPlayerId, getPlayerTag, getPlayerName, setPlayerName, sanitisePlayer
 import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch, guitarOptionalPcs } from '../data/triads';
+import { pickFingering } from '../data/guitarFingerings';
 import { pcSetMatchWithOptional } from '../data/pitchClass';
 import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey } from '../data/keys';
 import TrainerLayout from './TrainerLayout.jsx';
@@ -47,7 +48,12 @@ function CardFront({ round, card }) {
         ) : im === 'piano' ? (
           <PianoInput mode="display" value={card.notes} chordSeed={card.chordName} />
         ) : im === 'guitar' ? (
-          <GuitarInput mode="display" value={card.notes} chordSeed={card.chordName} />
+          <GuitarInput
+            mode="display"
+            value={card.notes}
+            chordSeed={card.chordName}
+            fingering={pickFingering(card.quality, card.root, card.chordName)}
+          />
         ) : (
           <div className="d-card-notes">
             {card.notes.map((n, i) => (

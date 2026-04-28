@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { getChordPageContent, slugToChord } from '../data/chordContent';
+import { pickFingering } from '../data/guitarFingerings';
 import PianoInput from './PianoInput';
 import GuitarInput from './GuitarInput';
 
@@ -34,7 +35,7 @@ export default function ChordPage({ slug }) {
   }
 
   const {
-    chordName, displayName, root, qualityLabel, notes,
+    chordName, displayName, root, qualityKey, qualityLabel, notes,
     intro, intervals, relatedKeys, relatedChords, commonMistakes,
     inProgressions, faq,
   } = data;
@@ -155,7 +156,12 @@ export default function ChordPage({ slug }) {
           <h2 className="chord-h2">On the guitar</h2>
           <p>One voicing of the {displayName} chord on a six-string guitar fretboard.</p>
           <div className="chord-diagram">
-            <GuitarInput mode="display" value={notes} chordSeed={slug} />
+            <GuitarInput
+              mode="display"
+              value={notes}
+              chordSeed={slug}
+              fingering={pickFingering(qualityKey, root, slug)}
+            />
           </div>
         </section>
 

@@ -13,6 +13,7 @@ import { buildGauntletRound } from '../utils/gauntletRounds';
 import { loadGauntletState, recordGauntletRound } from '../utils/gauntletState';
 import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch, QUALITIES, guitarOptionalPcs } from '../data/triads';
+import { pickFingering } from '../data/guitarFingerings';
 import { KEY_LETTERS, answersMatch, keyNameMatch, keyNameMatchOrRelative, relativeKeyOf, notesInKey } from '../data/keys';
 import { noteToPc, pcSetMatchWithOptional } from '../data/pitchClass';
 
@@ -54,7 +55,12 @@ function CardFront({ round, card }) {
         ) : im === 'piano' ? (
           <PianoInput mode="display" value={card.notes} chordSeed={card.chordName} />
         ) : im === 'guitar' ? (
-          <GuitarInput mode="display" value={card.notes} chordSeed={card.chordName} />
+          <GuitarInput
+            mode="display"
+            value={card.notes}
+            chordSeed={card.chordName}
+            fingering={pickFingering(card.quality, card.root, card.chordName)}
+          />
         ) : (
           <div className="g-card-notes">
             {card.notes.map((n, i) => (

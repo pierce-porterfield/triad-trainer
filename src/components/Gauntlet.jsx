@@ -12,9 +12,9 @@ import { formatTime } from '../utils/bestTimes';
 import { buildGauntletRound } from '../utils/gauntletRounds';
 import { loadGauntletState, recordGauntletRound } from '../utils/gauntletState';
 import { notesMatch, formatNote } from '../data/notes';
-import { chordNameMatch, QUALITIES } from '../data/triads';
+import { chordNameMatch, QUALITIES, guitarOptionalPcs } from '../data/triads';
 import { KEY_LETTERS, answersMatch, keyNameMatch, keyNameMatchOrRelative, relativeKeyOf, notesInKey } from '../data/keys';
-import { noteToPc } from '../data/pitchClass';
+import { noteToPc, pcSetMatchWithOptional } from '../data/pitchClass';
 
 const FEEDBACK_DELAY_MS = 1400;          // dwell after correct (auto-advances)
 // Wrong answers no longer auto-advance — the user clicks Next when ready,
@@ -158,7 +158,7 @@ function CardInput({ round, card, answer, setAnswer }) {
         <GuitarInput
           value={answer.notes || []}
           onChange={(next) => setAnswer({ ...answer, notes: next })}
-          maxNotes={card.notes.length}
+          maxNotes={6}
         />
       );
     }
@@ -358,6 +358,14 @@ function gradeAnswer(round, card, answer) {
   if (round.type === 'chord' && round.direction === 'chord-to-notes') {
     if (round.inputMode === 'staff') {
       return notesMatch(staffToStrings(answer.staffNotes), card.notes);
+    }
+    if (round.inputMode === 'guitar') {
+      // Guitar voicings: doubled pitch classes are fine, and 11/13 chords
+      // commonly omit the 9th in playable shapes.
+      return pcSetMatchWithOptional(
+        answer.notes || [], card.notes,
+        guitarOptionalPcs(card.quality, card.notes),
+      );
     }
     return notesMatch(answer.notes || [], card.notes);
   }

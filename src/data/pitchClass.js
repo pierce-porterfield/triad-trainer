@@ -49,3 +49,24 @@ export const pcSetsEqual = (a, b) => {
   if (sa.length !== sb.length) return false;
   return sa.every((v, i) => v === sb[i]);
 };
+
+// Pitch-class match where the user may double notes (guitar chords do this
+// naturally — same pitch class on multiple strings). Required = chord's
+// pitch classes minus any pitches in `optionalPcs`. The user's submission
+// must contain every required pitch class and contain nothing outside the
+// chord's pitch classes; duplicates within those constraints are fine.
+//
+//   pcSetMatchWithOptional([C, E, G, C, E], [C, E, G])           → true
+//   pcSetMatchWithOptional([C, E, G, B, A], [C, E, G, B♭, D, A], [pcOf(D)])
+//                                                                 → true (no 9, allowed)
+//   pcSetMatchWithOptional([C, E, G, C], [C, E, G, B♭, D, A])    → false (missing B♭, A)
+export const pcSetMatchWithOptional = (userNotes, chordNotes, optionalPcs = []) => {
+  const userSet  = new Set(userNotes.map(noteToPc).filter((p) => p >= 0));
+  const chordSet = new Set(chordNotes.map(noteToPc).filter((p) => p >= 0));
+  const optional = new Set(optionalPcs);
+  // Every chord pc that isn't optional must appear in the user's set.
+  for (const p of chordSet) if (!optional.has(p) && !userSet.has(p)) return false;
+  // No user pc may sit outside the chord's pc set.
+  for (const p of userSet) if (!chordSet.has(p)) return false;
+  return true;
+};

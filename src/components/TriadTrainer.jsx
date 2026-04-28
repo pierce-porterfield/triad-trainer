@@ -9,7 +9,8 @@ import ChordPicker from './ChordPicker.jsx';
 import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector from './InputModeSelector.jsx';
-import { pcSetsEqual, spellInContext } from '../data/pitchClass';
+import { pcSetsEqual, pcSetMatchWithOptional, spellInContext } from '../data/pitchClass';
+import { guitarOptionalPcs } from '../data/triads';
 import { shuffle, notesMatch } from '../data/notes';
 import { QUALITIES, buildTriadDeck, chordNameMatch } from '../data/triads';
 
@@ -178,7 +179,17 @@ export default function TriadTrainer() {
           (n) => spellInContext(n, current.notes, { ambiguousFallback: true })
         );
         userAnswer = display.filter(Boolean).join(' – ') || '(blank)';
-        isCorrect = pcSetsEqual(userNotes, current.notes);
+        // Guitar voicings double pitch classes across strings constantly,
+        // and 11th/13th chords are commonly played without the 9th.
+        // Use the optional-aware matcher for guitar; piano stays strict.
+        if (options.inputMode === 'guitar') {
+          isCorrect = pcSetMatchWithOptional(
+            userNotes, current.notes,
+            guitarOptionalPcs(current.quality, current.notes),
+          );
+        } else {
+          isCorrect = pcSetsEqual(userNotes, current.notes);
+        }
       } else {
         const userNotes = answers.notes;
         userAnswer = userNotes.filter(Boolean).join(' – ') || '(blank)';
@@ -947,7 +958,7 @@ export default function TriadTrainer() {
         <GuitarInput
           value={answers.notes || []}
           onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
-          maxNotes={current.notes.length}
+          maxNotes={6}
         />
       ) : (
         (() => {

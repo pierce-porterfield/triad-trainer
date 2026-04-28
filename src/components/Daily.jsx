@@ -7,7 +7,8 @@ import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import { getPlayerId, getPlayerTag, getPlayerName, setPlayerName, sanitisePlayerName, PLAYER_NAME_RULES } from '../utils/player';
 import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
-import { chordNameMatch } from '../data/triads';
+import { chordNameMatch, guitarOptionalPcs } from '../data/triads';
+import { pcSetMatchWithOptional } from '../data/pitchClass';
 import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey } from '../data/keys';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
@@ -196,7 +197,7 @@ function CardInput({ round, card, answer, setAnswer }) {
         <GuitarInput
           value={answer.notes || []}
           onChange={(next) => setAnswer({ ...answer, notes: next })}
-          maxNotes={card.notes.length}
+          maxNotes={6}
         />
       );
     }
@@ -321,6 +322,14 @@ function gradeAnswer(round, card, answer) {
   if (round.type === 'triad' && round.direction === 'chord-to-notes') {
     if (round.inputMode === 'staff') {
       return notesMatch(staffToStrings(answer.staffNotes), card.notes);
+    }
+    if (round.inputMode === 'guitar') {
+      // Guitar voicings: doubled pitch classes are normal, and 11/13 chords
+      // commonly omit the 9th. The optional-aware matcher handles both.
+      return pcSetMatchWithOptional(
+        answer.notes || [], card.notes,
+        guitarOptionalPcs(card.quality, card.notes),
+      );
     }
     return notesMatch(answer.notes || [], card.notes);
   }

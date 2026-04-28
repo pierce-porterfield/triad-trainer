@@ -1,4 +1,5 @@
 import { ROOTS, LETTERS, parseNote, spellForLetter, normalizeNote } from './notes';
+import { noteToPc } from './pitchClass';
 
 // All chord qualities supported. Intervals are stacked thirds in semitones.
 // 13ths follow the no-11 convention (1·3·5·7·9·13). 11ths include all six
@@ -56,6 +57,24 @@ export const buildChord = (root, qualityKey) => {
     const targetSemi = (rootSemi + iv) % 12;
     return spellForLetter(targetLetter, targetSemi);
   });
+};
+
+// Pitch classes the user may omit when voicing this chord on a guitar
+// fretboard. 11th and 13th chords commonly drop the 9th in standard voicings
+// because the hand can't reach the full stack on a six-string neck — this
+// is genuinely how those chords are played, not a workaround.
+//
+// Returns an array of pitch classes (0-11). Empty for chord types where every
+// note is required (triads, 7ths, 9ths). Used only by guitar input grading;
+// piano/staff/tap modes still require every chord note.
+export const guitarOptionalPcs = (qualityKey, chordNotes) => {
+  const q = QUALITIES[qualityKey];
+  if (!q) return [];
+  if (q.group === 'elevenths' || q.group === 'thirteenths') {
+    // The 9th sits at index 4 in our stacked-thirds chord arrays.
+    return chordNotes[4] != null ? [noteToPc(chordNotes[4])] : [];
+  }
+  return [];
 };
 
 // Build the deck for the given quality keys. Skips combinations that need

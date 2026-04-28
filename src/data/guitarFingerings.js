@@ -149,6 +149,197 @@ const SHAPES = [
       { stringIdx: 0, offset: 0 },
     ],
   },
+
+  // === 6th chords ===
+  // Major 6 E-shape. Open E6 = 022120 → 1, 5, 1, 3, 6, 1.
+  {
+    id: 'maj6-E', quality: 'maj6', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 }, // root
+      { stringIdx: 4, offset: 2 }, // 5
+      { stringIdx: 3, offset: 2 }, // root oct
+      { stringIdx: 2, offset: 1 }, // 3
+      { stringIdx: 1, offset: 2 }, // 6
+      { stringIdx: 0, offset: 0 }, // root 2-oct
+    ],
+  },
+  // Major 6 A-shape. Open A6 = x02222 → 1, 5, 1, 3, 6.
+  {
+    id: 'maj6-A', quality: 'maj6', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 }, // root
+      { stringIdx: 3, offset: 2 }, // 5
+      { stringIdx: 2, offset: 2 }, // root oct
+      { stringIdx: 1, offset: 2 }, // 3
+      { stringIdx: 0, offset: 2 }, // 6
+    ],
+  },
+  // Minor 6 E-shape. Open Em6 = 022020 → 1, 5, 1, ♭3, 6, 1.
+  {
+    id: 'min6-E', quality: 'min6', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      { stringIdx: 4, offset: 2 },
+      { stringIdx: 3, offset: 2 },
+      { stringIdx: 2, offset: 0 }, // ♭3 (open against barre)
+      { stringIdx: 1, offset: 2 }, // 6
+      { stringIdx: 0, offset: 0 },
+    ],
+  },
+  // Minor 6 A-shape. Open Am6 = x02212 → 1, 5, 1, ♭3, 6.
+  {
+    id: 'min6-A', quality: 'min6', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 },
+      { stringIdx: 3, offset: 2 },
+      { stringIdx: 2, offset: 2 },
+      { stringIdx: 1, offset: 1 }, // ♭3
+      { stringIdx: 0, offset: 2 }, // 6
+    ],
+  },
+
+  // === 9th chords ===
+  // Dominant 9 E-shape. Open E9 = 022132 → 1, 5, 1, 3, ♭7, 9.
+  {
+    id: 'dom9-E', quality: 'dom9', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      { stringIdx: 4, offset: 2 },
+      { stringIdx: 3, offset: 2 },
+      { stringIdx: 2, offset: 1 }, // 3
+      { stringIdx: 1, offset: 3 }, // ♭7
+      { stringIdx: 0, offset: 2 }, // 9
+    ],
+  },
+  // Dominant 9 A-shape. Open A9 = x02423 → 1, 5, 9, 3, ♭7.
+  {
+    id: 'dom9-A', quality: 'dom9', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 },
+      { stringIdx: 3, offset: 2 }, // 5
+      { stringIdx: 2, offset: 4 }, // 9
+      { stringIdx: 1, offset: 2 }, // 3
+      { stringIdx: 0, offset: 3 }, // ♭7
+    ],
+  },
+  // Major 9 E-shape with B muted. Open Emaj9 ≈ 02112x + e=2 → 1, 5, 7, 3, 9.
+  {
+    id: 'maj9-E', quality: 'maj9', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      { stringIdx: 4, offset: 2 }, // 5
+      { stringIdx: 3, offset: 1 }, // 7 (raised from ♭7)
+      { stringIdx: 2, offset: 1 }, // 3
+      // B string skipped (would otherwise be the 6 = wrong note)
+      { stringIdx: 0, offset: 2 }, // 9
+    ],
+  },
+  // Major 9 A-shape — drop-3 voicing. Cmaj9 = x35433 → 1, 5, 7, 9, 5.
+  // No 3rd; the maj7 + 9 still tells the ear "maj9" clearly.
+  {
+    id: 'maj9-A', quality: 'maj9', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 },
+      { stringIdx: 3, offset: 2 }, // 5
+      { stringIdx: 2, offset: 1 }, // 7
+      { stringIdx: 1, offset: 0 }, // 9
+      { stringIdx: 0, offset: 0 }, // 5 oct
+    ],
+  },
+  // Minor 9 E-shape with A muted. Em9 = 0x0002 → 1, ♭7, ♭3, 5, 9.
+  {
+    id: 'min9-E', quality: 'min9', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      // A skipped
+      { stringIdx: 3, offset: 0 }, // ♭7
+      { stringIdx: 2, offset: 0 }, // ♭3
+      { stringIdx: 1, offset: 0 }, // 5
+      { stringIdx: 0, offset: 2 }, // 9
+    ],
+  },
+
+  // === 11th chords ===
+  // The full 1·3·5·♭7·9·11 stack puts the 3 and the 11 a half-step apart in
+  // adjacent octaves — they clash. Standard practice is to omit the 3rd in
+  // dominant and major 11 voicings (the chord then sounds suspended-like,
+  // which is the conventional sound of a dom11). Minor 11s keep the ♭3
+  // because there's no clash.
+  //
+  // Dominant 11 A-shape (no 3). C11 = x33333 → 1, 11, ♭7, 9, 5.
+  // The famous "barre across one fret" sus-style voicing.
+  {
+    id: 'dom11-A', quality: 'dom11', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 }, // root
+      { stringIdx: 3, offset: 0 }, // 11
+      { stringIdx: 2, offset: 0 }, // ♭7
+      { stringIdx: 1, offset: 0 }, // 9
+      { stringIdx: 0, offset: 0 }, // 5
+    ],
+  },
+  // Major 11 A-shape (no 3). Cmaj11 = x33433 → 1, 11, 7, 9, 5.
+  {
+    id: 'maj11-A', quality: 'maj11', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 },
+      { stringIdx: 3, offset: 0 }, // 11
+      { stringIdx: 2, offset: 1 }, // 7
+      { stringIdx: 1, offset: 0 }, // 9
+      { stringIdx: 0, offset: 0 }, // 5
+    ],
+  },
+  // Minor 11 A-shape — keeps the ♭3 since there's no half-step clash with 11.
+  // Cm11 = x33343 → 1, 11, ♭7, ♭3, 5. Am11 = x00010.
+  {
+    id: 'min11-A', quality: 'min11', rootStringIdx: 4,
+    pattern: [
+      { stringIdx: 4, offset: 0 },
+      { stringIdx: 3, offset: 0 }, // 11
+      { stringIdx: 2, offset: 0 }, // ♭7
+      { stringIdx: 1, offset: 1 }, // ♭3
+      { stringIdx: 0, offset: 0 }, // 5
+    ],
+  },
+
+  // === 13th chords ===
+  // The full 1·3·5·7·9·13 stack is impossible to reach. Standard guitar
+  // voicings are 4-note "shells" — root, 7th, 3rd, 13th — which uniquely
+  // identify the chord while staying playable. These are the voicings
+  // taught in jazz comping pedagogy.
+  //
+  // Dominant 13 E-shape shell. G13 = 3x345x → 1, ♭7, 3, 13.
+  {
+    id: 'dom13-E', quality: 'dom13', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 }, // root
+      // A muted (would be the 5th — omitted in the shell)
+      { stringIdx: 3, offset: 0 }, // ♭7
+      { stringIdx: 2, offset: 1 }, // 3
+      { stringIdx: 1, offset: 2 }, // 13
+      // e muted
+    ],
+  },
+  // Major 13 E-shape shell. Gmaj13 = 3x445x → 1, 7, 3, 13.
+  {
+    id: 'maj13-E', quality: 'maj13', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      { stringIdx: 3, offset: 1 }, // 7 (raised from ♭7)
+      { stringIdx: 2, offset: 1 }, // 3
+      { stringIdx: 1, offset: 2 }, // 13
+    ],
+  },
+  // Minor 13 E-shape shell. Gm13 = 3x335x → 1, ♭7, ♭3, 13.
+  {
+    id: 'min13-E', quality: 'min13', rootStringIdx: 5,
+    pattern: [
+      { stringIdx: 5, offset: 0 },
+      { stringIdx: 3, offset: 0 }, // ♭7
+      { stringIdx: 2, offset: 0 }, // ♭3
+      { stringIdx: 1, offset: 2 }, // 13
+    ],
+  },
 ];
 
 // SPECIFIC OPEN CHORDS — voicings that aren't a barre-shape applied at
@@ -248,6 +439,59 @@ const OPEN_FINGERINGS = {
     { stringIdx: 2, fret: 2 },
     { stringIdx: 1, fret: 1 },
     { stringIdx: 0, fret: 1 },
+  ],
+
+  // === Add chords — standard open voicings ===
+  // Cadd9 — x32030 → 1, 3, 5, 9, 3.
+  'C-add9': [
+    { stringIdx: 4, fret: 3 },
+    { stringIdx: 3, fret: 2 },
+    { stringIdx: 2, fret: 0 },
+    { stringIdx: 1, fret: 3 },
+    { stringIdx: 0, fret: 0 },
+  ],
+  // Eadd9 — 022102 → 1, 5, 1, 3, 5, 9.
+  'E-add9': [
+    { stringIdx: 5, fret: 0 },
+    { stringIdx: 4, fret: 2 },
+    { stringIdx: 3, fret: 2 },
+    { stringIdx: 2, fret: 1 },
+    { stringIdx: 1, fret: 0 },
+    { stringIdx: 0, fret: 2 },
+  ],
+  // Gadd9 — 300003 → 1, 9, 5, 1, 3, 1.
+  'G-add9': [
+    { stringIdx: 5, fret: 3 },
+    { stringIdx: 4, fret: 0 },
+    { stringIdx: 3, fret: 0 },
+    { stringIdx: 2, fret: 0 },
+    { stringIdx: 1, fret: 0 },
+    { stringIdx: 0, fret: 3 },
+  ],
+  // Aadd9 — x02420 → 1, 5, 9, 3, 5.
+  'A-add9': [
+    { stringIdx: 4, fret: 0 },
+    { stringIdx: 3, fret: 2 },
+    { stringIdx: 2, fret: 4 },
+    { stringIdx: 1, fret: 2 },
+    { stringIdx: 0, fret: 0 },
+  ],
+  // Em(add9) — 022002 → 1, 5, 1, ♭3, 5, 9.
+  'E-madd9': [
+    { stringIdx: 5, fret: 0 },
+    { stringIdx: 4, fret: 2 },
+    { stringIdx: 3, fret: 2 },
+    { stringIdx: 2, fret: 0 },
+    { stringIdx: 1, fret: 0 },
+    { stringIdx: 0, fret: 2 },
+  ],
+  // Am(add9) — x02410 → 1, 5, 9, ♭3, 1.
+  'A-madd9': [
+    { stringIdx: 4, fret: 0 },
+    { stringIdx: 3, fret: 2 },
+    { stringIdx: 2, fret: 4 },
+    { stringIdx: 1, fret: 1 },
+    { stringIdx: 0, fret: 0 },
   ],
 };
 

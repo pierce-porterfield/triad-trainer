@@ -83,22 +83,30 @@ export default async function handler(req, res) {
   const playsKey = `daily:plays:${puzzleNumber}`;
   const nameKey = `daily:player:${playerId}:name`;
 
-  // Already submitted? Return existing record's rank without mutating play
-  // counts. We DO allow updating the display name on a duplicate submit so
-  // a player who skipped the name prompt can come back and add one without
-  // losing their result. ioredis returns {} (not null) for an unset hash,
-  // so we check a specific field rather than the wrapper object.
-  const existing = await redis.hgetall(resultKey);
-  if (existing && existing.time) {
+  // Atomic dedup gate: ZADD with NX returns 1 only if the member was newly
+  // added to the sorted set, 0 if it was already present (regardless of
+  // score). This is the *only* place we decide "is this a fresh submit?" —
+  // checking hgetall first is racy, since finishPuzzle and the
+  // results-screen-mount auto-backfill can fire submit() near-simultaneously
+  // and both pass the "not yet submitted" check. ZADD NX is atomic and
+  // guarantees only one of the racers proceeds with the counter increments.
+  const wasAdded = await redis.zadd(lbKey, 'NX', time, playerId);
+
+  if (wasAdded === 0) {
+    // Player already on this puzzle's leaderboard — duplicate path.
+    // Allow updating the display name (existing player → set or change name).
     const cleanNameForUpdate = sanitiseName(name);
-    if (cleanNameForUpdate && cleanNameForUpdate !== existing.name) {
-      await Promise.all([
-        redis.hset(resultKey, 'name', cleanNameForUpdate),
-        redis.set(nameKey, cleanNameForUpdate),
-      ]);
+    if (cleanNameForUpdate) {
+      const existing = await redis.hgetall(resultKey);
+      if (cleanNameForUpdate !== existing?.name) {
+        await Promise.all([
+          redis.hset(resultKey, 'name', cleanNameForUpdate),
+          redis.set(nameKey, cleanNameForUpdate),
+        ]);
+      }
     }
     const rank = await redis.zrank(lbKey, playerId);
-    const todayPlays = Number(await redis.get(playsKey)) || 0;
+    const todayPlays = await redis.zcard(lbKey);
     res.status(200).json({
       rank: rank == null ? null : rank + 1,
       todayPlays,
@@ -107,13 +115,12 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Persist name if given (also reused for future submits without re-prompt).
+  // Truly fresh submission (only the first racer reaches this path).
   if (cleanName) {
     await redis.set(nameKey, cleanName);
   }
   const displayName = cleanName || (await redis.get(nameKey)) || '';
 
-  // Pipeline the writes — atomic-ish single round-trip.
   const pipe = redis.pipeline();
   pipe.hset(resultKey,
     'time',         String(time),
@@ -122,15 +129,15 @@ export default async function handler(req, res) {
     'tag',          cleanTag || '',
     'submittedAt',  String(Date.now()),
   );
-  pipe.zadd(lbKey, time, playerId);
   pipe.incr('daily:total');
-  pipe.incr(playsKey);
   pipe.sadd('daily:players', playerId);
+  // No more INCR on playsKey — todayPlays is derived from ZCARD(lb) below,
+  // which is impossible to desync from the leaderboard.
   await pipe.exec();
 
   const [rank, todayPlays, lifetimeTotal, lifetimePlayers] = await Promise.all([
     redis.zrank(lbKey, playerId),
-    redis.get(playsKey),
+    redis.zcard(lbKey),
     redis.get('daily:total'),
     redis.scard('daily:players'),
   ]);

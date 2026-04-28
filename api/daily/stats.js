@@ -33,7 +33,6 @@ export default async function handler(req, res) {
   let today = null;
   if (Number.isInteger(puzzleNumber) && puzzleNumber >= 1) {
     const lbKey = `daily:lb:${puzzleNumber}`;
-    const playsKey = `daily:plays:${puzzleNumber}`;
 
     // Top 10: zrange by score asc, fastest times first.
     // ioredis returns a flat string[] for WITHSCORES: [member, score, member, score, ...]
@@ -67,7 +66,10 @@ export default async function handler(req, res) {
       }
     }
 
-    const plays = Number(await redis.get(playsKey)) || 0;
+    // Derive plays from the leaderboard ZSET itself rather than a separate
+    // INCR counter — guarantees the homepage count and the visible
+    // leaderboard size never disagree.
+    const plays = await redis.zcard(lbKey);
     today = { puzzleNumber, plays, top10, me };
   }
 

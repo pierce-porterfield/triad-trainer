@@ -9,7 +9,7 @@ import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector, { INPUT_MODES } from './InputModeSelector.jsx';
 import { shuffle, formatNote, notesEqual } from '../data/notes';
-import { noteToPc } from '../data/pitchClass';
+import { noteToPc, pcBothSpellings } from '../data/pitchClass';
 
 // One row per pitch class. `natural` covers white-key letters; sharp/flat
 // covers the five accidentals — we randomly pick a spelling per card so the
@@ -323,27 +323,44 @@ export default function NoteTrainer() {
                 <div className="nt-place-prompt">{formatNote(current.note)}</div>
               </>
             )}
-            {feedback === 'correct' && (
-              <>
-                <div className="nt-feedback-mark correct">✓</div>
-                <div className="nt-card-label">— Correct —</div>
-                <div className="nt-answer-row">
-                  <strong>{formatNote(current.note)}</strong>
-                </div>
-              </>
-            )}
-            {feedback === 'wrong' && (
-              <>
-                <div className="nt-feedback-mark wrong">✗</div>
-                <div className="nt-card-label">— Not quite —</div>
-                <div className="nt-answer-row was-wrong">
-                  Your answer · <strong>{formatNote(lastWrongAnswer)}</strong>
-                </div>
-                <div className="nt-answer-row">
-                  Correct · <strong>{formatNote(current.note)}</strong>
-                </div>
-              </>
-            )}
+            {(() => {
+              // In identify-direction with a piano/guitar prompt, both
+              // spellings of the highlighted pitch are equally correct
+              // (no harmonic context to privilege one). Show "E♭/D♯" so
+              // the reveal isn't misleading. Staff displays + place mode
+              // both anchor to a specific spelling, so use the exact note.
+              const ambiguous =
+                direction === 'identify' &&
+                (current.displayMode === 'piano' || current.displayMode === 'guitar');
+              const correctDisplay = ambiguous
+                ? pcBothSpellings(current.pc)
+                : formatNote(current.note);
+              return (
+                <>
+                  {feedback === 'correct' && (
+                    <>
+                      <div className="nt-feedback-mark correct">✓</div>
+                      <div className="nt-card-label">— Correct —</div>
+                      <div className="nt-answer-row">
+                        <strong>{correctDisplay}</strong>
+                      </div>
+                    </>
+                  )}
+                  {feedback === 'wrong' && (
+                    <>
+                      <div className="nt-feedback-mark wrong">✗</div>
+                      <div className="nt-card-label">— Not quite —</div>
+                      <div className="nt-answer-row was-wrong">
+                        Your answer · <strong>{formatNote(lastWrongAnswer)}</strong>
+                      </div>
+                      <div className="nt-answer-row">
+                        Correct · <strong>{correctDisplay}</strong>
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </TrainerLayout>
       </>

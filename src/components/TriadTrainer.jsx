@@ -9,7 +9,7 @@ import ChordPicker from './ChordPicker.jsx';
 import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector from './InputModeSelector.jsx';
-import { pcSetsEqual } from '../data/pitchClass';
+import { pcSetsEqual, spellInContext } from '../data/pitchClass';
 import { shuffle, notesMatch } from '../data/notes';
 import { QUALITIES, buildTriadDeck, chordNameMatch } from '../data/triads';
 
@@ -171,7 +171,13 @@ export default function TriadTrainer() {
       } else if (options.inputMode === 'piano' || options.inputMode === 'guitar') {
         // Pitch-class match (sharps and flats compared as the same pitch).
         const userNotes = answers.notes || [];
-        userAnswer = userNotes.filter(Boolean).join(' – ') || '(blank)';
+        // Echo back in the chord's spelling — clicking the black key between
+        // D and E inside an E♭maj chord context displays as "E♭", not "D♯".
+        // Wrong-pitch clicks (no chord match) fall back to "flat/sharp" form.
+        const display = userNotes.map(
+          (n) => spellInContext(n, current.notes, { ambiguousFallback: true })
+        );
+        userAnswer = display.filter(Boolean).join(' – ') || '(blank)';
         isCorrect = pcSetsEqual(userNotes, current.notes);
       } else {
         const userNotes = answers.notes;

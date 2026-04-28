@@ -10,7 +10,7 @@ import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector from './InputModeSelector.jsx';
 import { shuffle, notesEqual, formatNote } from '../data/notes';
 import { INTERVALS, INTERVAL_BY_ID, GROUPS, buildIntervalDeck } from '../data/intervals';
-import { pcSetsEqual } from '../data/pitchClass';
+import { pcSetsEqual, spellInContext } from '../data/pitchClass';
 
 const buildDeck = buildIntervalDeck;
 
@@ -105,7 +105,13 @@ export default function IntervalTrainer() {
       // Staff: spelling matters
       isCorrect = !!tok && `${tok.letter}${tok.accidental || ''}` === target;
     } else {
-      userAnswer = answer || '(blank)';
+      // For piano/guitar/tap inputs: echo the user's pick in the
+      // expected note's spelling (so clicking the pitch class of E♭ inside
+      // a "minor 3rd above C" prompt displays as "E♭", not "D♯").
+      // No context-match (totally wrong pitch) falls back to "flat/sharp".
+      userAnswer = answer
+        ? spellInContext(answer, [target], { ambiguousFallback: true })
+        : '(blank)';
       isCorrect = notesEqual(answer, target);
     }
     if (isCorrect) {

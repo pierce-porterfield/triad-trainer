@@ -1,5 +1,5 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import HamburgerNav from './components/HamburgerNav.jsx';
 import Landing from './components/Landing.jsx';
 import TriadTrainer from './components/TriadTrainer.jsx';
@@ -19,11 +19,25 @@ import { PUBLISHED_KEY_SLUGS } from './data/keyContent.js';
 import { PUBLISHED_SCALE_SLUGS } from './data/scaleContent.js';
 import { PUBLISHED_LEARN_SLUGS } from './data/learnContent.js';
 
+// Reset scroll to the top whenever the route changes. Without this, clicking
+// a nav link while scrolled down on the previous page lands you mid-page on
+// the next one (the browser preserves scroll position across SPA nav).
+// Skips when the URL has a hash so in-page anchors still work.
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (hash) return;
+    if (typeof window !== 'undefined') window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+};
+
 // Root layout. Renders the persistent hamburger nav on every route so the
 // chord library, trainers, and home all link to each other (kills SEO orphan
 // pages). vite-react-ssg's <Head> handles head extraction internally.
 const RootLayout = () => (
   <>
+    <ScrollToTop />
     <HamburgerNav />
     <Outlet />
   </>

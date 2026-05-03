@@ -67,14 +67,17 @@ const LIBRARIES = {
     getItems: () =>
       getLiveScaleSlugs().map((slug) => {
         const meta = slugToScale(slug);
-        return meta
-          ? {
-              slug,
-              to: `/scales/${slug}`,
-              title: `${meta.tonic} ${meta.mode} scale`,
-              sub: `${meta.count === 0 ? 'no accidentals' : `${meta.count} ${meta.type}${meta.count === 1 ? '' : 's'}`}`,
-            }
-          : null;
+        if (!meta) return null;
+        const { count, type: accidentalType } = meta.key;
+        return {
+          slug,
+          to: `/scales/${slug}`,
+          title: `${meta.tonic} ${meta.type} scale`,
+          sub:
+            count === 0
+              ? 'no accidentals'
+              : `${count} ${accidentalType}${count === 1 ? '' : 's'}`,
+        };
       }).filter(Boolean),
   },
   learn: {

@@ -504,9 +504,13 @@ export default function IntervalTrainer() {
     }
 
     .it-action-row {
-      display: flex; gap: 0.75rem; justify-content: center;
+      display: flex; gap: 0.6rem; justify-content: center;
       margin-top: 1.25rem;
+      flex-wrap: wrap;
     }
+    /* Each button grows to share width when there's space, but breaks to
+       a new row when it would overflow — matches CoF / Triad trainers. */
+    .it-action-row .it-btn { flex: 1 1 140px; min-width: 0; }
     .it-btn {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;

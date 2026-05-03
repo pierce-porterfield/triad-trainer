@@ -71,9 +71,14 @@ const BLACK_KEYS = [
 ];
 
 const WHITE_W = 50;     // SVG-coord width per white key
-const H = 220;
+const H_PER_OCTAVE = 110; // SVG-coord height per octave — keeps the
+                          // viewBox aspect ratio constant at 3.18:1
+                          // regardless of how many octaves are visible,
+                          // so the rendered piano height on mobile stays
+                          // the same and tap-targets sit where the user
+                          // expects (instead of bunching to the top of
+                          // a squashed canvas with empty space below).
 const BLACK_W = WHITE_W * 0.6;
-const BLACK_H = H * 0.62;
 
 export default function PianoInput({
   mode = 'input',
@@ -161,12 +166,14 @@ export default function PianoInput({
   };
 
   const w = 7 * octaves * WHITE_W;
+  const h = H_PER_OCTAVE * octaves;
+  const blackH = h * 0.62;
 
   return (
     <div className="piano-wrapper">
       <svg
         className="piano-svg"
-        viewBox={`0 0 ${w} ${H}`}
+        viewBox={`0 0 ${w} ${h}`}
         preserveAspectRatio="xMidYMid meet"
         style={{ touchAction: 'manipulation' }}
       >
@@ -188,7 +195,7 @@ export default function PianoInput({
                   x={x}
                   y={0}
                   width={WHITE_W}
-                  height={H}
+                  height={h}
                   fill={fill}
                   stroke="#1a1410"
                   strokeWidth="1"
@@ -212,7 +219,7 @@ export default function PianoInput({
                 x={x}
                 y={0}
                 width={BLACK_W}
-                height={BLACK_H}
+                height={blackH}
                 fill={fill}
                 stroke="#1a1410"
                 strokeWidth="1"

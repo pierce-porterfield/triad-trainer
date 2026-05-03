@@ -16,14 +16,18 @@ import {
   notesInKey,
   answersMatch,
   keyNameMatch,
+  relativeKeyOf,
 } from '../data/keys';
 
 // ============================================================================
 // COMPONENT
 // ============================================================================
 export default function CircleOfFifthsTrainer() {
-  const [mode, setMode] = useState('menu'); // menu, playing, finished
-  const [direction, setDirection] = useState('key-to-accidentals'); // or notes-to-key
+  // Flow: study-select (which kind of drill?) → menu (direction picker for
+  // the signature drills) → playing → finished. Relative-minor goes directly
+  // study-select → playing.
+  const [mode, setMode] = useState('study-select');
+  const [direction, setDirection] = useState('key-to-accidentals'); // 'key-to-accidentals' | 'notes-to-key' | 'relative-minor'
   const [deck, setDeck] = useState([]);
   const [idx, setIdx] = useState(0);
   // For key-to-accidentals: map of letter → '#'|'b'|''
@@ -49,7 +53,10 @@ export default function CircleOfFifthsTrainer() {
   }, [options]);
 
   const optionsKey = `M${options.major ? 1 : 0}m${options.minor ? 1 : 0}`;
-  const keyFor = (dir) => `cof-${dir}-${optionsKey}`;
+  // Relative-minor study has no toggleable options — it always uses the 14
+  // majors — so its storage key omits the optionsKey suffix.
+  const keyFor = (dir) =>
+    dir === 'relative-minor' ? 'cof-relative-minor' : `cof-${dir}-${optionsKey}`;
   const bestForDirection = (dir) => getBestTime(keyFor(dir));
 
   const toggleOption = (k) => setOptions((o) => ({ ...o, [k]: !o[k] }));
@@ -62,7 +69,10 @@ export default function CircleOfFifthsTrainer() {
 
   const startGame = (dir) => {
     setDirection(dir);
-    setDeck(shuffle(filteredKeys));
+    // Relative-minor always drills the 14 majors; signature drills use
+    // whichever modes the user toggled on.
+    const sourceDeck = dir === 'relative-minor' ? MAJOR_KEYS : filteredKeys;
+    setDeck(shuffle(sourceDeck));
     setIdx(0);
     setResults([]);
     setLetterAnswers({ A: '', B: '', C: '', D: '', E: '', F: '', G: '' });
@@ -98,6 +108,11 @@ export default function CircleOfFifthsTrainer() {
         .filter((l) => letterAnswers[l])
         .map((l) => l + (letterAnswers[l] === '#' ? '♯' : '♭'));
       userAnswerDisplay = marked.length ? marked.join(' · ') : '(none marked)';
+    } else if (direction === 'relative-minor') {
+      // Card is a major key; expected answer is its relative minor.
+      const expected = relativeKeyOf(current);
+      isCorrect = !!expected && keyNameMatch(keyAnswer, expected);
+      userAnswerDisplay = keyAnswer.trim() || '(blank)';
     } else {
       isCorrect = keyNameMatch(keyAnswer, current);
       userAnswerDisplay = keyAnswer.trim() || '(blank)';
@@ -346,6 +361,21 @@ export default function CircleOfFifthsTrainer() {
       font-size: 0.7rem;
       opacity: 0.6;
       letter-spacing: 0.15em;
+    }
+    /* Optional subtitle that appears under the main label on study-select
+       buttons. Styled to read as supporting copy, not prompt. */
+    .cof-mode-btn-detail {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      margin-top: 0.25rem;
+      line-height: 1.3;
+    }
+    .cof-mode-btn:hover .cof-mode-btn-detail {
+      color: var(--paper);
+      opacity: 0.8;
     }
     .cof-mode-btn-arrow {
       font-family: 'Italiana', serif;
@@ -902,6 +932,15 @@ export default function CircleOfFifthsTrainer() {
         allowMajor={current.mode === 'major'}
         allowMinor={current.mode === 'minor'}
       />
+    ) : !feedback && direction === 'relative-minor' ? (
+      // Relative-minor drill: prompt is a major key, answer is always a
+      // minor key. Lock the picker to minor — only root + accidental matter.
+      <KeyPicker
+        value={keyAnswer}
+        onChange={setKeyAnswer}
+        allowMajor={false}
+        allowMinor
+      />
     ) : null;
 
     const submitButton = !feedback ? (
@@ -936,13 +975,14 @@ export default function CircleOfFifthsTrainer() {
           <div className="cof-card" style={{ width: '100%', maxWidth: '480px' }}>
             <div className={`cof-card-inner ${flipped ? 'flipped' : ''}`}>
               <div className="cof-card-face">
-                {direction === 'key-to-accidentals' ? (
+                {direction === 'key-to-accidentals' && (
                   <>
                     <div className="cof-card-label">— Key of —</div>
                     <div className="cof-key-display">{formatName(current.tonic)}</div>
                     <div className="cof-key-quality">{current.mode}</div>
                   </>
-                ) : (
+                )}
+                {direction === 'notes-to-key' && (
                   <>
                     <div className="cof-card-label">— Notes of the {current.mode} scale —</div>
                     <div className="cof-notes-display">
@@ -955,44 +995,61 @@ export default function CircleOfFifthsTrainer() {
                     </div>
                   </>
                 )}
+                {direction === 'relative-minor' && (
+                  <>
+                    <div className="cof-card-label">— Relative minor of —</div>
+                    <div className="cof-key-display">{formatName(current.tonic)}</div>
+                    <div className="cof-key-quality">major</div>
+                  </>
+                )}
               </div>
               <div className={`cof-card-face cof-card-back ${feedback || ''}`}>
-                {feedback === 'correct' && (
-                  <>
-                    <div className="cof-feedback-mark correct">✓</div>
-                    <div className="cof-feedback-label correct">— Correct —</div>
-                    <div className="cof-answer-block">
-                      <div className="cof-answer-small">
-                        {direction === 'key-to-accidentals' ? 'Accidentals' : 'The key'}
-                      </div>
-                      <div className="cof-answer-value">
-                        {direction === 'key-to-accidentals'
-                          ? correctAccidentalDisplay
-                          : formatName(current.tonic) + ' ' + current.mode}
-                      </div>
-                    </div>
-                  </>
-                )}
-                {feedback === 'wrong' && (
-                  <>
-                    <div className="cof-feedback-mark wrong">✗</div>
-                    <div className="cof-feedback-label wrong">— Not quite —</div>
-                    <div className="cof-answer-block">
-                      <div className="cof-answer-small">Your answer</div>
-                      <div className="cof-answer-value was-wrong">
-                        {results[results.length - 1]?.userAnswer || ''}
-                      </div>
-                    </div>
-                    <div className="cof-answer-block">
-                      <div className="cof-answer-small">Correct answer</div>
-                      <div className="cof-answer-value">
-                        {direction === 'key-to-accidentals'
-                          ? correctAccidentalDisplay
-                          : formatName(current.tonic) + ' ' + current.mode}
-                      </div>
-                    </div>
-                  </>
-                )}
+                {(() => {
+                  // Compute the correct-answer display for whichever
+                  // direction is active.
+                  let correctLabel = 'The key';
+                  let correctValue = formatName(current.tonic) + ' ' + current.mode;
+                  if (direction === 'key-to-accidentals') {
+                    correctLabel = 'Accidentals';
+                    correctValue = correctAccidentalDisplay;
+                  } else if (direction === 'relative-minor') {
+                    const rel = relativeKeyOf(current);
+                    correctLabel = 'Relative minor';
+                    correctValue = rel
+                      ? formatName(rel.tonic) + ' minor'
+                      : '—';
+                  }
+                  return (
+                    <>
+                      {feedback === 'correct' && (
+                        <>
+                          <div className="cof-feedback-mark correct">✓</div>
+                          <div className="cof-feedback-label correct">— Correct —</div>
+                          <div className="cof-answer-block">
+                            <div className="cof-answer-small">{correctLabel}</div>
+                            <div className="cof-answer-value">{correctValue}</div>
+                          </div>
+                        </>
+                      )}
+                      {feedback === 'wrong' && (
+                        <>
+                          <div className="cof-feedback-mark wrong">✗</div>
+                          <div className="cof-feedback-label wrong">— Not quite —</div>
+                          <div className="cof-answer-block">
+                            <div className="cof-answer-small">Your answer</div>
+                            <div className="cof-answer-value was-wrong">
+                              {results[results.length - 1]?.userAnswer || ''}
+                            </div>
+                          </div>
+                          <div className="cof-answer-block">
+                            <div className="cof-answer-small">Correct answer</div>
+                            <div className="cof-answer-value">{correctValue}</div>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -1027,6 +1084,49 @@ export default function CircleOfFifthsTrainer() {
           <div className="cof-rule"><span className="cof-rule-mark">❦</span></div>
           <div className="cof-eyebrow" style={{ opacity: 0.7 }}>A Study of Key Signatures</div>
         </header>
+
+        {/* STUDY SELECT — pick which kind of drill */}
+        {mode === 'study-select' && (
+          <div className="cof-menu-card cof-fade-in">
+            <div className="cof-menu-label">— Select your study —</div>
+            <div className="cof-menu-q">Which Circle of Fifths drill?</div>
+
+            <button
+              className="cof-mode-btn"
+              onClick={() => setMode('menu')}
+            >
+              <span>
+                <span className="cof-mode-btn-num">I. </span>
+                Key signatures
+                <span className="cof-mode-btn-detail">
+                  Mark the sharps &amp; flats, or name the key from its scale
+                </span>
+              </span>
+              <span className="cof-mode-btn-arrow">→</span>
+            </button>
+            <button
+              className="cof-mode-btn"
+              onClick={() => startGame('relative-minor')}
+            >
+              <span>
+                <span className="cof-mode-btn-num">II. </span>
+                Relative minors
+                <span className="cof-mode-btn-detail">
+                  Given a major key, name its relative minor
+                </span>
+              </span>
+              <span className="cof-mode-btn-arrow">→</span>
+            </button>
+
+            <div className="cof-best-row">
+              <div className="cof-best-label">Best times · +20s per wrong</div>
+              <div className="cof-best-line">
+                <span>Relative minors</span>
+                <strong>{formatTime(bestForDirection('relative-minor'))}</strong>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* MENU */}
         {mode === 'menu' && (
@@ -1097,6 +1197,15 @@ export default function CircleOfFifthsTrainer() {
                 <strong>{formatTime(bestForDirection('notes-to-key'))}</strong>
               </div>
             </div>
+
+            <button
+              className="cof-mode-btn"
+              style={{ background: 'transparent', color: 'var(--ink)', marginTop: '1rem' }}
+              onClick={() => setMode('study-select')}
+            >
+              <span>← Change study</span>
+              <span></span>
+            </button>
           </div>
         )}
 
@@ -1136,28 +1245,35 @@ export default function CircleOfFifthsTrainer() {
             <div className="cof-results-list">
               <div className="cof-results-heading">— Round summary —</div>
               {results.map((r, i) => {
-                const correctStr = LETTERS
+                const accidentalStr = LETTERS
                   .filter((l) => accidentalFor(r.card, l))
                   .map((l) => l + (accidentalFor(r.card, l) === '#' ? '♯' : '♭'))
                   .join(' · ') || 'no accidentals';
+                const rel = direction === 'relative-minor' ? relativeKeyOf(r.card) : null;
+                let promptStr;
+                let correctStr;
+                if (direction === 'key-to-accidentals') {
+                  promptStr = formatName(r.card.tonic) + ' ' + r.card.mode;
+                  correctStr = accidentalStr;
+                } else if (direction === 'notes-to-key') {
+                  promptStr = notesInKey(r.card).map(formatName).join(' · ');
+                  correctStr = formatName(r.card.tonic) + ' ' + r.card.mode;
+                } else { // relative-minor
+                  promptStr = formatName(r.card.tonic) + ' major';
+                  correctStr = rel ? formatName(rel.tonic) + ' minor' : '—';
+                }
                 return (
                   <div key={i} className="cof-result-item">
                     <span className="cof-result-num">{String(i + 1).padStart(2, '0')}</span>
                     <div>
-                      <div className="cof-result-q">
-                        {direction === 'key-to-accidentals'
-                          ? formatName(r.card.tonic) + ' ' + r.card.mode
-                          : notesInKey(r.card).map(formatName).join(' · ')}
-                      </div>
+                      <div className="cof-result-q">{promptStr}</div>
                       {!r.correct && (
                         <>
                           <div className="cof-result-q-sub was-wrong">
                             you: {r.userAnswer}
                           </div>
                           <div className="cof-result-q-sub">
-                            answer: {direction === 'key-to-accidentals'
-                              ? correctStr
-                              : formatName(r.card.tonic) + ' ' + r.card.mode}
+                            answer: {correctStr}
                           </div>
                         </>
                       )}
@@ -1174,8 +1290,15 @@ export default function CircleOfFifthsTrainer() {
               <button className="cof-btn" onClick={() => startGame(direction)}>
                 Play again · shuffled
               </button>
-              <button className="cof-btn cof-btn-ghost" onClick={() => setMode('menu')}>
-                Change mode
+              {/* "Change direction" only applies to the signature drills,
+                  which have two valid directions. Relative-minor has none. */}
+              {direction !== 'relative-minor' && (
+                <button className="cof-btn cof-btn-ghost" onClick={() => setMode('menu')}>
+                  Change direction
+                </button>
+              )}
+              <button className="cof-btn cof-btn-ghost" onClick={() => setMode('study-select')}>
+                Change study
               </button>
             </div>
           </div>

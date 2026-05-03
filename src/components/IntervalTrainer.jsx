@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
@@ -709,6 +710,22 @@ export default function IntervalTrainer() {
 
   return (
     <div className="it-root">
+      <Head>
+        <title>Interval Trainer — Music Theory Interval Flashcards</title>
+        <meta name="description" content="Practice naming intervals between notes. All 11 common intervals — minor 2nd through major 7th — drilled with timed flashcards on tap, music staff, piano, or guitar." />
+        <link rel="canonical" href="https://theory-trainer.com/intervals" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Interval Trainer — Music Theory Interval Flashcards" />
+        <meta property="og:description" content="Drill interval recognition: 11 intervals, two directions, four input modes. Free, mobile-friendly." />
+        <meta property="og:url" content="https://theory-trainer.com/intervals" />
+        <meta property="og:image" content="https://theory-trainer.com/og-default.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Interval Trainer" />
+        <meta name="twitter:description" content="Music theory interval flashcards across 11 intervals and four input modes." />
+        <meta name="twitter:image" content="https://theory-trainer.com/og-default.png" />
+      </Head>
       <style>{css}</style>
       <div className="it-container">
 
@@ -875,6 +892,50 @@ export default function IntervalTrainer() {
               <button className="it-btn ghost" onClick={() => setMode('options')}>Change intervals</button>
             </div>
           </div>
+        )}
+
+        {(mode === 'options' || mode === 'menu') && (
+          <section className="trainer-seo">
+            <h2 className="trainer-seo-h2">About the Interval Trainer</h2>
+            <p>
+              The Interval Trainer drills note-to-note interval recognition
+              across every standard interval — minor 2nd, major 2nd, minor
+              3rd, major 3rd, perfect 4th, tritone, perfect 5th, minor 6th,
+              major 6th, minor 7th, and major 7th. Toggle the intervals you
+              want to practice on the setup screen, then pick a direction.
+            </p>
+            <h2 className="trainer-seo-h2">Two directions</h2>
+            <p>
+              <em>Find the note</em> — see a root and an interval (like "a
+              minor third above F"), name the resulting note. The standard
+              direction for sight-reading and constructing scales by ear.
+            </p>
+            <p>
+              <em>Find the root</em> — see a target note and an interval
+              (like "B♭ is the perfect 4th of —"), name the root that sits
+              below it. The reverse direction, which is what you need when
+              reverse-engineering a chord, harmonizing a melody, or
+              transposing a piece.
+            </p>
+            <h2 className="trainer-seo-h2">Four input modes</h2>
+            <p>
+              Practice with <strong>tap selectors</strong> for fast typing,
+              {' '}<strong>music staff</strong> for sight-reading drills,
+              {' '}<strong>piano keyboard</strong> with the prompt note
+              highlighted in green as a visual anchor, or
+              {' '}<strong>guitar fretboard</strong> for fretboard-position
+              drilling.
+            </p>
+            <h2 className="trainer-seo-h2">Why drill intervals?</h2>
+            <p>
+              Interval recognition is the bedrock skill for everything else
+              in music theory. Chords are stacked intervals, scales are
+              sequences of intervals, modulation is interval relationships.
+              The faster you can name the third above any note, the faster
+              you can do every other theory task. Best times stored locally;
+              +20 seconds per wrong answer.
+            </p>
+          </section>
         )}
 
         <div className="it-footer">Created by Pierce Porterfield</div>

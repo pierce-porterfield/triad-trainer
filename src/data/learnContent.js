@@ -14,6 +14,7 @@ export const ALL_LEARN_SLUGS = [
   'how-to-remember-base-triads',
   'how-to-read-a-key-signature',
   'major-vs-minor',
+  'etudle-daily-music-theory-puzzle',
 ];
 
 const CONTENT = {
@@ -312,6 +313,79 @@ const CONTENT = {
       { q: 'Why is minor associated with sadness in Western music?', a: 'A mix of acoustics and convention. The major third aligns with the natural overtone series of the root; the minor third doesn\'t. Centuries of Western composers using minor for laments and major for celebrations reinforced the association. In other musical traditions the same intervals carry different emotional connotations.' },
       { q: 'What are harmonic and melodic minor?', a: 'Variations of natural minor that change the upper part of the scale. Harmonic minor raises the 7th degree to create a stronger leading-tone pull (and the augmented 2nd that defines its sound). Melodic minor raises both the 6th and 7th going up but uses naturals coming down, smoothing the melodic line in classical practice.' },
       { q: 'Can a song change between major and minor mid-piece?', a: 'Yes, constantly. Modulation between parallel modes (C major ↔ C minor) is called mode mixture and is one of the oldest tricks in tonal music. The Beatles\' "Norwegian Wood" pivots between E major and E minor; many film scores use the device to mark emotional shifts.' },
+    ],
+  },
+
+  'etudle-daily-music-theory-puzzle': {
+    publishAt: '2020-01-01',
+    updatedAt: '2026-04-28',
+    title: 'Etudle: a daily music theory puzzle (like Wordle, but for chords and keys)',
+    description:
+      'Etudle is a free daily music theory puzzle. 15 cards, 3 rounds, same puzzle worldwide, fresh every day at midnight UTC. Like Wordle, but for chords, key signatures, and intervals.',
+    blocks: [
+      { type: 'p', text:
+        'Wordle worked because the rules were simple, the puzzle was the same for everyone, and you only got one a day. The constraint did the heavy lifting — limited attempts plus shared social experience. Etudle applies the same shape to music theory practice: one puzzle a day, fifteen cards, the same prompts worldwide, and a global leaderboard for everyone who finishes.' },
+      { type: 'p', text:
+        'Where most music theory practice tools assume you\'ll show up and design your own session — pick the qualities, pick the keys, set a timer — Etudle removes the choice. There\'s exactly one puzzle each day, generated deterministically from the date, identical on every device. Your job is to finish it as fast as you can.' },
+
+      { type: 'h2', text: 'How it works' },
+      { type: 'p', text:
+        'Three rounds, five cards each. The rounds rotate across categories — chord spelling, key signatures, intervals — drawn from one of a handful of round templates. Each card has one correct answer; you keep guessing until you nail it. Time is the score. Wrong guesses cost you nothing extra beyond the seconds it takes to retry, but those seconds add up.' },
+      { type: 'ul', items: [
+        'Same puzzle worldwide. The card list is generated from the day\'s UTC date, so a player in Tokyo and a player in Los Angeles see exactly the same fifteen prompts.',
+        'Resets at midnight UTC. New puzzle daily; you can\'t replay a missed day.',
+        'One attempt per day. Once you finish, your time is locked in for the leaderboard.',
+        'Streaks tracked locally. Show up every day, your streak grows.',
+        'Anonymous by default. Your time goes to the leaderboard under a randomly-generated tag (#K7P9XR-style); set a display name if you want.',
+      ] },
+
+      { type: 'h2', text: 'What\'s on a card' },
+      { type: 'p', text:
+        'Round content varies day to day, but the categories cycle through the same five card types:' },
+      { type: 'ul', items: [
+        'Spell a chord — see a chord name (Cmaj7, Bbm9, F♯dim), enter the notes via tap, music staff, or piano keyboard.',
+        'Name a chord — see the notes, identify the chord.',
+        'Mark a key signature — see "Key of D major", mark the F♯ and C♯.',
+        'Name a key — see the notes of a scale, name the key (the prompt tells you whether it\'s major or minor since the same notes belong to both).',
+        'Find an interval — see "perfect 5th above C", name the resulting note.',
+      ] },
+      { type: 'p', text:
+        'Each round locks to one input mode (tap, music staff, or piano), so you don\'t whiplash between interfaces mid-round. Guitar fretboard input is intentionally excluded from the daily — staff and piano are more universal — but it\'s still available in the trainers themselves.' },
+
+      { type: 'h2', text: 'Why a daily-puzzle format works for music theory' },
+      { type: 'p', text:
+        'Music theory rewards repetition more than mastery. Knowing the third of D major is F♯ doesn\'t require deep understanding — it requires having seen it enough times that the answer arrives faster than the question. A single short daily session, every day, builds that fluency more reliably than occasional long study blocks. Etudle exists to make the daily session show up on its own.' },
+      { type: 'p', text:
+        'The shared-puzzle format adds a social dimension that practicing alone doesn\'t. You can compare your time to a friend\'s, share the result grid, see where you ranked on the global leaderboard. That little hit of comparison turns "I should practice today" into "I want to beat my time."' },
+
+      { type: 'h2', text: 'The share grid' },
+      { type: 'p', text:
+        'After you finish, you can share your result as a Wordle-style colored-square grid:' },
+      { type: 'callout', text:
+        'Etudle #014 · 1:54 🔥 4\n🟩🟩🟨🟩🟩\n🟩🟩🟩🟩🟩\n🟩🟨🟩🟧🟩\n17 guesses · etudle.com' },
+      { type: 'p', text:
+        'Green = first try, yellow = 2 guesses, orange = 3, red = 4+. The grid texture immediately shows where you struggled — useful for spotting your own weak spots over time.' },
+
+      { type: 'h2', text: 'Streaks and the leaderboard' },
+      { type: 'p', text:
+        'Your streak counter ticks up every day you finish. Miss a day, it resets. The leaderboard ranks today\'s players by time only — accuracy is enforced by the keep-guessing rule, so the only way to land high is to get every card right quickly. Anonymous players show as #TAG; players who set a display name appear as "Name #TAG".' },
+
+      { type: 'h2', text: 'Get faster' },
+      { type: 'p', text:
+        'Etudle\'s fifteen cards are sampled from the same content the trainers drill. If a particular card type kept tripping you up — say, you spent a full minute on "Cmaj9 → spell" — the Chord Trainer is the place to drill that quality specifically until it\'s reflexive. Same goes for key signatures and intervals. The daily is the test; the trainers are the practice.' },
+      { type: 'related', items: [
+        { label: 'Play today\'s Etudle', to: '/daily' },
+        { label: 'Chord Trainer', to: '/triads' },
+        { label: 'Circle of Fifths Trainer', to: '/circle-of-fifths' },
+        { label: 'Interval Trainer', to: '/intervals' },
+      ] },
+    ],
+    faq: [
+      { q: 'Is Etudle free?', a: 'Yes. No account, no ads, no email collection. The only thing that touches a server is your time when you submit — and that goes to the anonymous leaderboard.' },
+      { q: 'When does the puzzle reset?', a: 'Midnight UTC. In US Eastern time that\'s 7pm EST (8pm EDT during daylight saving); in UK time it\'s midnight GMT or 1am BST. Same puzzle worldwide, same reset.' },
+      { q: 'Can I replay a previous day\'s puzzle?', a: 'No. The "one a day" constraint is part of what makes the format work — the same one-shot pressure as Wordle. New puzzle every midnight UTC.' },
+      { q: 'How is Etudle different from a regular music theory practice tool?', a: 'A practice tool gives you unlimited drills with options to configure. Etudle removes the configuration: one puzzle, fifteen cards, your time competes against everyone else who played that day. The constraint is the point.' },
+      { q: 'What\'s the difference between Etudle and Wordle?', a: 'Wordle is one word, six guesses, vocabulary-based. Etudle is fifteen cards, unlimited guesses per card, music-theory-based. The shared-puzzle / once-a-day / leaderboard skeleton is the same; the content and mechanics underneath are music-specific.' },
     ],
   },
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import Staff, { layoutChordNotes } from './Staff.jsx';
@@ -1108,6 +1109,22 @@ export default function TriadTrainer() {
 
   return (
     <div className="tt-root">
+      <Head>
+        <title>Chord Trainer — Free Chord Flashcards &amp; Spelling Drills</title>
+        <meta name="description" content="Free interactive chord flashcards. Drill major, minor, diminished, augmented, 6th, 7th, 9th, 11th, 13th, and add chords across all 12 roots. Tap, music staff, piano, or guitar input." />
+        <link rel="canonical" href="https://theory-trainer.com/triads" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Chord Trainer — Free Chord Flashcards" />
+        <meta property="og:description" content="Drill chord spelling: every quality, every root, four input modes. Free, mobile-friendly, no account." />
+        <meta property="og:url" content="https://theory-trainer.com/triads" />
+        <meta property="og:image" content="https://theory-trainer.com/og-default.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Chord Trainer — Free Chord Flashcards" />
+        <meta name="twitter:description" content="Drill chord spelling across every quality and root with interactive flashcards." />
+        <meta name="twitter:image" content="https://theory-trainer.com/og-default.png" />
+      </Head>
       <style>{css}</style>
       <div className="tt-container">
 
@@ -1401,6 +1418,56 @@ export default function TriadTrainer() {
               </button>
             </div>
           </div>
+        )}
+
+        {(mode === 'options' || mode === 'menu') && (
+          <section className="trainer-seo">
+            <h2 className="trainer-seo-h2">About the Chord Trainer</h2>
+            <p>
+              The Chord Trainer drills chord spelling across all 12 roots and
+              every common chord quality — major, minor, diminished,
+              augmented, dominant 7, major 7, minor 7, half-diminished,
+              diminished 7, major 9, dominant 9, minor 9, add9, major 11,
+              minor 11, major 13, dominant 13, and minor 13. Pick the
+              qualities you want to practice on the setup screen and the
+              deck builds itself; toggle 7ths off if you only want triads,
+              or turn on the 9ths and 13ths once the basics feel automatic.
+            </p>
+            <h2 className="trainer-seo-h2">Two directions, four input modes</h2>
+            <p>
+              Each card runs in one of two directions. <em>Spell the chord</em>
+              {' '}shows a chord name (like B♭madd9) and asks you to enter
+              the notes — perfect for building active recall. <em>Name the
+              chord</em> shows you the notes and asks you to identify what
+              they spell — the skill you need when analyzing a piece or
+              transcribing music.
+            </p>
+            <p>
+              Four input modes mean you can practice on whatever surface fits
+              your instrument: <strong>tap</strong> selectors for fast
+              typing, <strong>music staff</strong> for sight-reading practice,
+              {' '}<strong>piano keyboard</strong> for piano players, and
+              {' '}<strong>guitar fretboard</strong> with curated real-world
+              fingerings (open chords, E-shape and A-shape barre voicings,
+              and shell voicings for 11ths and 13ths) for guitarists.
+            </p>
+            <h2 className="trainer-seo-h2">Why drill chord spelling?</h2>
+            <p>
+              Chord recognition is a recall task. The faster you can spell a
+              B♭maj9 in your head, the more attention you can spend on
+              phrasing, voicing, and feel when you actually play. Drilling
+              also builds the spelling discipline — knowing that the third of
+              D major is F♯ (not G♭), that the diminished triad uses two
+              minor thirds, that the 13th of a dominant 13 chord is the major
+              sixth above the root.
+            </p>
+            <p>
+              Best times are tracked per setup so you have a target to beat,
+              and every wrong answer adds 20 seconds — encouraging accuracy
+              over speed. The trainer is free, runs in your browser, and
+              requires no account.
+            </p>
+          </section>
         )}
 
         <div className="tt-footer">Created by Pierce Porterfield</div>

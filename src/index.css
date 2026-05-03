@@ -535,3 +535,33 @@ input {
   margin-top: 0.5rem;
   text-align: center;
 }
+
+/* ============================================================================
+ * Trainer-page SEO content — shown below the setup screen on each trainer
+ * (TriadTrainer, CircleOfFifthsTrainer, IntervalTrainer, NoteTrainer). Hidden
+ * during play so it doesn't clutter the focused study UI. Gives Google the
+ * keyword-rich body text the SPA-rendered pages would otherwise lack.
+ * ========================================================================= */
+.trainer-seo {
+  max-width: 640px;
+  margin: 3.5rem auto 0;
+  padding-top: 2.25rem;
+  border-top: 1px dotted #3d342b;
+  color: #3d342b;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+.trainer-seo-h2 {
+  font-family: 'Italiana', serif;
+  font-size: 1.35rem;
+  color: #1a1410;
+  margin: 1.5rem 0 0.4rem;
+  font-weight: 400;
+}
+.trainer-seo-h2:first-child { margin-top: 0; }
+.trainer-seo p { margin: 0 0 0.75rem; }
+.trainer-seo em { color: #8b2c20; font-style: italic; }
+.trainer-seo strong { color: #1a1410; font-weight: 600; }
+.trainer-seo ul { margin: 0.4rem 0 0.85rem; padding-left: 1.15rem; }
+.trainer-seo li { margin-bottom: 0.45rem; }

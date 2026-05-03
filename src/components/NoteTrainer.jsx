@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
@@ -369,6 +370,22 @@ export default function NoteTrainer() {
 
   return (
     <div className="nt-root">
+      <Head>
+        <title>Note Trainer — Music Note Reading Flashcards</title>
+        <meta name="description" content="Identify notes on the music staff, piano keyboard, or guitar fretboard with interactive flashcards. Practice both directions — see a note name a note, or hear a name place a note. Free and mobile-friendly." />
+        <link rel="canonical" href="https://theory-trainer.com/notes" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Note Trainer — Music Note Reading Flashcards" />
+        <meta property="og:description" content="Sight-reading drills for staff, piano, and guitar. Free, mobile-friendly, no account." />
+        <meta property="og:url" content="https://theory-trainer.com/notes" />
+        <meta property="og:image" content="https://theory-trainer.com/og-default.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Note Trainer" />
+        <meta name="twitter:description" content="Music note reading flashcards on staff, piano, and guitar." />
+        <meta name="twitter:image" content="https://theory-trainer.com/og-default.png" />
+      </Head>
       <style>{css}</style>
       <div className="nt-container">
 
@@ -508,6 +525,45 @@ export default function NoteTrainer() {
               <button className="nt-btn ghost" onClick={() => setPhase('options')}>Change displays</button>
             </div>
           </div>
+        )}
+
+        {(phase === 'options' || phase === 'menu') && (
+          <section className="trainer-seo">
+            <h2 className="trainer-seo-h2">About the Note Trainer</h2>
+            <p>
+              The Note Trainer drills single-note recognition on three
+              different surfaces — the music staff, the piano keyboard, and
+              the guitar fretboard. Pick which surfaces to include on the
+              setup screen (one, two, or all three) and the trainer cycles
+              through 12 random pitches per round, mixing the active
+              surfaces.
+            </p>
+            <h2 className="trainer-seo-h2">Two directions</h2>
+            <p>
+              <em>Identify the note</em> — see a note drawn on the chosen
+              surface (a notehead on the treble staff, a highlighted piano
+              key, or a fretboard dot), name what it is. Builds the recall
+              path from visual position to note name.
+            </p>
+            <p>
+              <em>Place the note</em> — see a note name (like "F♯") and
+              place it on the surface yourself. Builds the reverse path from
+              note name to position. On the music staff, you drag a notehead
+              to the correct line or space; on the piano and guitar, you tap
+              the right key or fret.
+            </p>
+            <h2 className="trainer-seo-h2">Why drill note reading?</h2>
+            <p>
+              Note reading on the staff is the slow skill that holds back
+              most beginners — every other theory concept builds on it.
+              Drilling 12 random notes per round, alternating between
+              identification and placement, builds the reflex faster than
+              reading exercises alone. Position on the guitar fretboard
+              randomizes per card; staff octave randomizes between treble-
+              clef ranges. Best times stored locally; +20 seconds per wrong
+              answer.
+            </p>
+          </section>
         )}
 
         <div className="nt-footer">Created by Pierce Porterfield</div>

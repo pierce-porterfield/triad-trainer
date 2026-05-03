@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { Head } from 'vite-react-ssg';
 import { getBestTime, recordTime, formatTime, WRONG_PENALTY_MS } from '../utils/bestTimes';
 import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import TrainerLayout from './TrainerLayout.jsx';
@@ -1060,6 +1061,22 @@ export default function CircleOfFifthsTrainer() {
 
   return (
     <div className="cof-root">
+      <Head>
+        <title>Circle of Fifths Trainer — Key Signature Flashcards</title>
+        <meta name="description" content="Drill all 14 major and 14 minor key signatures with interactive flashcards. Mark accidentals, identify keys from notes, name relative minors. Free, mobile-friendly, no account." />
+        <link rel="canonical" href="https://theory-trainer.com/circle-of-fifths" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Circle of Fifths Trainer — Key Signature Flashcards" />
+        <meta property="og:description" content="Memorize key signatures with interactive flashcards. All 14 majors, all 14 minors, two directions plus a relative-minor drill." />
+        <meta property="og:url" content="https://theory-trainer.com/circle-of-fifths" />
+        <meta property="og:image" content="https://theory-trainer.com/og-default.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Circle of Fifths Trainer" />
+        <meta name="twitter:description" content="Memorize key signatures with interactive flashcards." />
+        <meta name="twitter:image" content="https://theory-trainer.com/og-default.png" />
+      </Head>
       <style>{css}</style>
       <div className="cof-container">
 
@@ -1302,6 +1319,48 @@ export default function CircleOfFifthsTrainer() {
               </button>
             </div>
           </div>
+        )}
+
+        {(mode === 'study-select' || mode === 'menu') && (
+          <section className="trainer-seo">
+            <h2 className="trainer-seo-h2">About the Circle of Fifths Trainer</h2>
+            <p>
+              The Circle of Fifths Trainer drills the 14 major and 14 minor
+              key signatures used in Western music — every key from C major
+              (no accidentals) through F♯ major (six sharps) and G♭ major
+              (six flats), plus every relative minor. Two study modes, three
+              drill directions, all free and mobile-friendly.
+            </p>
+            <h2 className="trainer-seo-h2">Key signatures study</h2>
+            <p>
+              Pick which keys to drill (major only, minor only, or both),
+              then choose a direction. <em>Key to accidentals</em> shows
+              you a key name (like "Key of D major") and asks you to mark
+              the F♯ and C♯. <em>Notes to key</em> shows you the seven
+              notes of a scale and asks you to name the key — a slightly
+              harder direction that builds the reverse-association you need
+              for sight-reading and analysis.
+            </p>
+            <h2 className="trainer-seo-h2">Relative minors study</h2>
+            <p>
+              A focused drill: see a major key, name its relative minor.
+              The 14 majors cycle through in random order. Useful for
+              internalizing the major/minor pairings — that A minor is the
+              relative minor of C major, that E minor is G major's relative
+              minor, that D minor pairs with F major, and so on through
+              the whole circle.
+            </p>
+            <h2 className="trainer-seo-h2">Why memorize key signatures?</h2>
+            <p>
+              The circle of fifths is one of the few facts in music theory
+              that genuinely repays drilling. There's no shortcut to knowing
+              that B major has 5 sharps without looking it up — but once it's
+              reflexive you can read any score, transpose any piece, and
+              analyze any chord progression without breaking flow. Best
+              times are stored in your browser; +20 seconds per wrong answer
+              keeps the focus on accuracy.
+            </p>
+          </section>
         )}
 
         <div className="cof-footer">Created by Pierce Porterfield</div>

@@ -209,6 +209,37 @@ export default function Landing() {
       letter-spacing: normal;
     }
 
+    /* SEO content block — visible to readers below the trainer cards,
+       indexable by crawlers, gives Google the keyword-rich body text the
+       page would otherwise lack. Styled subtle so it reads as supplementary
+       prose, not a sales pitch. */
+    .landing-seo {
+      max-width: 700px;
+      margin: 4rem auto 0;
+      padding-top: 2.5rem;
+      border-top: 1px dotted var(--ink-soft);
+      color: var(--ink-soft);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    .landing-seo-h2 {
+      font-family: 'Italiana', serif;
+      font-size: 1.4rem;
+      color: var(--ink);
+      margin: 1.75rem 0 0.5rem;
+      font-weight: 400;
+    }
+    .landing-seo-h2:first-child { margin-top: 0; }
+    .landing-seo p { margin: 0 0 0.85rem; }
+    .landing-seo em { color: var(--accent); font-style: italic; }
+    .landing-seo-list {
+      margin: 0.5rem 0 0.85rem;
+      padding-left: 1.25rem;
+    }
+    .landing-seo-list li { margin-bottom: 0.6rem; }
+    .landing-seo-list strong { color: var(--ink); font-weight: 600; }
+
     .landing-footer {
       text-align: center;
       margin-top: 3rem;
@@ -701,6 +732,99 @@ export default function Landing() {
           </Link>
 
         </div>
+
+        <section className="landing-seo">
+          <h2 className="landing-seo-h2">What is Music Theory Trainer?</h2>
+          <p>
+            Music Theory Trainer is a free, ad-free flashcard tool for the
+            fundamentals of Western music theory: chords, scales, key
+            signatures, intervals, and note reading. Every concept is drilled
+            with interactive practice — not lectures, not videos, not lessons —
+            because fluency in theory comes from spaced repetition, the way
+            fluency in a language comes from speaking it.
+          </p>
+
+          <h2 className="landing-seo-h2">Why flashcards for music theory?</h2>
+          <p>
+            The hard part of music theory isn't understanding the rules; it's
+            recalling them fast enough to use them. When you're sight-reading
+            on stage, transcribing a piece, or analyzing a chord progression
+            on the fly, you don't have time to think <em>"the third of D
+            major is F♯ because the major-third interval is two whole
+            steps…"</em> — you need that information to be reflexive.
+            Flashcards build reflexes. Spaced repetition is the most-studied
+            method for memorizing factual content, and music theory is full of
+            factual content (key signatures, chord spellings, intervals)
+            waiting to become automatic.
+          </p>
+
+          <h2 className="landing-seo-h2">What you can drill</h2>
+          <ul className="landing-seo-list">
+            <li>
+              <strong>Chord Trainer</strong> — every major, minor, diminished,
+              and augmented chord, plus 6ths, 7ths, 9ths, 11ths, 13ths, and
+              add chords across all 12 roots. Two directions (spell the chord
+              from a name, or name the chord from its notes) and four input
+              modes (tap, music staff, piano keyboard, guitar fretboard with
+              real-world fingerings).
+            </li>
+            <li>
+              <strong>Circle of Fifths Trainer</strong> — all 14 major and 14
+              minor key signatures. Mark sharps and flats from a key name,
+              identify keys from their scales, or drill relative minors.
+            </li>
+            <li>
+              <strong>Interval Trainer</strong> — minor 2nds through major 7ths
+              plus the perfect 4th, tritone, and perfect 5th. Both directions
+              (find the note above a root, or find the root below a note).
+            </li>
+            <li>
+              <strong>Note Trainer</strong> — identify single notes on the
+              music staff, piano keyboard, or guitar fretboard. Both
+              directions (see a note, name it; or hear a name, place it).
+            </li>
+            <li>
+              <strong>Etudle</strong> — a 15-card daily music theory puzzle
+              with a global leaderboard. Same puzzle worldwide, refreshing at
+              midnight UTC. Like Wordle, but for chords, keys, and intervals.
+            </li>
+            <li>
+              <strong>Practice Gauntlet</strong> — no-setup mode that drops you
+              into focused 5-card rounds picked at random across all the
+              trainers. Tier ranks (Apprentice → Maestro) reward sustained
+              practice.
+            </li>
+          </ul>
+
+          <h2 className="landing-seo-h2">How this is different</h2>
+          <p>
+            Most reference sites for music theory have great explanations but
+            no practice tool. Most practice tools are old-school and don't
+            scale to phones. Music Theory Trainer is built for both —
+            interactive flashcards for every chord, key, scale, and interval
+            referenced on the site, with mobile-first input modes that don't
+            require a physical keyboard.
+          </p>
+          <p>
+            It's free, requires no account, runs in your browser, and tracks
+            your best times in your own browser storage. The Etudle leaderboard
+            is the only thing that touches a server, and it's anonymous by
+            default. There are no ads, no email collection, no tracking
+            pixels — just the practice tool and the words to explain it.
+          </p>
+
+          <h2 className="landing-seo-h2">Who is this for?</h2>
+          <p>
+            Self-taught musicians who want to drill the fundamentals to
+            fluency. Music students working on theory homework, ear training,
+            or sight-reading. Guitarists who never properly learned to read
+            sheet music and want to. Pianists studying jazz harmony. Anyone
+            who's tried to memorize the circle of fifths from a diagram and
+            wished there was a faster path. The trainers are designed for
+            self-directed practice, but the daily Etudle puzzle and Practice
+            Gauntlet make it social and game-like for casual players too.
+          </p>
+        </section>
 
         <div className="landing-footer">Created by Pierce Porterfield</div>
       </div>

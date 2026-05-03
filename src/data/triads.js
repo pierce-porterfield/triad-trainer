@@ -12,8 +12,11 @@ export const QUALITIES = {
   min:    { label: 'minor',           symbol: 'm',     intervals: [0, 3, 7],             group: 'base' },
   dim:    { label: 'diminished',      symbol: '\u00B0', intervals: [0, 3, 6],            group: 'dim' },
   aug:    { label: 'augmented',       symbol: '+',     intervals: [0, 4, 8],             group: 'aug' },
-  maj6:   { label: 'major 6th',       symbol: '6',     intervals: [0, 4, 7, 9],          group: 'sixths' },
-  min6:   { label: 'minor 6th',       symbol: 'm6',    intervals: [0, 3, 7, 9],          group: 'sixths' },
+  // 6 chords name the 4th note as the 6th scale degree, not a 7th. Without
+  // an explicit `degrees` override the default `i * 2` letter-stepping lands
+  // it on the 7th letter slot — A min6 came out A-C-E-Gb instead of A-C-E-F#.
+  maj6:   { label: 'major 6th',       symbol: '6',     intervals: [0, 4, 7, 9],          degrees: [0, 2, 4, 5], group: 'sixths' },
+  min6:   { label: 'minor 6th',       symbol: 'm6',    intervals: [0, 3, 7, 9],          degrees: [0, 2, 4, 5], group: 'sixths' },
   maj7:   { label: 'major 7th',       symbol: 'maj7',  intervals: [0, 4, 7, 11],         group: 'sevenths' },
   dom7:   { label: 'dominant 7th',    symbol: '7',     intervals: [0, 4, 7, 10],         group: 'sevenths' },
   min7:   { label: 'minor 7th',       symbol: 'm7',    intervals: [0, 3, 7, 10],         group: 'sevenths' },

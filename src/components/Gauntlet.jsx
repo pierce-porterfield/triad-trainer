@@ -12,7 +12,7 @@ import { formatTime } from '../utils/bestTimes';
 import { buildGauntletRound } from '../utils/gauntletRounds';
 import { loadGauntletState, recordGauntletRound } from '../utils/gauntletState';
 import { notesMatch, formatNote } from '../data/notes';
-import { chordNameMatch, QUALITIES, guitarOptionalPcs } from '../data/triads';
+import { chordNameMatch, QUALITIES, guitarOptionalPcs, octavesForChord } from '../data/triads';
 import { pickFingering } from '../data/guitarFingerings';
 import { KEY_LETTERS, answersMatch, keyNameMatch, keyNameMatchOrRelative, relativeKeyOf, notesInKey } from '../data/keys';
 import { noteToPc, pcSetMatchWithOptional } from '../data/pitchClass';
@@ -53,7 +53,12 @@ function CardFront({ round, card }) {
         {im === 'staff' ? (
           <Staff mode="display" displayNotes={layoutChordNotes(card.notes)} />
         ) : im === 'piano' ? (
-          <PianoInput mode="display" value={card.notes} chordSeed={card.chordName} />
+          <PianoInput
+            mode="display"
+            value={card.notes}
+            chordSeed={card.chordName}
+            octaves={octavesForChord(card.quality)}
+          />
         ) : im === 'guitar' ? (
           <GuitarInput
             mode="display"
@@ -156,6 +161,7 @@ function CardInput({ round, card, answer, setAnswer }) {
           value={answer.notes || []}
           onChange={(next) => setAnswer({ ...answer, notes: next })}
           maxNotes={card.notes.length}
+          octaves={octavesForChord(card.quality)}
         />
       );
     }
@@ -207,6 +213,8 @@ function CardInput({ round, card, answer, setAnswer }) {
           value={answer.note ? [answer.note] : []}
           onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
           maxNotes={1}
+          referenceNote={card.root}
+          referenceOctave={0}
         />
       );
     }

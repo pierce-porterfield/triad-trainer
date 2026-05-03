@@ -59,6 +59,22 @@ export const buildChord = (root, qualityKey) => {
   });
 };
 
+// How many octaves the piano needs to display this chord type so the full
+// ascending stack fits regardless of root pitch class. Triads / 6ths / 7ths
+// fit comfortably in 2 octaves; 9th/11th/13th and add chords with high-pc
+// roots (B, A) need 3 to keep the topmost extension above the 7th.
+//
+// Returning fewer octaves wherever possible keeps tap targets larger on
+// mobile — only the chord types that actually need the extra space pay the
+// density cost.
+export const octavesForChord = (qualityKey) => {
+  const q = QUALITIES[qualityKey];
+  if (!q) return 2;
+  if (q.group === 'ninths' || q.group === 'elevenths' ||
+      q.group === 'thirteenths' || q.group === 'add') return 3;
+  return 2;
+};
+
 // Pitch classes the user may omit when voicing this chord on a guitar
 // fretboard. 11th and 13th chords commonly drop the 9th in standard voicings
 // because the hand can't reach the full stack on a six-string neck — this

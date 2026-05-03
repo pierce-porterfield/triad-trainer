@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { getChordPageContent, slugToChord } from '../data/chordContent';
 import { pickFingering } from '../data/guitarFingerings';
+import { octavesForChord } from '../data/triads';
 import PianoInput from './PianoInput';
 import GuitarInput from './GuitarInput';
 
@@ -148,7 +149,7 @@ export default function ChordPage({ slug }) {
           <h2 className="chord-h2">On the keyboard</h2>
           <p>Each note of the {displayName} chord highlighted on a piano. Pitch class is what matters — any octave works.</p>
           <div className="chord-diagram">
-            <PianoInput mode="display" value={notes} chordSeed={slug} />
+            <PianoInput mode="display" value={notes} chordSeed={slug} octaves={octavesForChord(qualityKey)} />
           </div>
         </section>
 

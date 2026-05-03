@@ -602,6 +602,12 @@ export default function IntervalTrainer() {
           value={answer ? [answer] : []}
           onChange={(next) => setAnswer(next[next.length - 1] || '')}
           maxNotes={1}
+          // Show the prompt note in green so the user has a reference. In
+          // find-note mode the root is given (lower octave; user finds the
+          // result above). In find-root mode the result is given (upper
+          // octave; user finds the root below).
+          referenceNote={direction === 'find-root' ? current.note : current.root}
+          referenceOctave={direction === 'find-root' ? 1 : 0}
         />
       ) : inputMode === 'guitar' ? (
         <GuitarInput

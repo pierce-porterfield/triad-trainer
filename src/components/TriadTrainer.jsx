@@ -10,7 +10,7 @@ import PianoInput from './PianoInput.jsx';
 import GuitarInput from './GuitarInput.jsx';
 import InputModeSelector from './InputModeSelector.jsx';
 import { pcSetsEqual, pcSetMatchWithOptional, spellInContext } from '../data/pitchClass';
-import { guitarOptionalPcs } from '../data/triads';
+import { guitarOptionalPcs, octavesForChord } from '../data/triads';
 import { pickFingering } from '../data/guitarFingerings';
 import { shuffle, notesMatch } from '../data/notes';
 import { QUALITIES, buildTriadDeck, chordNameMatch } from '../data/triads';
@@ -954,6 +954,7 @@ export default function TriadTrainer() {
           value={answers.notes || []}
           onChange={(next) => setAnswers((a) => ({ ...a, notes: next }))}
           maxNotes={current.notes.length}
+          octaves={octavesForChord(current.quality)}
         />
       ) : options.inputMode === 'guitar' ? (
         <GuitarInput
@@ -1043,7 +1044,12 @@ export default function TriadTrainer() {
                     {options.inputMode === 'staff' ? (
                       <Staff mode="display" displayNotes={layoutChordNotes(current.notes)} />
                     ) : options.inputMode === 'piano' ? (
-                      <PianoInput mode="display" value={current.notes} chordSeed={current.chordName} />
+                      <PianoInput
+                        mode="display"
+                        value={current.notes}
+                        chordSeed={current.chordName}
+                        octaves={octavesForChord(current.quality)}
+                      />
                     ) : options.inputMode === 'guitar' ? (
                       <GuitarInput
                         mode="display"

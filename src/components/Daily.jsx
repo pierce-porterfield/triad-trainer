@@ -7,7 +7,7 @@ import { hapticCorrect, hapticWrong } from '../utils/haptics';
 import { getPlayerId, getPlayerTag, getPlayerName, setPlayerName, sanitisePlayerName, PLAYER_NAME_RULES } from '../utils/player';
 import { submitDailyResult, fetchDailyStats } from '../utils/leaderboard';
 import { notesMatch, formatNote } from '../data/notes';
-import { chordNameMatch, guitarOptionalPcs } from '../data/triads';
+import { chordNameMatch, guitarOptionalPcs, octavesForChord } from '../data/triads';
 import { pickFingering } from '../data/guitarFingerings';
 import { pcSetMatchWithOptional } from '../data/pitchClass';
 import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey } from '../data/keys';
@@ -46,7 +46,12 @@ function CardFront({ round, card }) {
         {im === 'staff' ? (
           <Staff mode="display" displayNotes={layoutChordNotes(card.notes)} />
         ) : im === 'piano' ? (
-          <PianoInput mode="display" value={card.notes} chordSeed={card.chordName} />
+          <PianoInput
+            mode="display"
+            value={card.notes}
+            chordSeed={card.chordName}
+            octaves={octavesForChord(card.quality)}
+          />
         ) : im === 'guitar' ? (
           <GuitarInput
             mode="display"
@@ -195,6 +200,7 @@ function CardInput({ round, card, answer, setAnswer }) {
           value={answer.notes || []}
           onChange={(next) => setAnswer({ ...answer, notes: next })}
           maxNotes={card.notes.length}
+          octaves={octavesForChord(card.quality)}
         />
       );
     }
@@ -294,6 +300,8 @@ function CardInput({ round, card, answer, setAnswer }) {
           value={answer.note ? [answer.note] : []}
           onChange={(next) => setAnswer({ ...answer, note: next[next.length - 1] || '' })}
           maxNotes={1}
+          referenceNote={card.root}
+          referenceOctave={0}
         />
       );
     }

@@ -9,6 +9,7 @@ import NoteTrainer from './components/NoteTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import Gauntlet from './components/Gauntlet.jsx';
 import StaticPage from './components/StaticPage.jsx';
+import LibraryIndex from './components/LibraryIndex.jsx';
 import ChordPage from './components/ChordPage.jsx';
 import KeyPage from './components/KeyPage.jsx';
 import ScalePage from './components/ScalePage.jsx';
@@ -69,6 +70,14 @@ export const routes = [
       { path: 'gauntlet', Component: Gauntlet },
       { path: 'about',    Component: () => <StaticPage slug="about" />,    entry: 'src/components/StaticPage.jsx' },
       { path: 'privacy',  Component: () => <StaticPage slug="privacy" />,  entry: 'src/components/StaticPage.jsx' },
+      // Library index pages — list every published reference page in their
+      // section. Crawler-friendly site map for the chord/key/scale/learn
+      // content trees, and the destination when the user clicks a section
+      // title in the hamburger nav.
+      { path: 'chords',   Component: () => <LibraryIndex library="chords" />,  entry: 'src/components/LibraryIndex.jsx' },
+      { path: 'keys',     Component: () => <LibraryIndex library="keys" />,    entry: 'src/components/LibraryIndex.jsx' },
+      { path: 'scales',   Component: () => <LibraryIndex library="scales" />,  entry: 'src/components/LibraryIndex.jsx' },
+      { path: 'learn',    Component: () => <LibraryIndex library="learn" />,   entry: 'src/components/LibraryIndex.jsx' },
       ...PUBLISHED_CHORD_SLUGS.map(makeChordRoute),
       ...PUBLISHED_KEY_SLUGS.map(makeKeyRoute),
       ...PUBLISHED_SCALE_SLUGS.map(makeScaleRoute),

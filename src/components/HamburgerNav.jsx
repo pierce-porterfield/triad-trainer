@@ -93,7 +93,9 @@ export default function HamburgerNav() {
 
         {learnLinks.length > 0 && (
           <div className="nav-section">
-            <h3 className="nav-section-title">Guides</h3>
+            <Link to="/learn" className="nav-section-title-link">
+              <h3 className="nav-section-title">Guides <span className="nav-section-arrow">→</span></h3>
+            </Link>
             <ul>
               {learnLinks.map(({ slug, title }) => (
                 <li key={slug}>
@@ -106,7 +108,9 @@ export default function HamburgerNav() {
 
         {keyLinks.length > 0 && (
           <div className="nav-section">
-            <h3 className="nav-section-title">Key library</h3>
+            <Link to="/keys" className="nav-section-title-link">
+              <h3 className="nav-section-title">Key library <span className="nav-section-arrow">→</span></h3>
+            </Link>
             <ul>
               {keyLinks.map(({ slug, meta }) => (
                 <li key={slug}>
@@ -119,7 +123,9 @@ export default function HamburgerNav() {
 
         {scaleLinks.length > 0 && (
           <div className="nav-section">
-            <h3 className="nav-section-title">Scale library</h3>
+            <Link to="/scales" className="nav-section-title-link">
+              <h3 className="nav-section-title">Scale library <span className="nav-section-arrow">→</span></h3>
+            </Link>
             <ul>
               {scaleLinks.map(({ slug, meta }) => (
                 <li key={slug}>
@@ -134,7 +140,9 @@ export default function HamburgerNav() {
 
         {chordLinks.length > 0 && (
           <div className="nav-section">
-            <h3 className="nav-section-title">Chord library</h3>
+            <Link to="/chords" className="nav-section-title-link">
+              <h3 className="nav-section-title">Chord library <span className="nav-section-arrow">→</span></h3>
+            </Link>
             <ul>
               {chordLinks.map(({ slug, meta }) => (
                 <li key={slug}>
@@ -253,6 +261,30 @@ const styles = `
     color: var(--accent, #8b2c20);
     border-bottom: 1px dotted var(--ink-soft, #3d342b);
     padding-bottom: 0.35rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  /* Section-title-as-link wrapper. Visually identical to a non-link
+     section title; the small arrow on the right hints at navigability. */
+  .nav-section-title-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .nav-section-title-link:hover .nav-section-title {
+    color: var(--ink, #1a1410);
+  }
+  .nav-section-arrow {
+    font-family: 'Italiana', serif;
+    font-size: 1rem;
+    color: var(--ink-soft, #3d342b);
+    opacity: 0.6;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .nav-section-title-link:hover .nav-section-arrow {
+    opacity: 1;
+    transform: translateX(2px);
   }
   .nav-section ul {
     list-style: none;

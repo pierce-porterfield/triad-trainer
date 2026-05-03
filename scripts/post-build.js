@@ -48,6 +48,13 @@ const STATIC_ROUTES = [
   { path: '/daily',            priority: '0.9', changefreq: 'daily' },
   { path: '/about',            priority: '0.5', changefreq: 'yearly' },
   { path: '/privacy',          priority: '0.3', changefreq: 'yearly' },
+  // Library index pages — list every published reference page in their tree.
+  // Higher priority than individual library entries because they're the hub
+  // pages that pass link equity into the references.
+  { path: '/chords',           priority: '0.85', changefreq: 'weekly' },
+  { path: '/keys',             priority: '0.85', changefreq: 'weekly' },
+  { path: '/scales',           priority: '0.85', changefreq: 'weekly' },
+  { path: '/learn',            priority: '0.85', changefreq: 'weekly' },
 ];
 
 const urls = [

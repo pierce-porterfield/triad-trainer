@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import { noteToPc, pcToNote } from '../data/pitchClass';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
+import { noteToPc, pcToNote, pcBothSpellings } from '../data/pitchClass';
 import { cyrb53 } from '../utils/seededRandom';
 
 const DOT_COLORS = [
@@ -102,6 +102,14 @@ export default function PianoInput({
   // ever sees pitch-class strings, derived from positions in emitPositions.
   const [positions, setPositions] = useState([]);
 
+  // Tap-and-drag state. On mobile especially with the 3-octave piano the
+  // black keys are tiny — a finger covers 2-3 keys at once. Drag-to-aim
+  // lets the user press anywhere, slide to the target, and see a floating
+  // preview of the note they'll commit on release. `dragKey.off` means
+  // they're currently outside any valid key (or hovering the reference).
+  const [dragKey, setDragKey] = useState(null);
+  const svgRef = useRef(null);
+
   // Reset internal positions when the parent clears `value`.
   useEffect(() => {
     if (mode === 'input' && value.length === 0 && positions.length > 0) {
@@ -149,9 +157,8 @@ export default function PianoInput({
     }
   };
 
-  const handleKeyTap = (pc, octave) => {
+  const commitKey = (pc, octave) => {
     if (mode !== 'input' || !onChange) return;
-    // Don't let the reference key be tapped — it's the prompt, not an answer.
     if (isReferenceKey(pc, octave)) return;
     const idx = positionAt(pc, octave);
     if (idx !== -1) {
@@ -165,17 +172,77 @@ export default function PianoInput({
     emitPositions([...positions, { pc, octave }]);
   };
 
+  // Hit-test the topmost piano key at a screen point. Black keys overlap
+  // white keys in the upper portion of the SVG; elementFromPoint resolves
+  // that automatically because black keys render after white keys (so they
+  // sit on top in the DOM stacking order).
+  const hitTest = (clientX, clientY) => {
+    if (typeof document === 'undefined') return null;
+    const el = document.elementFromPoint(clientX, clientY);
+    if (!el) return null;
+    const target = el.closest('[data-pc]');
+    if (!target) return null;
+    const pc = Number(target.dataset.pc);
+    const oct = Number(target.dataset.oct);
+    if (Number.isNaN(pc) || Number.isNaN(oct)) return null;
+    return { pc, octave: oct };
+  };
+
+  const onPointerDown = (e) => {
+    if (mode !== 'input') return;
+    const hit = hitTest(e.clientX, e.clientY);
+    if (!hit) return;
+    // Capture so subsequent move/up events route here even if the finger
+    // slides outside the SVG bounds.
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch {}
+    const off = isReferenceKey(hit.pc, hit.octave);
+    setDragKey({ pc: hit.pc, octave: hit.octave, x: e.clientX, y: e.clientY, off });
+  };
+
+  const onPointerMove = (e) => {
+    if (!dragKey) return;
+    const hit = hitTest(e.clientX, e.clientY);
+    if (!hit) {
+      setDragKey({ ...dragKey, x: e.clientX, y: e.clientY, off: true });
+      return;
+    }
+    const off = isReferenceKey(hit.pc, hit.octave);
+    setDragKey({ pc: hit.pc, octave: hit.octave, x: e.clientX, y: e.clientY, off });
+  };
+
+  const onPointerUp = () => {
+    if (!dragKey) return;
+    if (!dragKey.off) commitKey(dragKey.pc, dragKey.octave);
+    setDragKey(null);
+  };
+
+  const onPointerCancel = () => setDragKey(null);
+
   const w = 7 * octaves * WHITE_W;
   const h = H_PER_OCTAVE * octaves;
   const blackH = h * 0.62;
 
+  // Hover/preview key (the one that would commit if the finger lifts now).
+  const hoverKey = dragKey && !dragKey.off ? dragKey : null;
+  const isHoverKey = (pc, octave) =>
+    hoverKey && hoverKey.pc === pc && hoverKey.octave === octave;
+
   return (
     <div className="piano-wrapper">
       <svg
+        ref={svgRef}
         className="piano-svg"
         viewBox={`0 0 ${w} ${h}`}
         preserveAspectRatio="xMidYMid meet"
-        style={{ touchAction: 'manipulation' }}
+        // touchAction: none disables the browser's own scroll/zoom gestures
+        // on this element while in input mode so the drag doesn't scroll
+        // the page out from under the user. Display mode keeps the default
+        // ('manipulation') so chord pages still pan normally.
+        style={{ touchAction: mode === 'input' ? 'none' : 'manipulation' }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
       >
         {/* White keys */}
         {Array.from({ length: octaves }, (_, oct) =>
@@ -183,24 +250,23 @@ export default function PianoInput({
             const x = (oct * 7 + k.idx) * WHITE_W;
             const isRef = isReferenceKey(k.pc, oct);
             const isOn = !isRef && isKeyLit(k.pc, oct);
+            const isHover = !isRef && isHoverKey(k.pc, oct);
             const color = isRef ? REFERENCE_GREEN : colorForKey(k.pc, oct);
             const fill = isRef || isOn ? color : '#fafafa';
             return (
-              <g
+              <rect
                 key={`w-${oct}-${k.idx}`}
+                data-pc={k.pc}
+                data-oct={oct}
+                x={x}
+                y={0}
+                width={WHITE_W}
+                height={h}
+                fill={fill}
+                stroke={isHover ? color : '#1a1410'}
+                strokeWidth={isHover ? 3 : 1}
                 style={{ cursor: mode === 'input' && !isRef ? 'pointer' : 'default' }}
-                onClick={() => handleKeyTap(k.pc, oct)}
-              >
-                <rect
-                  x={x}
-                  y={0}
-                  width={WHITE_W}
-                  height={h}
-                  fill={fill}
-                  stroke="#1a1410"
-                  strokeWidth="1"
-                />
-              </g>
+              />
             );
           })
         )}
@@ -211,27 +277,38 @@ export default function PianoInput({
             const x = xCenter - BLACK_W / 2;
             const isRef = isReferenceKey(b.pc, oct);
             const isOn = !isRef && isKeyLit(b.pc, oct);
+            const isHover = !isRef && isHoverKey(b.pc, oct);
             const color = isRef ? REFERENCE_GREEN : colorForKey(b.pc, oct);
             const fill = isRef ? color : (isOn ? color : '#1a1410');
             return (
               <rect
                 key={`b-${oct}-${b.pc}`}
+                data-pc={b.pc}
+                data-oct={oct}
                 x={x}
                 y={0}
                 width={BLACK_W}
                 height={blackH}
                 fill={fill}
-                stroke="#1a1410"
-                strokeWidth="1"
+                stroke={isHover ? color : '#1a1410'}
+                strokeWidth={isHover ? 3 : 1}
                 style={{ cursor: mode === 'input' && !isRef ? 'pointer' : 'default' }}
-                onClick={() => handleKeyTap(b.pc, oct)}
               />
             );
           })
         )}
       </svg>
+      {hoverKey && (
+        <div
+          className="piano-preview"
+          style={{ left: hoverKey.x, top: hoverKey.y }}
+          aria-hidden="true"
+        >
+          {pcBothSpellings(hoverKey.pc)}
+        </div>
+      )}
       {mode === 'input' && (
-        <div className="piano-hint">Tap a key to add · tap again to remove</div>
+        <div className="piano-hint">Tap or drag to place a note · tap again to remove</div>
       )}
     </div>
   );

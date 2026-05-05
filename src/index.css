@@ -436,6 +436,37 @@ input {
   margin-top: 0.4rem;
   text-align: center;
 }
+/* Floating tooltip showing the pitch name above the finger during a tap-and-
+ * drag on the piano. Positioned with fixed coords (clientX/Y) so it tracks
+ * the pointer regardless of where the piano is on the page. translate the
+ * box up and centered so the finger doesn't cover it on mobile. */
+.piano-preview {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 24px));
+  background: var(--ink, #1a1410);
+  color: var(--paper, #f4ecdc);
+  font-family: 'Italiana', serif;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--ink, #1a1410);
+  box-shadow: 3px 3px 0 var(--paper-shadow, #d9cbad);
+  white-space: nowrap;
+}
+.piano-preview::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+  height: 10px;
+  background: var(--ink, #1a1410);
+  border-right: 1px solid var(--ink, #1a1410);
+  border-bottom: 1px solid var(--ink, #1a1410);
+}
 
 /* ============================================================================
  * Guitar input

@@ -4,10 +4,10 @@ import { Link, useLocation } from 'react-router-dom';
 // Reusable collapsible library section. The title is a Link to the index
 // page (so a tap on the heading still navigates), and a separate caret
 // button on the left toggles the list of entries open/closed. Default
-// state is collapsed — the lists were getting long enough to push the
-// "Site" / About / Privacy section several screen-heights down on mobile.
-function CollapsibleNavSection({ to, title, children }) {
-  const [open, setOpen] = useState(false);
+// state is collapsed for the long libraries — Guides defaults open since
+// the article list is short and high-value enough to expose by default.
+function CollapsibleNavSection({ to, title, defaultOpen = false, children }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="nav-section">
       <div className="nav-section-header">
@@ -67,9 +67,16 @@ export default function HamburgerNav() {
   const chordLinks = PUBLISHED_CHORD_SLUGS
     .map((slug) => ({ slug, meta: slugToChord(slug) }))
     .filter((x) => x.meta);
+  // Order keys by the order of sharps: C (0 accidentals), then sharp keys
+  // in ascending sharp count (G, D, A, E, B, F#, C#), then flat keys in
+  // ascending flat count (F, Bb, Eb, Ab, Db, Gb). Matches how the circle
+  // of fifths is taught — far more useful than alphabetical.
+  const circleOrder = (m) =>
+    m.count === 0 ? 0 : (m.type === 'sharp' ? m.count : 7 + m.count);
   const keyLinks = PUBLISHED_KEY_SLUGS
     .map((slug) => ({ slug, meta: slugToKey(slug) }))
-    .filter((x) => x.meta);
+    .filter((x) => x.meta)
+    .sort((a, b) => circleOrder(a.meta) - circleOrder(b.meta));
   const scaleLinks = PUBLISHED_SCALE_SLUGS
     .map((slug) => ({ slug, meta: slugToScale(slug) }))
     .filter((x) => x.meta);
@@ -122,7 +129,7 @@ export default function HamburgerNav() {
         </div>
 
         {learnLinks.length > 0 && (
-          <CollapsibleNavSection to="/learn" title="Guides">
+          <CollapsibleNavSection to="/learn" title="Guides" defaultOpen>
             {learnLinks.map(({ slug, title }) => (
               <li key={slug}>
                 <Link to={`/learn/${slug}`}>{title}</Link>

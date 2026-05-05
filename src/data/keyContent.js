@@ -89,7 +89,7 @@ const CONTENT = {
     ],
   },
   'd-major': {
-    publishAt: '2026-04-27',
+    publishAt: '2020-01-01',
     intro:
       'D major has two sharps — F# and C# — and is one of the brightest, most resonant keys for stringed instruments. Violins, violas, and guitars all have open strings tuned to notes in the D major scale, which is why orchestral works in D (Beethoven\'s Violin Concerto, Pachelbel\'s Canon) tend to ring with extra brilliance. D major sits two steps clockwise from C on the circle of fifths.',
     progressions:
@@ -104,7 +104,7 @@ const CONTENT = {
     ],
   },
   'b-flat-major': {
-    publishAt: '2026-04-28',
+    publishAt: '2020-01-01',
     intro:
       'B♭ major has two flats — B♭ and E♭ — and is the standard key for many wind instruments (trumpet, clarinet, tenor saxophone). Concert-band literature is full of pieces in B♭ for that reason. It sits two steps counter-clockwise from C on the circle of fifths, with G minor as its relative minor.',
     progressions:
@@ -119,7 +119,7 @@ const CONTENT = {
     ],
   },
   'a-major': {
-    publishAt: '2026-04-29',
+    publishAt: '2020-01-01',
     intro:
       'A major has three sharps — F#, C#, and G# — and is a favourite key for guitar, violin, and singer-songwriter material. The open strings of a guitar (E-A-D-G-B-E) line up with chords in A, making it harmonically natural for the instrument. A major sits three clockwise steps from C on the circle of fifths.',
     progressions:
@@ -134,7 +134,7 @@ const CONTENT = {
     ],
   },
   'e-flat-major': {
-    publishAt: '2026-04-30',
+    publishAt: '2020-01-01',
     intro:
       'E♭ major has three flats — B♭, E♭, and A♭ — and is a warm, full-bodied key especially popular in jazz, swing, and classical works featuring brass. Mozart\'s Symphony No. 39, Beethoven\'s "Eroica" Symphony, and most big-band charts use E♭ as a home key. It sits three counter-clockwise steps from C on the circle of fifths.',
     progressions:
@@ -149,7 +149,7 @@ const CONTENT = {
     ],
   },
   'e-major': {
-    publishAt: '2026-05-01',
+    publishAt: '2020-01-01',
     intro:
       'E major has four sharps — F#, C#, G#, and D# — and is the brightest of the standard keys. It is the open-string home of a guitar (the lowest and highest strings are both E), so rock and blues in E have an immediate, ringing power. E major sits four clockwise steps from C on the circle of fifths.',
     progressions:
@@ -164,7 +164,7 @@ const CONTENT = {
     ],
   },
   'a-flat-major': {
-    publishAt: '2026-05-02',
+    publishAt: '2020-01-01',
     intro:
       'A♭ major has four flats — B♭, E♭, A♭, and D♭ — and is one of the warmest keys in the western system. Chopin and Schubert wrote some of their most lyrical works in A♭, and it\'s common in jazz ballads as a key just dark enough to feel intimate without being heavy. It sits four counter-clockwise steps from C on the circle of fifths.',
     progressions:
@@ -179,7 +179,7 @@ const CONTENT = {
     ],
   },
   'b-major': {
-    publishAt: '2026-05-03',
+    publishAt: '2020-01-01',
     intro:
       'B major has five sharps — F#, C#, G#, D#, and A# — and sits five clockwise steps from C on the circle of fifths. It\'s a less common written key (most tonally adjacent music is notated in C♭ major or modulates through related keys instead), but it appears regularly in vocal music transposed for range and in jazz tunes.',
     progressions:
@@ -194,7 +194,7 @@ const CONTENT = {
     ],
   },
   'd-flat-major': {
-    publishAt: '2026-05-04',
+    publishAt: '2020-01-01',
     intro:
       'D♭ major has five flats — B♭, E♭, A♭, D♭, and G♭ — and sits five counter-clockwise steps from C on the circle of fifths. It\'s the enharmonic equivalent of C# major (which has seven sharps), and almost all music in this pitch is written in D♭ instead. Pianists love it because the hand falls naturally across black keys.',
     progressions:
@@ -209,7 +209,7 @@ const CONTENT = {
     ],
   },
   'f-sharp-major': {
-    publishAt: '2026-05-05',
+    publishAt: '2020-01-01',
     intro:
       'F# major has six sharps — F#, C#, G#, D#, A#, and E# — and sits six clockwise steps from C on the circle of fifths. It\'s enharmonically equivalent to G♭ major (six flats), so the choice between them is usually about what the surrounding music makes easiest to read.',
     progressions:
@@ -224,7 +224,7 @@ const CONTENT = {
     ],
   },
   'g-flat-major': {
-    publishAt: '2026-05-06',
+    publishAt: '2020-01-01',
     intro:
       'G♭ major has six flats — B♭, E♭, A♭, D♭, G♭, and C♭ — and sits six counter-clockwise steps from C on the circle of fifths. It\'s enharmonically the same pitch as F# major (six sharps), and music in this region is usually notated in whichever key looks cleaner against the surrounding context.',
     progressions:
@@ -239,7 +239,7 @@ const CONTENT = {
     ],
   },
   'c-sharp-major': {
-    publishAt: '2026-05-07',
+    publishAt: '2020-01-01',
     intro:
       'C# major has seven sharps — F#, C#, G#, D#, A#, E#, and B# — and sits seven clockwise steps from C on the circle of fifths. It\'s the enharmonic equivalent of D♭ major (five flats), and almost all practical music in this pitch is written in D♭ instead because the signature is much cleaner.',
     progressions:
@@ -254,7 +254,7 @@ const CONTENT = {
     ],
   },
   'c-major': {
-    publishAt: '2026-05-08',
+    publishAt: '2020-01-01',
     intro:
       'C major is the centre of the western tonal system: zero sharps, zero flats, all white keys on the piano. Every other key signature is measured by its distance from C on the circle of fifths. It\'s the first scale most students learn and the default key for theory examples, ear-training drills, and beginner piano literature.',
     progressions:

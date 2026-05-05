@@ -5,6 +5,20 @@ import { getLiveChordSlugs, slugToChord } from '../data/chordContent';
 import { getLiveKeySlugs, slugToKey } from '../data/keyContent';
 import { getLiveScaleSlugs, slugToScale } from '../data/scaleContent';
 import { getLiveLearnSlugs, getLearnPageContent } from '../data/learnContent';
+import { notesInKey } from '../data/keys';
+
+// Slug helper for the relative-minor scale page. Mirrors the (private)
+// tonicToSlug helper in scaleContent — accidental-aware so "F#" → "f-sharp".
+const tonicToScaleSlug = (tonic) => {
+  const letter = tonic[0].toLowerCase();
+  if (tonic.length === 1) return `${letter}-minor`;
+  return `${letter}-${tonic[1] === '#' ? 'sharp' : 'flat'}-minor`;
+};
+
+// Order-of-sharps sort: C (0 accidentals), then sharp keys 1-7, then flat
+// keys 1-6. Matches the pedagogical order on the circle of fifths.
+const keyCircleOrder = (meta) =>
+  meta.count === 0 ? 0 : (meta.type === 'sharp' ? meta.count : 7 + meta.count);
 
 // Single component handling all four library index pages — chord, key, scale,
 // learn. Each variant pulls its live slugs from the corresponding content
@@ -41,21 +55,40 @@ const LIBRARIES = {
     canonicalPath: '/keys',
     drillTo: '/circle-of-fifths',
     drillLabel: 'Circle of Fifths Trainer',
-    getItems: () =>
-      getLiveKeySlugs().map((slug) => {
-        const meta = slugToKey(slug);
-        return meta
-          ? {
-              slug,
+    // Paired cards: each card represents one key signature, showing the
+    // major and its relative minor together. Ordered by the order of
+    // sharps so the layout reads C → G → D → A → ... → Gb (matches how
+    // the circle of fifths is taught in textbooks).
+    paired: true,
+    getItems: () => {
+      const liveScaleSlugs = new Set(getLiveScaleSlugs());
+      return getLiveKeySlugs()
+        .map((slug) => {
+          const meta = slugToKey(slug);
+          if (!meta) return null;
+          const relMinorTonic = notesInKey(meta)[5];
+          const relMinorSlug = tonicToScaleSlug(relMinorTonic);
+          const relMinorLive = liveScaleSlugs.has(relMinorSlug);
+          return {
+            slug,
+            order: keyCircleOrder(meta),
+            major: {
               to: `/keys/${slug}`,
-              title: `Key of ${meta.tonic} major`,
-              sub:
-                meta.count === 0
-                  ? 'no sharps or flats'
-                  : `${meta.count} ${meta.type}${meta.count === 1 ? '' : 's'}`,
-            }
-          : null;
-      }).filter(Boolean),
+              title: `${meta.tonic} major`,
+            },
+            minor: {
+              to: relMinorLive ? `/scales/${relMinorSlug}` : null,
+              title: `${relMinorTonic} minor`,
+            },
+            sub:
+              meta.count === 0
+                ? 'no sharps or flats'
+                : `${meta.count} ${meta.type}${meta.count === 1 ? '' : 's'}`,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.order - b.order);
+    },
   },
   scales: {
     title: 'Scale Library',
@@ -152,10 +185,34 @@ export default function LibraryIndex({ library }) {
           <ul className="library-grid">
             {items.map((item) => (
               <li key={item.slug}>
-                <Link to={item.to} className="library-card">
-                  <span className="library-card-title">{item.title}</span>
-                  {item.sub && <span className="library-card-sub">{item.sub}</span>}
-                </Link>
+                {config.paired ? (
+                  // Paired card for the keys library: major + relative minor
+                  // grouped under one signature heading. Each name is its own
+                  // link target so the user can jump straight to either page.
+                  // The relative minor link disappears (becomes plain text)
+                  // if its scale page hasn't rolled live yet.
+                  <div className="library-card library-card-paired">
+                    {item.sub && <span className="library-card-sub">{item.sub}</span>}
+                    <Link to={item.major.to} className="library-card-pair-link">
+                      <span className="library-card-title">{item.major.title}</span>
+                    </Link>
+                    <span className="library-card-pair-divider">relative minor</span>
+                    {item.minor.to ? (
+                      <Link to={item.minor.to} className="library-card-pair-link library-card-pair-link-secondary">
+                        <span className="library-card-title-sub">{item.minor.title}</span>
+                      </Link>
+                    ) : (
+                      <span className="library-card-title-sub library-card-title-muted">
+                        {item.minor.title}
+                      </span>
+                    )}
+                  </div>
+                ) : (
+                  <Link to={item.to} className="library-card">
+                    <span className="library-card-title">{item.title}</span>
+                    {item.sub && <span className="library-card-sub">{item.sub}</span>}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -257,6 +314,49 @@ const styles = `
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0 var(--accent);
     border-color: var(--accent);
+  }
+  /* Paired-card variant for the keys library: a non-link container that
+     groups two clickable headings (major + relative minor) under one
+     signature meta-line. We override the hover transform here because
+     the container itself isn't a link — instead each inner pair-link
+     gets its own subtle hover treatment. */
+  .library-card-paired {
+    gap: 0.35rem;
+    cursor: default;
+  }
+  .library-card-paired:hover {
+    transform: none;
+    box-shadow: 4px 4px 0 var(--paper-shadow);
+    border-color: var(--ink);
+  }
+  .library-card-pair-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 0.15rem 0;
+    transition: color 0.12s ease, transform 0.12s ease;
+  }
+  .library-card-pair-link:hover {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+  .library-card-pair-divider {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.65;
+    margin-top: 0.25rem;
+  }
+  .library-card-title-sub {
+    font-family: 'Italiana', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .library-card-title-muted {
+    color: var(--ink-soft);
+    opacity: 0.65;
   }
   .library-card-title {
     font-family: 'Italiana', serif;

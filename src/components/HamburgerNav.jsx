@@ -1,5 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
+// Reusable collapsible library section. The title is a Link to the index
+// page (so a tap on the heading still navigates), and a separate caret
+// button on the left toggles the list of entries open/closed. Default
+// state is collapsed — the lists were getting long enough to push the
+// "Site" / About / Privacy section several screen-heights down on mobile.
+function CollapsibleNavSection({ to, title, children }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="nav-section">
+      <div className="nav-section-header">
+        <button
+          type="button"
+          className={`nav-caret-btn${open ? ' is-open' : ''}`}
+          aria-label={open ? `Collapse ${title}` : `Expand ${title}`}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="nav-caret" aria-hidden="true">▸</span>
+        </button>
+        <Link to={to} className="nav-section-title-link">
+          <h3 className="nav-section-title">
+            {title} <span className="nav-section-arrow">→</span>
+          </h3>
+        </Link>
+      </div>
+      {open && <ul>{children}</ul>}
+    </div>
+  );
+}
 import { PUBLISHED_CHORD_SLUGS, slugToChord } from '../data/chordContent.js';
 import { PUBLISHED_KEY_SLUGS, slugToKey } from '../data/keyContent.js';
 import { PUBLISHED_SCALE_SLUGS, slugToScale } from '../data/scaleContent.js';
@@ -92,65 +122,45 @@ export default function HamburgerNav() {
         </div>
 
         {learnLinks.length > 0 && (
-          <div className="nav-section">
-            <Link to="/learn" className="nav-section-title-link">
-              <h3 className="nav-section-title">Guides <span className="nav-section-arrow">→</span></h3>
-            </Link>
-            <ul>
-              {learnLinks.map(({ slug, title }) => (
-                <li key={slug}>
-                  <Link to={`/learn/${slug}`}>{title}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <CollapsibleNavSection to="/learn" title="Guides">
+            {learnLinks.map(({ slug, title }) => (
+              <li key={slug}>
+                <Link to={`/learn/${slug}`}>{title}</Link>
+              </li>
+            ))}
+          </CollapsibleNavSection>
         )}
 
         {keyLinks.length > 0 && (
-          <div className="nav-section">
-            <Link to="/keys" className="nav-section-title-link">
-              <h3 className="nav-section-title">Key library <span className="nav-section-arrow">→</span></h3>
-            </Link>
-            <ul>
-              {keyLinks.map(({ slug, meta }) => (
-                <li key={slug}>
-                  <Link to={`/keys/${slug}`}>{meta.tonic} major</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <CollapsibleNavSection to="/keys" title="Key library">
+            {keyLinks.map(({ slug, meta }) => (
+              <li key={slug}>
+                <Link to={`/keys/${slug}`}>{meta.tonic} major</Link>
+              </li>
+            ))}
+          </CollapsibleNavSection>
         )}
 
         {scaleLinks.length > 0 && (
-          <div className="nav-section">
-            <Link to="/scales" className="nav-section-title-link">
-              <h3 className="nav-section-title">Scale library <span className="nav-section-arrow">→</span></h3>
-            </Link>
-            <ul>
-              {scaleLinks.map(({ slug, meta }) => (
-                <li key={slug}>
-                  <Link to={`/scales/${slug}`}>
-                    {meta.tonic} {meta.type === 'major' ? 'major' : 'minor'}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <CollapsibleNavSection to="/scales" title="Scale library">
+            {scaleLinks.map(({ slug, meta }) => (
+              <li key={slug}>
+                <Link to={`/scales/${slug}`}>
+                  {meta.tonic} {meta.type === 'major' ? 'major' : 'minor'}
+                </Link>
+              </li>
+            ))}
+          </CollapsibleNavSection>
         )}
 
         {chordLinks.length > 0 && (
-          <div className="nav-section">
-            <Link to="/chords" className="nav-section-title-link">
-              <h3 className="nav-section-title">Chord library <span className="nav-section-arrow">→</span></h3>
-            </Link>
-            <ul>
-              {chordLinks.map(({ slug, meta }) => (
-                <li key={slug}>
-                  <Link to={`/chords/${slug}`}>{meta.displayName} chord</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <CollapsibleNavSection to="/chords" title="Chord library">
+            {chordLinks.map(({ slug, meta }) => (
+              <li key={slug}>
+                <Link to={`/chords/${slug}`}>{meta.displayName} chord</Link>
+              </li>
+            ))}
+          </CollapsibleNavSection>
         )}
 
         <div className="nav-section">
@@ -265,6 +275,37 @@ const styles = `
     justify-content: space-between;
     align-items: baseline;
   }
+  /* Header row for collapsible library sections: caret toggle on the left
+     plus the title-link occupying the rest of the row. The link still
+     navigates to the index page; the caret only toggles expand/collapse. */
+  .nav-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .nav-section-header .nav-section-title-link { flex: 1; min-width: 0; }
+  .nav-caret-btn {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--ink-soft, #3d342b);
+  }
+  .nav-caret {
+    display: inline-block;
+    font-size: 0.85rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+  }
+  .nav-caret-btn.is-open .nav-caret { transform: rotate(90deg); }
+  .nav-caret-btn:hover { color: var(--accent, #8b2c20); }
+
   /* Section-title-as-link wrapper. Visually identical to a non-link
      section title; the small arrow on the right hints at navigability. */
   .nav-section-title-link {

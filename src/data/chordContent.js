@@ -16,6 +16,9 @@ const QUALITY_SLUG_MAP = {
   'minor':            { key: 'min',  display: 'minor' },
   'diminished':       { key: 'dim',  display: 'diminished' },
   'augmented':        { key: 'aug',  display: 'augmented' },
+  'major-7':          { key: 'maj7', display: 'major 7' },
+  'minor-7':          { key: 'min7', display: 'minor 7' },
+  'dominant-7':       { key: 'dom7', display: 'dominant 7' },
   'diminished-7':     { key: 'dim7', display: 'diminished 7' },
   'half-diminished':  { key: 'm7b5', display: 'half-diminished' },
 };
@@ -2190,6 +2193,1234 @@ const CONTENT = {
       { q: 'How does Bm7♭5 resolve?', a: 'In A minor: Bm7♭5 → E7 → Am. The chord prepares the dominant E7, which resolves to the Am tonic. This is one of the most-used cadences in tonal music.' },
       { q: 'Is Bm7♭5 the same as Bm7?', a: 'No — different chords. Bm7 (B-D-F♯-A) has a perfect fifth; Bm7♭5 (B-D-F-A) lowers that fifth a half step, producing the half-diminished colour and the iiø7 function in A minor.' },
       { q: 'Where does B half-diminished appear in famous music?', a: 'Throughout A-minor literature: Bach\'s A-minor preludes and fugues, Mozart\'s K. 310 sonata, Beethoven\'s "Moonlight" Sonata third movement (in C♯ minor but borrowing related sonorities), and every A-minor jazz standard.' },
+    ],
+  },
+
+  // ─── Phase 3: major 7th chords (Imaj7 / IVmaj7) ──────────────────────────
+  // Major triad plus a major 7th — the lush, dreamy backbone of jazz, bossa
+  // nova, and modern ballads. The defining sound of "Girl from Ipanema."
+
+  'c-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C major 7 (Cmaj7) — C, E, G, B — is one of the most foundational chords in jazz harmony. It\'s C major with the 7th degree of the C scale (B) added on top, creating a smooth, complete-sounding sonority that defines the I chord of major-key jazz. Bill Evans built entire arrangements around it; "Cantaloupe Island" and "Maiden Voyage" open with related Cmaj7 colours.',
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C major', slug: 'c-major', kind: 'key' },
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C dominant 7', slug: 'c-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'c-dominant-7', 'd-minor-7', 'g-dominant-7', 'a-minor-7'],
+    commonMistakes:
+      'The single biggest trap with Cmaj7 is the 7th — B natural, not B♭. Replacing B with B♭ produces C7 (dominant 7), a completely different chord with the urgent "needs to resolve" sound. The maj7 distinction (a half-step higher than a dom7) is what gives Cmaj7 its lush, stable character. On guitar, the open Cmaj7 voicing (x32000) is one of the easiest jazz chords to learn.',
+    inProgressions:
+      'Cmaj7 is the I chord in C major (jazz). The full ii–V–I in C is Dm7 → G7 → Cmaj7 — the most-used progression in jazz, underlying "Autumn Leaves" (in the relative minor), "All The Things You Are," and countless standards. Cmaj7 also serves as the IV chord of G major (giving a lydian colour) and the bVI of E minor.',
+    faq: [
+      { q: 'What notes are in a Cmaj7 chord?', a: 'Cmaj7 contains four notes: C (root), E (major third), G (perfect fifth), and B (major seventh).' },
+      { q: 'How is Cmaj7 different from C7?', a: 'Only the seventh changes. Cmaj7 has B natural (a major 7th from C); C7 has B♭ (a minor 7th, also called a dominant 7th). The half-step makes Cmaj7 sound stable and dreamy; C7 sounds tense and wants to resolve to F.' },
+      { q: 'What does the "maj7" symbol mean?', a: 'It means major 7th chord — a major triad with a major 7th interval added on top. Some scores write it as Δ7 or M7; "Cmaj7" and "CΔ7" and "CM7" are all the same chord.' },
+      { q: 'Where does Cmaj7 appear in famous music?', a: 'Bossa nova and jazz standards constantly: "Girl from Ipanema" (in F but using maj7 voicings), "Misty," "All The Things You Are." Stevie Wonder\'s "Ribbon in the Sky," Steely Dan\'s "Aja" — anywhere a smooth, complete I chord is needed.' },
+    ],
+  },
+
+  'c-sharp-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯ major 7 (C♯maj7) — C♯, E♯, G♯, B♯ — is C♯ major with a major 7th on top. The four-sharp-of-sharps spelling (with B♯ enharmonic to C natural and E♯ enharmonic to F) places the chord deep in sharp-key territory. It\'s enharmonically equivalent to D♭maj7 (which has a friendlier five-flat signature) and is rarely written outside C♯ major or G♯ major contexts.',
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Enharmonic: D♭ major 7', slug: 'd-flat-major-7', kind: 'chord' },
+      { label: 'Related: C♯ dominant 7', slug: 'c-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-major', 'd-flat-major-7', 'c-sharp-dominant-7', 'd-sharp-minor-7', 'g-sharp-dominant-7'],
+    commonMistakes:
+      'Both the third (E♯) and seventh (B♯) are enharmonics for naturals (F and C respectively). Reading them as naturals is wrong inside C♯ major context but the pitch is identical. Most charts use D♭maj7 instead — same sound, dramatically fewer accidentals on the page.',
+    inProgressions:
+      'C♯maj7 is the I chord in C♯ major and the IV chord in G♯ major. The ii–V–I cadence runs D♯m7 → G♯7 → C♯maj7. In practice the chord is more often notated as D♭maj7 unless the surrounding key signature is firmly on the sharp side.',
+    faq: [
+      { q: 'What notes are in a C♯maj7 chord?', a: 'C♯maj7 contains four notes: C♯ (root), E♯ (major third — same pitch as F), G♯ (perfect fifth), and B♯ (major seventh — same pitch as C).' },
+      { q: 'Is C♯maj7 the same as D♭maj7?', a: 'Yes, enharmonically — same four pitches. C♯maj7 has seven sharps; D♭maj7 has five flats. D♭maj7 is the standard spelling in nearly all literature.' },
+      { q: 'Why is the third E♯ and not F?', a: 'Major scales use each of the seven letters once. The C♯ major scale runs C♯-D♯-E♯-F♯-G♯-A♯-B♯ — using C-D-E-F-G-A-B in order. Calling the third "F" would skip the E letter and use F twice.' },
+      { q: 'When would I see C♯maj7 instead of D♭maj7?', a: 'Inside music in C♯ major or G♯ major where the surrounding harmony already uses sharps. Bach\'s Well-Tempered Clavier includes a C♯ major prelude that uses this exact spelling.' },
+    ],
+  },
+
+  'd-flat-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭ major 7 (D♭maj7) — D♭, F, A♭, C — is D♭ major with a major 7th on top. The five-flat spelling makes it the standard notation for this lush, romantic chord. Chopin\'s "Raindrop" Prelude uses D♭ harmony constantly; the maj7 extension gives the chord its full late-Romantic / impressionist colour.',
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D♭ major', slug: 'd-flat-major', kind: 'key' },
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: C♯ major 7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-major', 'c-sharp-major-7', 'd-flat-dominant-7', 'e-flat-minor-7', 'a-flat-dominant-7'],
+    commonMistakes:
+      'The 7th is C natural — a half-step higher than D♭dom7 (which has C♭ as its 7th). The most common error among beginners is reading the maj7 as dom7 or vice versa; the half-step makes all the difference in chord function. On guitar, D♭maj7 is most often played as a 4th-fret C-shape or as a closed-position three-string voicing.',
+    inProgressions:
+      'D♭maj7 is the I chord in D♭ major. The ii–V–I cadence runs E♭m7 → A♭7 → D♭maj7. Coltrane\'s "Naima" is anchored in A♭ but builds tension on D♭maj7 throughout. In jazz, D♭maj7 also functions as the bVI in F minor and the IV in A♭ major.',
+    faq: [
+      { q: 'What notes are in a D♭maj7 chord?', a: 'D♭maj7 contains four notes: D♭ (root), F (major third), A♭ (perfect fifth), and C (major seventh).' },
+      { q: 'How is D♭maj7 different from D♭7?', a: 'Only the seventh changes. D♭maj7 has C natural (a major 7th from D♭); D♭7 has C♭ (a minor 7th). The maj7 sounds stable and dreamy; the dom7 wants to resolve to G♭.' },
+      { q: 'What jazz standards use D♭maj7?', a: 'Coltrane\'s "Naima" features prominent D♭maj7 voicings. "There Will Never Be Another You" passes through D♭maj7 in its bridge. Many ballads modulate to D♭ for the second half precisely because D♭maj7 has such a rich, romantic colour.' },
+      { q: 'Is D♭maj7 the same as C♯maj7?', a: 'Enharmonically yes — same four pitches. D♭maj7 (five flats) is the standard spelling; C♯maj7 (seven sharps) appears only in deep sharp-key contexts.' },
+    ],
+  },
+
+  'd-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D major 7 (Dmaj7) — D, F♯, A, C♯ — is D major with a major 7th on top. The chord shines on guitar because the open strings (D, A) line up with D major harmonics; jazz guitarists from Wes Montgomery onward have made Dmaj7 a signature voicing. "Girl from Ipanema" is in F major but visits Dmaj7-related colours constantly.',
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D major', slug: 'd-major', kind: 'key' },
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: D dominant 7', slug: 'd-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-major', 'd-dominant-7', 'e-minor-7', 'a-dominant-7', 'b-minor-7'],
+    commonMistakes:
+      'Dmaj7 has C♯ as its 7th — the leading tone of D. Replacing C♯ with C natural produces D7 (dominant), which has a tense, "needs to resolve" character. On guitar, the open Dmaj7 voicing (xx0222) is among the most-used jazz chords for beginners learning extended harmony.',
+    inProgressions:
+      'Dmaj7 is the I chord in D major. The ii–V–I cadence runs Em7 → A7 → Dmaj7. Dmaj7 also appears as IV in A major (very common in jazz) and as bVI in F♯ minor. The progression Dmaj7 → Bm7 → Em7 → A7 → Dmaj7 (I–vi–ii–V–I) is the spine of countless ballads.',
+    faq: [
+      { q: 'What notes are in a Dmaj7 chord?', a: 'Dmaj7 contains four notes: D (root), F♯ (major third), A (perfect fifth), and C♯ (major seventh).' },
+      { q: 'How do you play Dmaj7 on guitar?', a: 'The most common voicing is xx0222 — mute strings 6-5, then D (open 4th), F♯ (2nd fret 3rd string), A (2nd fret 2nd string), C♯ (2nd fret 1st string). The voicing is one of the easiest jazz chords to finger.' },
+      { q: 'How is Dmaj7 different from D7?', a: 'Only the seventh changes. Dmaj7 has C♯ (major 7th); D7 has C natural (minor / dominant 7th). The half-step shift creates two very different harmonic functions.' },
+      { q: 'Where does Dmaj7 appear in famous music?', a: 'In every jazz standard in D major: "Girl from Ipanema" (in F but echoing D-shaped harmony), "Sweet Georgia Brown," "I Got Rhythm" (in various transpositions). Pop ballads in D major from the 60s onward also use Dmaj7 constantly.' },
+    ],
+  },
+
+  'e-flat-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭ major 7 (E♭maj7) — E♭, G, B♭, D — is E♭ major with a major 7th on top. The chord is fundamental to big-band and jazz writing because so many wind instruments transpose to E♭. The Duke Ellington Orchestra played E♭maj7 voicings constantly; Bill Evans built ballads around the chord.',
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E♭ major', slug: 'e-flat-major', kind: 'key' },
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭ dominant 7', slug: 'e-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-major', 'e-flat-dominant-7', 'f-minor-7', 'b-flat-dominant-7', 'c-minor-7'],
+    commonMistakes:
+      'The 7th of E♭maj7 is D natural — a half-step higher than E♭7 (which has D♭). Reading D as D♭ produces a dominant 7th with a totally different harmonic function. On piano, the chord falls under the hand as black-white-black-white starting from E♭. On guitar, the 6th-fret A-shape barre with the 7th replacing the octave is the most common voicing.',
+    inProgressions:
+      'E♭maj7 is the I chord in E♭ major. The ii–V–I runs Fm7 → B♭7 → E♭maj7 — the cadence in every E♭-major jazz standard from "Stella by Starlight" to "Misty." The chord also functions as the IV of B♭ major and the bVI of G minor.',
+    faq: [
+      { q: 'What notes are in an E♭maj7 chord?', a: 'E♭maj7 contains four notes: E♭ (root), G (major third), B♭ (perfect fifth), and D (major seventh).' },
+      { q: 'How is E♭maj7 different from E♭7?', a: 'Only the seventh changes. E♭maj7 has D natural; E♭7 has D♭. The half-step shift turns a stable, dreamy chord into a tense, dominant one that wants to resolve to A♭.' },
+      { q: 'What jazz standards use E♭maj7?', a: '"Misty" (in E♭), "Stella by Starlight" (which modulates through E♭), "There Will Never Be Another You," and many other jazz tunes. The horn-friendly key makes it especially common in big-band arrangements.' },
+      { q: 'How do you play E♭maj7 on piano?', a: 'Place your thumb on E♭, index finger on G, middle finger on B♭, and pinky on D. The chord falls comfortably under the hand once memorised.' },
+    ],
+  },
+
+  'e-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E major 7 (Emaj7) — E, G♯, B, D♯ — is E major with a major 7th on top. The chord is a guitar favourite because the open low E string makes Emaj7 voicings ring out fully. Joe Pass and Jim Hall both used Emaj7 constantly; the chord is the foundation of bossa-nova jazz guitar.',
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E major', slug: 'e-major', kind: 'key' },
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: E dominant 7', slug: 'e-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-major', 'e-dominant-7', 'f-sharp-minor-7', 'b-dominant-7', 'c-sharp-minor-7'],
+    commonMistakes:
+      'Emaj7 has D♯ as its 7th — the leading tone of E. Replacing D♯ with D natural produces E7 (dominant), which has a bluesy, resolution-seeking sound. On guitar, the open Emaj7 voicing (021100) keeps the bass E ringing while moving the 4th-string finger off the standard E shape to grab D♯.',
+    inProgressions:
+      'Emaj7 is the I chord in E major. The ii–V–I runs F♯m7 → B7 → Emaj7. The chord also appears as IV of B major (giving a lydian colour) and bVI of G♯ minor. Wes Montgomery\'s "Bumpin\' on Sunset" uses Emaj7 as its primary tonic.',
+    faq: [
+      { q: 'What notes are in an Emaj7 chord?', a: 'Emaj7 contains four notes: E (root), G♯ (major third), B (perfect fifth), and D♯ (major seventh).' },
+      { q: 'How do you play Emaj7 on guitar?', a: 'The standard open voicing is 021100: open low E, B (2nd fret 5th string), E (2nd fret 4th string), G♯ (1st fret 3rd string), B (open 2nd string), and an optional open high E. The D♯ on top can be added at the 11th fret of the 1st string for a closed voicing.' },
+      { q: 'How is Emaj7 different from E7?', a: 'Only the seventh changes. Emaj7 has D♯ (major 7th); E7 has D natural (minor / dominant 7th). E7 wants to resolve to A; Emaj7 sits stably as the tonic of E major.' },
+      { q: 'What pieces use Emaj7?', a: 'Wes Montgomery\'s "Bumpin\' on Sunset," many Joe Pass arrangements, bossa-nova standards transposed to E. Jeff Buckley\'s "Hallelujah" (in C major but uses related lush 7th voicings throughout).' },
+    ],
+  },
+
+  'f-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F major 7 (Fmaj7) — F, A, C, E — is F major with a major 7th on top. The chord is a beginner-jazz favourite because its notes are all naturals; many introductory jazz primers use Fmaj7 as the first 7th chord students learn. On guitar, the partial Fmaj7 voicing (xx3210) avoids the dreaded F barre while still capturing the chord\'s full character.',
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F major', slug: 'f-major', kind: 'key' },
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: F dominant 7', slug: 'f-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'f-dominant-7', 'g-minor-7', 'c-dominant-7', 'd-minor-7'],
+    commonMistakes:
+      'Fmaj7 has E natural as its 7th. Replacing E with E♭ produces F7 (dominant), which has a "needs to resolve" character. The most common beginner error is reading the chord as F minor 7 (which would be F-A♭-C-E♭). On guitar, the partial voicing xx3210 lets you play Fmaj7 with one open string and avoids the barre entirely.',
+    inProgressions:
+      'Fmaj7 is the I chord in F major. The ii–V–I runs Gm7 → C7 → Fmaj7 — the cadence in countless F-major jazz standards. The chord also serves as the IV of C major (where its lydian colour gives a slight float to the tonic-IV relationship) and the bVI of A minor.',
+    faq: [
+      { q: 'What notes are in an Fmaj7 chord?', a: 'Fmaj7 contains four notes: F (root), A (major third), C (perfect fifth), and E (major seventh).' },
+      { q: 'How do you play Fmaj7 on guitar?', a: 'The most common partial voicing is xx3210: mute strings 6-5, then F (3rd fret 4th string), A (2nd fret 3rd string), C (1st fret 2nd string), and E (open 1st string). This voicing avoids the F barre entirely.' },
+      { q: 'How is Fmaj7 different from F7?', a: 'Only the seventh changes. Fmaj7 has E natural; F7 has E♭. Fmaj7 sounds smooth and stable; F7 sounds tense and pulls toward B♭.' },
+      { q: 'What jazz standards use Fmaj7?', a: '"Girl from Ipanema" (in F major), "All The Things You Are" (which passes through F major), countless bossa-nova tunes. Fmaj7 is one of the most-played beginner jazz chords because of its all-natural spelling.' },
+    ],
+  },
+
+  'f-sharp-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯ major 7 (F♯maj7) — F♯, A♯, C♯, E♯ — is F♯ major with a major 7th on top. The six-sharp key signature makes the chord visually dense, but the sound is exactly the same as its enharmonic neighbour G♭maj7 (six flats). Wagner used F♯ major harmony in dense chromatic passages; jazz uses F♯maj7 in modulations that pivot from B major harmony.',
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F♯ major', slug: 'f-sharp-major', kind: 'key' },
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Enharmonic: G♭ major 7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-major', 'g-flat-major-7', 'f-sharp-dominant-7', 'g-sharp-minor-7', 'c-sharp-dominant-7'],
+    commonMistakes:
+      'F♯maj7 has E♯ as its 7th (enharmonic to F natural). Inside F♯-major key contexts the E♯ spelling preserves the seven-letter rule; in jazz lead sheets the same chord may be written F♯maj7 with F as the 7th letter — strictly incorrect but common. The chord is sometimes notated as G♭maj7 in flat-key contexts.',
+    inProgressions:
+      'F♯maj7 is the I chord in F♯ major. The ii–V–I cadence runs G♯m7 → C♯7 → F♯maj7. The chord also serves as the IV of C♯ major and bVI of A♯ minor. Modulations from B major to F♯ major are common in late-Romantic and modern jazz; the V (C♯7) leads naturally to F♯maj7.',
+    faq: [
+      { q: 'What notes are in an F♯maj7 chord?', a: 'F♯maj7 contains four notes: F♯ (root), A♯ (major third), C♯ (perfect fifth), and E♯ (major seventh — same pitch as F).' },
+      { q: 'Is F♯maj7 the same as G♭maj7?', a: 'Yes, enharmonically — same four pitches. F♯maj7 has six sharps; G♭maj7 has six flats. They\'re equally valid; composers pick one based on surrounding harmony.' },
+      { q: 'Why is the 7th E♯ and not F?', a: 'Major scales use each of the seven letters exactly once. The F♯ major scale runs F♯-G♯-A♯-B-C♯-D♯-E♯ — using each letter in order. Calling the 7th "F" would skip the E letter and use F twice.' },
+      { q: 'When would I see F♯maj7 in real music?', a: 'In music notated in F♯ major or C♯ major. In jazz, F♯maj7 appears when surrounding chords use sharp-side notation. In late-Romantic classical music it appears in chromatic passages through F♯ major.' },
+    ],
+  },
+
+  'g-flat-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♭ major 7 (G♭maj7) — G♭, B♭, D♭, F — is G♭ major with a major 7th on top. The six-flat key signature is dense but the chord\'s sound is lush and far-removed from the bright energy of sharp-side maj7 chords. G♭maj7 is enharmonic to F♯maj7; composers choose based on surrounding harmony.',
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G♭ major', slug: 'g-flat-major', kind: 'key' },
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: F♯ major 7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-flat-major', 'f-sharp-major-7', 'g-flat-dominant-7', 'a-flat-minor-7', 'd-flat-dominant-7'],
+    commonMistakes:
+      'G♭maj7 has F natural as its 7th — a half-step higher than G♭7 (which has F♭, enharmonic to E natural). The maj7 / dom7 distinction is crucial; the F natural sits a half-step from the root G♭, giving the chord its lush, slightly bittersweet character. Most jazz charts in flat-side keys use G♭maj7 directly; sharp-key contexts respell as F♯maj7.',
+    inProgressions:
+      'G♭maj7 is the I chord in G♭ major. The ii–V–I cadence runs A♭m7 → D♭7 → G♭maj7. Wayne Shorter\'s "Footprints" and many other modal jazz tunes drift through G♭maj7 voicings. In late-Romantic music, G♭maj7 often appears as a chromatic-mediant approach to D major or E♭ minor.',
+    faq: [
+      { q: 'What notes are in a G♭maj7 chord?', a: 'G♭maj7 contains four notes: G♭ (root), B♭ (major third), D♭ (perfect fifth), and F (major seventh).' },
+      { q: 'Is G♭maj7 the same as F♯maj7?', a: 'Yes, enharmonically — same four pitches. G♭maj7 has six flats; F♯maj7 has six sharps. They\'re identical in sound and equally valid notationally.' },
+      { q: 'How is G♭maj7 different from G♭7?', a: 'Only the seventh changes. G♭maj7 has F natural; G♭7 has F♭ (= E). The half-step turns a stable, dreamy chord into a tense, dominant one that wants to resolve to C♭ (= B).' },
+      { q: 'Where does G♭maj7 appear in jazz?', a: 'In any jazz tune in G♭ major or with G♭-major modulations. "Lush Life" by Billy Strayhorn passes through G♭-major colours; many ballads modulate to G♭ for the bridge specifically because G♭maj7 has such a distinct lush colour.' },
+    ],
+  },
+
+  'g-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G major 7 (Gmaj7) — G, B, D, F♯ — is G major with a major 7th on top. The chord is a guitar staple because the standard G voicing barely changes to become Gmaj7 (just lift the F note off the 1st string). The chord opens many jazz ballads and serves as the I in countless G-major standards.',
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G major', slug: 'g-major', kind: 'key' },
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: G dominant 7', slug: 'g-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'g-dominant-7', 'a-minor-7', 'd-dominant-7', 'e-minor-7'],
+    commonMistakes:
+      'Gmaj7 has F♯ as its 7th. Replacing F♯ with F natural produces G7 (dominant), which has a tense, bluesy character. The half-step is what defines the chord\'s major-7 quality. On guitar, the open Gmaj7 voicing (3x0002 or 320002) keeps the bass G and adds F♯ on the 2nd string.',
+    inProgressions:
+      'Gmaj7 is the I chord in G major. The ii–V–I runs Am7 → D7 → Gmaj7. The chord also serves as the IV of D major and bVI of B minor. Pop-jazz crossovers from the 70s onward use Gmaj7 heavily — Steely Dan, Stevie Wonder, Donald Fagen all built song forms around it.',
+    faq: [
+      { q: 'What notes are in a Gmaj7 chord?', a: 'Gmaj7 contains four notes: G (root), B (major third), D (perfect fifth), and F♯ (major seventh).' },
+      { q: 'How do you play Gmaj7 on guitar?', a: 'The standard open voicing is 3x0002 or 320002 — G on the 6th string, optional B on the 5th string, open D and G on the 4th and 3rd, open B on the 2nd, and F♯ on the 2nd fret of the 1st string.' },
+      { q: 'How is Gmaj7 different from G7?', a: 'Only the seventh changes. Gmaj7 has F♯ (major 7th); G7 has F natural (minor / dominant 7th). Gmaj7 sounds stable; G7 wants to resolve to C.' },
+      { q: 'What pieces use Gmaj7?', a: 'Steely Dan\'s "Aja," Stevie Wonder\'s "Visions," "Have You Met Miss Jones" (in F major but visiting G-related harmony), and countless other jazz-pop standards. Gmaj7 is one of the most-played 7th chords on guitar.' },
+    ],
+  },
+
+  'a-flat-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭ major 7 (A♭maj7) — A♭, C, E♭, G — is A♭ major with a major 7th on top. The four-flat key signature is comfortable for both pianists and horn players; A♭ is one of the most-used jazz keys, and A♭maj7 appears at every primary cadence in A♭-major literature.',
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A♭ major', slug: 'a-flat-major', kind: 'key' },
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭ dominant 7', slug: 'a-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-major', 'a-flat-dominant-7', 'b-flat-minor-7', 'e-flat-dominant-7', 'f-minor-7'],
+    commonMistakes:
+      'A♭maj7 has G natural as its 7th — a half-step higher than A♭7 (which has G♭). The leading-tone G in A♭ major is what gives the chord its full, complete-sounding character. On piano, A♭maj7 falls comfortably as black-white-black-white. On guitar, the most common voicing is a 4th-fret E-shape barre with the 7th adjusted.',
+    inProgressions:
+      'A♭maj7 is the I chord in A♭ major. The ii–V–I runs B♭m7 → E♭7 → A♭maj7 — the cadence in many great jazz ballads including "Misty" (which centres in A♭) and "What Are You Doing the Rest of Your Life." The chord also serves as the IV of E♭ major and bVI of C minor.',
+    faq: [
+      { q: 'What notes are in an A♭maj7 chord?', a: 'A♭maj7 contains four notes: A♭ (root), C (major third), E♭ (perfect fifth), and G (major seventh).' },
+      { q: 'How is A♭maj7 different from A♭7?', a: 'Only the seventh changes. A♭maj7 has G natural; A♭7 has G♭. The half-step turns a stable I chord into a tense dominant that wants to resolve to D♭.' },
+      { q: 'What jazz standards use A♭maj7?', a: '"Misty" (in A♭), "What Are You Doing the Rest of Your Life," "Body and Soul" (in D♭ but with A♭-related modulations). Many ballads use A♭ because the key is comfortable for both vocalists and horns.' },
+      { q: 'How do you play A♭maj7 on piano?', a: 'Place your thumb on A♭, index finger on C, middle finger on E♭, and pinky on G. The chord pattern (black-white-black-white) falls comfortably under the hand once memorised.' },
+    ],
+  },
+
+  'a-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A major 7 (Amaj7) — A, C♯, E, G♯ — is A major with a major 7th on top. The chord is a guitar favourite because the open A string can serve as the bass; the standard open voicing (x02120) is one of the easiest jazz chords to finger.',
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A major', slug: 'a-major', kind: 'key' },
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: A dominant 7', slug: 'a-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'a-dominant-7', 'b-minor-7', 'e-dominant-7', 'f-sharp-minor-7'],
+    commonMistakes:
+      'Amaj7 has G♯ as its 7th — the leading tone of A. Replacing G♯ with G natural produces A7 (dominant), which is the famous blues-cadence chord. The half-step shift completely changes the function. On guitar, the open Amaj7 voicing (x02120) gives a clean, lush sound; the closed-position 5th-fret E-shape barre is the most common alternative.',
+    inProgressions:
+      'Amaj7 is the I chord in A major. The ii–V–I runs Bm7 → E7 → Amaj7. The chord also serves as IV of E major and bVI of C♯ minor. Many bossa-nova standards modulate to A major for the bridge (the key sits comfortably for both guitar and vocals), making Amaj7 a constant presence in the bossa-nova repertoire.',
+    faq: [
+      { q: 'What notes are in an Amaj7 chord?', a: 'Amaj7 contains four notes: A (root), C♯ (major third), E (perfect fifth), and G♯ (major seventh).' },
+      { q: 'How do you play Amaj7 on guitar?', a: 'The open voicing x02120: mute the low E, then A (open 5th), E (2nd fret 4th string), G♯ (1st fret 3rd string), C♯ (2nd fret 2nd string), and open high E.' },
+      { q: 'How is Amaj7 different from A7?', a: 'Only the seventh changes. Amaj7 has G♯; A7 has G natural. Amaj7 sounds dreamy and stable; A7 sounds bluesy and pulls toward D.' },
+      { q: 'What pieces use Amaj7?', a: 'Many bossa-nova standards: "Wave," "Corcovado" (in C major but with A♭/A-related modulations), and countless jazz-pop tunes in A. The Beatles\' "Something" hovers around A major and uses related extended voicings.' },
+    ],
+  },
+
+  'b-flat-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ major 7 (B♭maj7) — B♭, D, F, A — is B♭ major with a major 7th on top. The chord is fundamental to big-band jazz because B♭ is the natural key for trumpets, tenor saxophones, and clarinets (B♭ instruments). Most jazz "fake books" notate tunes in B♭ specifically because the horns play comfortably there.',
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B♭ major', slug: 'b-flat-major', kind: 'key' },
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭ dominant 7', slug: 'b-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-major', 'b-flat-dominant-7', 'c-minor-7', 'f-dominant-7', 'g-minor-7'],
+    commonMistakes:
+      'B♭maj7 has A natural as its 7th — a half-step higher than B♭7 (which has A♭). The half-step shift turns a stable I chord into a tense dominant. On guitar, B♭maj7 is most often a 1st-fret A-shape barre with the 4th-string finger adjusted to grab the major 7th.',
+    inProgressions:
+      'B♭maj7 is the I chord in B♭ major. The ii–V–I runs Cm7 → F7 → B♭maj7. The chord underlies many big-band charts and bebop standards including "Confirmation," "Anthropology," and "Donna Lee" — all in B♭ major and all centred on B♭maj7 as the home chord.',
+    faq: [
+      { q: 'What notes are in a B♭maj7 chord?', a: 'B♭maj7 contains four notes: B♭ (root), D (major third), F (perfect fifth), and A (major seventh).' },
+      { q: 'How is B♭maj7 different from B♭7?', a: 'Only the seventh changes. B♭maj7 has A natural; B♭7 has A♭. The maj7 sounds stable; the dom7 wants to resolve to E♭.' },
+      { q: 'What jazz standards use B♭maj7?', a: '"Confirmation," "Anthropology," "Donna Lee" — all Charlie Parker / bebop standards in B♭. "Just Friends," "Have You Met Miss Jones" (in F but with B♭ excursions), and most B♭-major big-band charts.' },
+      { q: 'Why is B♭ major so common in jazz?', a: 'Because B♭ is the natural concert key for trumpets, tenor saxes, and clarinets. Most jazz tunes were originally arranged for big bands, and B♭ puts the horns in their easiest registers.' },
+    ],
+  },
+
+  'b-major-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B major 7 (Bmaj7) — B, D♯, F♯, A♯ — is B major with a major 7th on top. The five-sharp key signature is dense but the chord shines on guitar in closed-position voicings starting from the 2nd fret. B major is a less common key in classical literature but appears regularly in jazz tunes transposed for vocal range.',
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B major', slug: 'b-major', kind: 'key' },
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: B dominant 7', slug: 'b-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-major', 'b-dominant-7', 'c-sharp-minor-7', 'f-sharp-dominant-7', 'g-sharp-minor-7'],
+    commonMistakes:
+      'Bmaj7 has A♯ as its 7th — the leading tone of B. Replacing A♯ with A natural produces B7 (dominant). The five-sharp signature is dense; sight-readers benefit from confirming the A♯ on neighbouring chords too. On guitar, Bmaj7 is most often a 2nd-fret A-shape barre with the 4th string adjusted to grab the A♯.',
+    inProgressions:
+      'Bmaj7 is the I chord in B major. The ii–V–I runs C♯m7 → F♯7 → Bmaj7. The chord also serves as IV of F♯ major and bVI of D♯ minor. Many jazz singers transpose tunes to B major because the key sits well for tenor and soprano voices; Bmaj7 then appears at every cadence.',
+    faq: [
+      { q: 'What notes are in a Bmaj7 chord?', a: 'Bmaj7 contains four notes: B (root), D♯ (major third), F♯ (perfect fifth), and A♯ (major seventh).' },
+      { q: 'How do you play Bmaj7 on guitar?', a: 'Most commonly a 2nd-fret A-shape barre: index across strings 5-1 on fret 2, ring finger on the 4th fret of the 4th string (D♯), middle finger on the 3rd fret of the 3rd string (F♯), pinky on the 4th fret of the 2nd string (A♯).' },
+      { q: 'How is Bmaj7 different from B7?', a: 'Only the seventh changes. Bmaj7 has A♯; B7 has A natural. Bmaj7 sounds stable as a tonic; B7 sounds tense and pulls toward E.' },
+      { q: 'What pieces use Bmaj7?', a: 'Many jazz vocal standards transposed to B for range: "Misty," "What Are You Doing the Rest of Your Life," and others. Less common in classical literature where C major or D major would be preferred.' },
+    ],
+  },
+
+  // ─── Phase 3: minor 7th chords (im7 / iim7 / vim7) ────────────────────────
+  // Minor triad plus a minor 7th — the bluesy, mellow workhorse of jazz
+  // and R&B. The ii chord of major-key ii–V–I cadences.
+
+  'c-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C minor 7 (Cm7) — C, E♭, G, B♭ — is C minor with a minor 7th on top. The chord is the iim7 of B♭ major (every B♭-major jazz tune cadences through Cm7 → F7 → B♭maj7) and the im7 of C minor in modal jazz. Miles Davis\'s "So What" is built on Dm7 with a Cm7-like modal feel; Cm7 itself appears in countless flat-key standards.',
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C minor (= E♭ major)', slug: 'e-flat-major', kind: 'key' },
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: C major 7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-minor', 'c-major-7', 'b-flat-major-7', 'f-dominant-7', 'e-flat-major-7'],
+    commonMistakes:
+      'Cm7 has B♭ as its 7th — a minor 7th from C. Replacing B♭ with B natural produces Cm(maj7), a much rarer and tenser chord. The minor-7th distinction is what gives Cm7 its mellow, complete-sounding character. On guitar, Cm7 is most often a 3rd-fret A-shape barre with the 4th-string finger adjusted.',
+    inProgressions:
+      'Cm7 is the iim7 of B♭ major (Cm7 → F7 → B♭maj7) and the vim7 of E♭ major. As the im7 of C minor in modal jazz, the chord sits stably without needing to resolve — a different function from its tonal cadential role.',
+    faq: [
+      { q: 'What notes are in a Cm7 chord?', a: 'Cm7 contains four notes: C (root), E♭ (minor third), G (perfect fifth), and B♭ (minor seventh).' },
+      { q: 'How is Cm7 different from Cm(maj7)?', a: 'Only the seventh changes. Cm7 has B♭ (minor 7th); Cm(maj7) has B natural (major 7th). Cm(maj7) is the famous "James Bond" chord — much more tense and unstable.' },
+      { q: 'What jazz standards use Cm7?', a: '"All The Things You Are" passes through Cm7 in its opening. Any tune in B♭ major or E♭ major cadences through Cm7 at some point. Modal tunes like "Maiden Voyage" use Cm7 voicings constantly.' },
+      { q: 'How do you play Cm7 on guitar?', a: 'Most commonly a 3rd-fret A-shape barre: index across strings 5-1 on fret 3, ring finger on the 5th fret of the 4th string, middle finger on the 3rd fret of the 3rd string, pinky on the 4th fret of the 2nd string.' },
+    ],
+  },
+
+  'c-sharp-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯ minor 7 (C♯m7) — C♯, E, G♯, B — is C♯ minor with a minor 7th on top. The chord is the iim7 of B major (cadencing C♯m7 → F♯7 → Bmaj7) and the im7 of C♯ minor in modal contexts. Many jazz singers transpose tunes to B major for vocal range, putting C♯m7 in the iim7 slot constantly.',
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C♯ minor (= E major)', slug: 'e-major', kind: 'key' },
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯ major 7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-minor', 'c-sharp-major-7', 'b-major-7', 'f-sharp-dominant-7', 'e-major-7'],
+    commonMistakes:
+      'C♯m7 has B natural as its 7th. The mix of sharps (C♯, G♯) and naturals (E, B) is the chord\'s signature. Replacing B with B♭ would produce a chord outside the seven-letter-rule. On guitar, C♯m7 is most often a 4th-fret A-shape barre.',
+    inProgressions:
+      'C♯m7 is the iim7 of B major (the ii–V–I runs C♯m7 → F♯7 → Bmaj7), the vim7 of E major, and the im7 of C♯ minor. Many jazz ballads in B major use C♯m7 as their primary supertonic chord.',
+    faq: [
+      { q: 'What notes are in a C♯m7 chord?', a: 'C♯m7 contains four notes: C♯ (root), E (minor third), G♯ (perfect fifth), and B (minor seventh).' },
+      { q: 'What key does C♯m7 belong to?', a: 'C♯m7 is the iim7 of B major and the vim7 of E major. As the im7 of C♯ minor, the chord serves as a modal-jazz tonic without needing to resolve.' },
+      { q: 'How do you play C♯m7 on guitar?', a: 'Most commonly a 4th-fret A-shape barre: index across strings 5-1 on fret 4, ring finger on the 6th fret of the 4th string, middle finger on the 4th fret of the 3rd string, pinky on the 5th fret of the 2nd string.' },
+      { q: 'Is C♯m7 the same as D♭m7?', a: 'Enharmonically yes. D♭m7 (D♭-F♭-A♭-C♭) is essentially never written because of the F♭ and C♭ accidentals; C♯m7 is the standard spelling.' },
+    ],
+  },
+
+  'd-flat-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭ minor 7 (D♭m7) — D♭, F♭, A♭, C♭ — is D♭ minor with a minor 7th on top. The deeply flat spelling (with F♭ and C♭ enharmonic to E and B) makes this chord almost never appear in published music. The same pitches are universally written as C♯m7 (no double accidentals).',
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: C♯ minor 7', slug: 'c-sharp-minor-7', kind: 'chord' },
+      { label: 'Parallel: D♭ minor (theoretical)', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭ major 7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-minor', 'c-sharp-minor-7', 'd-flat-major-7', 'a-flat-minor-7', 'e-major-7'],
+    commonMistakes:
+      'D♭m7 contains F♭ and C♭ — both enharmonics for naturals (E and B). The spelling exists for theoretical consistency inside heavily flat-side music, but in practice the chord is always written C♯m7. Treat D♭m7 as a notation curiosity rather than a working chord symbol.',
+    inProgressions:
+      'D♭m7 doesn\'t function as a tonic in practical music. The chord may appear briefly as a chromatic passing chord in dense flat-key Romantic harmony, but every such instance can be respelled as C♯m7 — the version musicians actually read.',
+    faq: [
+      { q: 'What notes are in a D♭m7 chord?', a: 'D♭m7 contains four notes: D♭ (root), F♭ (minor third — same as E), A♭ (perfect fifth), and C♭ (minor seventh — same as B).' },
+      { q: 'Is D♭m7 the same as C♯m7?', a: 'Yes, enharmonically — same four pitches. D♭m7 requires F♭ and C♭ (both unusual accidentals); C♯m7 uses only sharps and naturals. C♯m7 is the universal practical spelling.' },
+      { q: 'When would I see D♭m7 in music?', a: 'Essentially never as a working chord symbol. The spelling appears only in deeply chromatic flat-key Romantic music where surrounding harmony demands flat-side consistency.' },
+      { q: 'Why is the third F♭ instead of E?', a: 'The minor 7th chord stacks thirds on each letter from the root. D♭ minor uses letters D-F-A-C; the minor third lands on the F letter, which becomes F♭ when lowered from F natural.' },
+    ],
+  },
+
+  'd-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D minor 7 (Dm7) — D, F, A, C — is D minor with a minor 7th on top. All four notes are naturals — the cleanest minor 7th spelling on the page. Miles Davis\'s "So What" is built on Dm7 (the chord plays for 16 bars at the top of the form); the chord is also the iim7 of C major and the vim7 of F major.',
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D minor (= F major)', slug: 'f-major', kind: 'key' },
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: D dominant 7', slug: 'd-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-minor', 'd-dominant-7', 'c-major-7', 'g-dominant-7', 'f-major-7'],
+    commonMistakes:
+      'Dm7 is one of the easier chords to spell because all four notes are naturals — but the most common error is reading the chord as Dmaj7 (which would have C♯ as the 7th). The minor-7th C is what gives Dm7 its mellow, blues-tinged character. On guitar, the open Dm7 voicing (xx0211) is one of the easiest jazz chords for beginners.',
+    inProgressions:
+      'Dm7 is the iim7 of C major (the ii–V–I runs Dm7 → G7 → Cmaj7), the vim7 of F major, and the im7 of D minor in modal jazz. Miles Davis\'s "So What" makes Dm7 a 16-bar tonic in its modal A section.',
+    faq: [
+      { q: 'What notes are in a Dm7 chord?', a: 'Dm7 contains four notes: D (root), F (minor third), A (perfect fifth), and C (minor seventh).' },
+      { q: 'How do you play Dm7 on guitar?', a: 'The open Dm7 voicing is xx0211: mute strings 6-5, then D (open 4th), A (2nd fret 3rd string), C (1st fret 2nd string), and F (1st fret 1st string).' },
+      { q: 'What jazz standards use Dm7?', a: '"So What" by Miles Davis (modal Dm7 for 16 bars), "Autumn Leaves" (in its relative minor cadence to Am7), "Maiden Voyage" by Herbie Hancock (which uses parallel m7 chords). Dm7 is one of the most-played 7th chords in jazz.' },
+      { q: 'How is Dm7 different from Dm(maj7)?', a: 'Only the seventh changes. Dm7 has C natural; Dm(maj7) has C♯. Dm(maj7) is the famous "James Bond" chord — much more tense.' },
+    ],
+  },
+
+  'd-sharp-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♯ minor 7 (D♯m7) — D♯, F♯, A♯, C♯ — is D♯ minor with a minor 7th on top. The chord is the iim7 of C♯ major (and enharmonically the iim7 of D♭ major when respelled as E♭m7). All four notes are sharp — the highest-sharp-count m7 chord that avoids double accidentals.',
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D♯ minor (= F♯ major)', slug: 'f-sharp-major', kind: 'key' },
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: E♭ minor 7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-sharp-minor', 'e-flat-minor-7', 'c-sharp-major-7', 'g-sharp-dominant-7', 'f-sharp-major-7'],
+    commonMistakes:
+      'All four notes carry sharps. The most common error is dropping one — reading F♯ as F natural makes a different chord (D♯dim7 essentially). The chord is enharmonically equivalent to E♭m7 (E♭-G♭-B♭-D♭); in flat-key contexts E♭m7 is the preferred spelling.',
+    inProgressions:
+      'D♯m7 is the iim7 of C♯ major (the ii–V–I runs D♯m7 → G♯7 → C♯maj7) and the vim7 of F♯ major. As the im7 of D♯ minor in modal jazz, it serves as a tonic chord that doesn\'t need to resolve.',
+    faq: [
+      { q: 'What notes are in a D♯m7 chord?', a: 'D♯m7 contains four notes: D♯ (root), F♯ (minor third), A♯ (perfect fifth), and C♯ (minor seventh).' },
+      { q: 'Is D♯m7 the same as E♭m7?', a: 'Yes, enharmonically — same four pitches. D♯m7 lives inside C♯-major key contexts; E♭m7 (E♭-G♭-B♭-D♭) is the flat-side spelling and is much more common in published jazz charts.' },
+      { q: 'How do you play D♯m7 on guitar?', a: 'Most commonly a 6th-fret A-shape barre: index across strings 5-1 on fret 6, ring finger on the 8th fret of the 4th string, middle finger on the 6th fret of the 3rd string, pinky on the 7th fret of the 2nd string.' },
+      { q: 'When would I see D♯m7 instead of E♭m7?', a: 'In music notated in C♯ major or F♯ major — keeping consistent sharp-side spelling. Outside those keys, E♭m7 is the universal practical spelling.' },
+    ],
+  },
+
+  'e-flat-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭ minor 7 (E♭m7) — E♭, G♭, B♭, D♭ — is E♭ minor with a minor 7th on top. The chord is the iim7 of D♭ major (the ii–V–I runs E♭m7 → A♭7 → D♭maj7) and a workhorse jazz chord in flat-side keys. Coltrane\'s "Naima" features E♭m7-related voicings prominently.',
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E♭ minor (= G♭ major)', slug: 'g-flat-major', kind: 'key' },
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭ major 7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-minor', 'e-flat-major-7', 'd-flat-major-7', 'a-flat-dominant-7', 'b-flat-minor-7'],
+    commonMistakes:
+      'E♭m7 has three flats on top of the E♭ root — every note except the root is flat. The most common error is misreading G♭ as G natural (which would produce E♭maj7\'s wider third) or D♭ as D natural (which would be E♭m maj7). On guitar, E♭m7 is most often a 6th-fret A-shape barre.',
+    inProgressions:
+      'E♭m7 is the iim7 of D♭ major (E♭m7 → A♭7 → D♭maj7) and the vim7 of G♭ major. The chord underlies any D♭-major or G♭-major jazz tune. Coltrane\'s "Naima" (in A♭ major but modulating through D♭ harmony) uses E♭m7-related colours constantly.',
+    faq: [
+      { q: 'What notes are in an E♭m7 chord?', a: 'E♭m7 contains four notes: E♭ (root), G♭ (minor third), B♭ (perfect fifth), and D♭ (minor seventh).' },
+      { q: 'Is E♭m7 the same as D♯m7?', a: 'Yes, enharmonically. E♭m7 is the flat-side spelling (used in D♭-major contexts); D♯m7 is the sharp-side spelling. E♭m7 is much more common in published jazz literature.' },
+      { q: 'What jazz standards use E♭m7?', a: 'Coltrane\'s "Naima" (with its D♭-major colour modulations), "Lush Life" by Billy Strayhorn, and many other deeply flat-side ballads. The chord is fundamental to advanced jazz harmony in D♭ / G♭.' },
+      { q: 'How do you play E♭m7 on guitar?', a: 'Most commonly a 6th-fret A-shape barre: index across strings 5-1 on fret 6, ring finger on the 8th fret of the 4th string, middle finger on the 6th fret of the 3rd string, pinky on the 7th fret of the 2nd string.' },
+    ],
+  },
+
+  'e-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E minor 7 (Em7) — E, G, B, D — is E minor with a minor 7th on top. All four notes are naturals, making Em7 one of the cleanest m7 spellings on the page. The chord is the iim7 of D major (Em7 → A7 → Dmaj7) and the vim7 of G major; on guitar, the open Em7 voicing (022030) is among the easiest jazz chords.',
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E minor (= G major)', slug: 'g-major', kind: 'key' },
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: E dominant 7', slug: 'e-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-minor', 'e-dominant-7', 'd-major-7', 'a-dominant-7', 'g-major-7'],
+    commonMistakes:
+      'Em7 is all naturals. The most common error is misreading the chord as Em(maj7) (which would have D♯ as the 7th) or as E7 (which would have G♯ as the third). On guitar, the open Em7 voicing (022030) is widely used; the closed-position 7th-fret A-shape barre is the alternative.',
+    inProgressions:
+      'Em7 is the iim7 of D major (Em7 → A7 → Dmaj7) and the vim7 of G major. As the im7 of E minor in modal jazz, the chord serves as a stable tonic. Many folk and pop tunes in G major or E minor use Em7 constantly.',
+    faq: [
+      { q: 'What notes are in an Em7 chord?', a: 'Em7 contains four notes: E (root), G (minor third), B (perfect fifth), and D (minor seventh).' },
+      { q: 'How do you play Em7 on guitar?', a: 'The open Em7 voicing is 022030: low E (open), B (2nd fret 5th string), E (2nd fret 4th string), G (open 3rd string), D (3rd fret 2nd string), and open high E.' },
+      { q: 'What pieces use Em7?', a: 'Any tune in D major or E minor: "Autumn Leaves" (in E minor) opens on Em7. "Stairway to Heaven" passes through Em-related harmony. Countless folk and jazz tunes use Em7 as a primary supertonic or tonic chord.' },
+      { q: 'How is Em7 different from E7?', a: 'Only the third changes. E7 has G♯ (major 3rd); Em7 has G natural (minor 3rd). E7 is a dominant chord; Em7 is a minor 7th — completely different functions.' },
+    ],
+  },
+
+  'f-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F minor 7 (Fm7) — F, A♭, C, E♭ — is F minor with a minor 7th on top. The chord is the iim7 of E♭ major (Fm7 → B♭7 → E♭maj7) — the cadence in every E♭-major jazz standard from "Stella by Starlight" to "Misty." Fm7 is also a primary chord in flat-key R&B and soul.',
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F minor (= A♭ major)', slug: 'a-flat-major', kind: 'key' },
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: F dominant 7', slug: 'f-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-minor', 'f-dominant-7', 'e-flat-major-7', 'b-flat-dominant-7', 'a-flat-major-7'],
+    commonMistakes:
+      'Fm7 has A♭ as its third and E♭ as its 7th — two flats on a natural root. The most common error is reading A♭ as A natural, which would make Fmaj7 (a completely different chord). On guitar, Fm7 is most often a 1st-fret E-shape barre — though many guitarists prefer the partial voicing on the upper strings to avoid the full barre.',
+    inProgressions:
+      'Fm7 is the iim7 of E♭ major (Fm7 → B♭7 → E♭maj7), the vim7 of A♭ major, and the im7 of F minor in modal jazz. Beethoven\'s "Appassionata" Sonata uses Fm-related harmony constantly; in jazz, "Misty," "Stella by Starlight," and most E♭-major standards cadence through Fm7.',
+    faq: [
+      { q: 'What notes are in an Fm7 chord?', a: 'Fm7 contains four notes: F (root), A♭ (minor third), C (perfect fifth), and E♭ (minor seventh).' },
+      { q: 'What jazz standards use Fm7?', a: '"Misty" (in E♭ major), "Stella by Starlight" (which cadences in E♭ at multiple points), "There Will Never Be Another You," and most E♭-major bebop standards. The ii–V–I in E♭ runs Fm7 → B♭7 → E♭maj7 — universal in the repertoire.' },
+      { q: 'How do you play Fm7 on guitar?', a: 'Most commonly a 1st-fret E-shape barre with the 4th-string finger lifted: index across all six strings on fret 1, ring finger on the 3rd fret of the 5th string, partial open positions on strings 4-3-2-1.' },
+      { q: 'How is Fm7 different from Fmaj7?', a: 'Two notes change. Fmaj7 has A natural (major 3rd) and E natural (major 7th); Fm7 has A♭ (minor 3rd) and E♭ (minor 7th). Different chord quality, different harmonic function.' },
+    ],
+  },
+
+  'f-sharp-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯ minor 7 (F♯m7) — F♯, A, C♯, E — is F♯ minor with a minor 7th on top. The chord is the iim7 of E major (F♯m7 → B7 → Emaj7) and the vim7 of A major. Sting\'s "Roxanne" famously builds on the F♯m and related extensions; jazz guitarists in A major lean on F♯m7 as a tonic-substitute.',
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F♯ minor (= A major)', slug: 'a-major', kind: 'key' },
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯ dominant 7', slug: 'f-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-minor', 'f-sharp-dominant-7', 'e-major-7', 'b-dominant-7', 'a-major-7'],
+    commonMistakes:
+      'F♯m7 has F♯ and C♯ as the sharp pair, plus A and E as naturals. The most common error is reading A as A♯, which would produce F♯maj7. The two sharps + two naturals pattern is the chord\'s signature.',
+    inProgressions:
+      'F♯m7 is the iim7 of E major (F♯m7 → B7 → Emaj7) and the vim7 of A major. As the im7 of F♯ minor in modal jazz, the chord serves as a stable tonic. Many bossa-nova tunes in A major use F♯m7 in their bridges.',
+    faq: [
+      { q: 'What notes are in an F♯m7 chord?', a: 'F♯m7 contains four notes: F♯ (root), A (minor third), C♯ (perfect fifth), and E (minor seventh).' },
+      { q: 'What key does F♯m7 belong to?', a: 'F♯m7 is the iim7 of E major and the vim7 of A major. Both keys share the same three-sharp signature.' },
+      { q: 'How do you play F♯m7 on guitar?', a: 'Most commonly a 2nd-fret E-minor-shape barre: index across all six strings on fret 2, ring finger on the 4th fret of the 5th string. Open positions are uncommon for F♯m7.' },
+      { q: 'What pieces use F♯m7?', a: 'Sting\'s "Roxanne" hovers around F♯m. Many A-major jazz ballads use F♯m7 as a vim7 / tonic-substitute. Bossa-nova tunes in A often modulate through F♯m7 in their bridges.' },
+    ],
+  },
+
+  'g-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G minor 7 (Gm7) — G, B♭, D, F — is G minor with a minor 7th on top. The chord is the iim7 of F major (Gm7 → C7 → Fmaj7) — the cadence in countless F-major jazz tunes including "Girl from Ipanema" (in F). Mozart\'s G-minor symphonies use Gm-related harmony constantly.',
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G minor (= B♭ major)', slug: 'b-flat-major', kind: 'key' },
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: G dominant 7', slug: 'g-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-minor', 'g-dominant-7', 'f-major-7', 'c-dominant-7', 'b-flat-major-7'],
+    commonMistakes:
+      'Gm7 has B♭ as its third and F natural as its 7th. Reading B♭ as B natural makes Gmaj7 (a completely different chord). On guitar, Gm7 is most often a 3rd-fret E-minor-shape barre or a closed-position three-string voicing.',
+    inProgressions:
+      'Gm7 is the iim7 of F major (Gm7 → C7 → Fmaj7) and the vim7 of B♭ major. As the im7 of G minor in modal jazz, the chord serves as a stable tonic. "Girl from Ipanema" in F major passes through Gm7 at every cadence.',
+    faq: [
+      { q: 'What notes are in a Gm7 chord?', a: 'Gm7 contains four notes: G (root), B♭ (minor third), D (perfect fifth), and F (minor seventh).' },
+      { q: 'What jazz standards use Gm7?', a: '"Girl from Ipanema" (in F major), Mozart\'s G-minor symphonies (with related harmony), and any tune in F major or B♭ major that needs a iim7 chord. Gm7 is one of the most-played 7th chords in jazz.' },
+      { q: 'How do you play Gm7 on guitar?', a: 'Most commonly a 3rd-fret E-minor-shape barre: index across all six strings on fret 3, ring finger on the 5th fret of the 5th string. The closed-position voicing also works at the 10th-fret area as an A-shape.' },
+      { q: 'How is Gm7 different from G7?', a: 'Only the third changes. G7 has B natural (major 3rd, dominant); Gm7 has B♭ (minor 3rd). Different chord quality with different harmonic function.' },
+    ],
+  },
+
+  'g-sharp-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯ minor 7 (G♯m7) — G♯, B, D♯, F♯ — is G♯ minor with a minor 7th on top. The chord is the iim7 of F♯ major (G♯m7 → C♯7 → F♯maj7) and the vim7 of B major. Five sharps on the page; the chord appears in any jazz tune transposed to B major for vocal range.',
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G♯ minor (= B major)', slug: 'b-major', kind: 'key' },
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: A♭ minor 7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-minor', 'a-flat-minor-7', 'b-major-7', 'c-sharp-dominant-7', 'f-sharp-major-7'],
+    commonMistakes:
+      'G♯m7 has three sharps (G♯, D♯, F♯) plus B natural. The most common error is reading B as B♯, which would break the chord spelling. The chord is enharmonically equivalent to A♭m7 (A♭-C♭-E♭-G♭) but the sharp-side spelling is much more common in published music.',
+    inProgressions:
+      'G♯m7 is the iim7 of F♯ major (G♯m7 → C♯7 → F♯maj7) and the vim7 of B major. Many jazz vocalists transpose tunes to B major for range, putting G♯m7 in the iim7 position at every cadence.',
+    faq: [
+      { q: 'What notes are in a G♯m7 chord?', a: 'G♯m7 contains four notes: G♯ (root), B (minor third), D♯ (perfect fifth), and F♯ (minor seventh).' },
+      { q: 'Is G♯m7 the same as A♭m7?', a: 'Yes, enharmonically — same four pitches. G♯m7 (five sharps) is the standard spelling in B-major contexts; A♭m7 (seven flats with F♭ and C♭) is much rarer in published music.' },
+      { q: 'How do you play G♯m7 on guitar?', a: 'Most commonly a 4th-fret E-minor-shape barre: index across all six strings on fret 4, ring finger on the 6th fret of the 5th string. The closed-position voicing covers the chord cleanly without needing open strings.' },
+      { q: 'When would I see G♯m7 in real music?', a: 'In music notated in B major or F♯ major. Jazz tunes transposed to those keys (often for vocal range) put G♯m7 at every cadence.' },
+    ],
+  },
+
+  'a-flat-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭ minor 7 (A♭m7) — A♭, C♭, E♭, G♭ — is A♭ minor with a minor 7th on top. The chord uses three flats plus C♭ (enharmonic to B natural). Like its parent A♭ minor, the chord is rarely written outside dense Romantic chromaticism; G♯m7 is the universal practical spelling.',
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: G♯ minor 7', slug: 'g-sharp-minor-7', kind: 'chord' },
+      { label: 'Parallel: A♭ minor (theoretical)', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭ major 7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-minor', 'g-sharp-minor-7', 'a-flat-major-7', 'b-major-7', 'd-flat-major-7'],
+    commonMistakes:
+      'A♭m7 has C♭ as its third (enharmonic to B natural). The all-flat spelling appears almost exclusively in deeply chromatic flat-key music; in practical jazz the same chord is G♯m7. Even when the surrounding key signature has many flats, modern editors often respell as G♯m7 for readability.',
+    inProgressions:
+      'A♭m7 rarely functions as a working chord. The same harmonic content is universally written G♯m7 in published music. Inside dense chromatic Romantic music — Wagner, Liszt — A♭m7 appears as a chromatic colour with flat-side spelling consistency.',
+    faq: [
+      { q: 'What notes are in an A♭m7 chord?', a: 'A♭m7 contains four notes: A♭ (root), C♭ (minor third — same as B), E♭ (perfect fifth), and G♭ (minor seventh).' },
+      { q: 'Is A♭m7 the same as G♯m7?', a: 'Yes, enharmonically — same four pitches. A♭m7 (seven flats with C♭) is essentially never written in jazz; G♯m7 (five sharps) is the universal practical spelling.' },
+      { q: 'Why is the third C♭ instead of B?', a: 'The minor 7th chord stacks thirds on each scale-letter from the root. A♭ minor uses letters A-C-E-G; the third lands on the C letter, which becomes C♭ when lowered a half step.' },
+      { q: 'When would I see A♭m7 in real music?', a: 'Essentially never in jazz charts. Only in dense chromatic Romantic-era classical music where surrounding harmony demands flat-side consistency.' },
+    ],
+  },
+
+  'a-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A minor 7 (Am7) — A, C, E, G — is A minor with a minor 7th on top. All four notes are naturals — the cleanest m7 spelling on the page. The chord is the iim7 of G major (Am7 → D7 → Gmaj7), the vim7 of C major, and the im7 of A minor; "Autumn Leaves" in C major / A minor uses Am7 constantly.',
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A minor (= C major)', slug: 'c-major', kind: 'key' },
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: A dominant 7', slug: 'a-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-minor', 'a-dominant-7', 'g-major-7', 'd-dominant-7', 'c-major-7'],
+    commonMistakes:
+      'Am7 is all naturals. The most common error is misreading the chord as Amaj7 (which would have G♯) or as A7 (which would have C♯). On guitar, the open Am7 voicing (x02013) is one of the easiest jazz chords for beginners.',
+    inProgressions:
+      'Am7 is the iim7 of G major (Am7 → D7 → Gmaj7), the vim7 of C major, and the im7 of A minor. "Autumn Leaves" alternates between G major and E minor cadences, putting Am7 in the iim7 position constantly. Modal jazz tunes like "Maiden Voyage" use Am7 as a stable tonic in modal contexts.',
+    faq: [
+      { q: 'What notes are in an Am7 chord?', a: 'Am7 contains four notes: A (root), C (minor third), E (perfect fifth), and G (minor seventh).' },
+      { q: 'How do you play Am7 on guitar?', a: 'The open Am7 voicing is x02013: mute the low E, then A (open 5th), E (2nd fret 4th string), G (open 3rd string), C (1st fret 2nd string), and an optional open high E.' },
+      { q: 'What jazz standards use Am7?', a: '"Autumn Leaves" (in G major / E minor — Am7 is the iim7), "Take the A Train" (in C major), and many modal tunes. Am7 is one of the most-played 7th chords in jazz.' },
+      { q: 'How is Am7 different from Amaj7?', a: 'Two notes change. Amaj7 has C♯ (major 3rd) and G♯ (major 7th); Am7 has C natural (minor 3rd) and G natural (minor 7th). Different chord quality and function.' },
+    ],
+  },
+
+  'a-sharp-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♯ minor 7 (A♯m7) — A♯, C♯, E♯, G♯ — is A♯ minor with a minor 7th on top. Four sharps plus the sharp-of-sharp E♯ (enharmonic to F). The chord is the iim7 of G♯ major (theoretical) and the vim7 of C♯ major. In practice, B♭m7 (the enharmonic spelling) is universally used in published music.',
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: B♭ minor 7', slug: 'b-flat-minor-7', kind: 'chord' },
+      { label: 'Parallel: A♯ minor (theoretical)', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯ major 7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-sharp-minor', 'b-flat-minor-7', 'c-sharp-major-7', 'd-sharp-minor-7', 'g-sharp-dominant-7'],
+    commonMistakes:
+      'A♯m7 has E♯ as its fifth — same pitch as F natural. The chord uses every kind of accidental in dense sharp-key territory. In practical music the spelling is virtually always replaced by B♭m7. Only Bach\'s systematic key cycles in the Well-Tempered Clavier give this exact spelling proper musical use.',
+    inProgressions:
+      'A♯m7 doesn\'t function as a working chord outside Bach\'s WTC and very dense chromatic Romantic music. The enharmonic B♭m7 covers all the practical use cases.',
+    faq: [
+      { q: 'What notes are in an A♯m7 chord?', a: 'A♯m7 contains four notes: A♯ (root), C♯ (minor third), E♯ (perfect fifth — same as F), and G♯ (minor seventh).' },
+      { q: 'Is A♯m7 the same as B♭m7?', a: 'Yes, enharmonically — same four pitches. A♯m7 (seven sharps including E♯) is essentially never written in practice; B♭m7 (five flats) is the universal spelling.' },
+      { q: 'Why is the fifth E♯ instead of F?', a: 'The minor 7th chord stacks thirds on each scale-letter from the root. A♯ minor uses letters A-C-E-G; the fifth lands on the E letter, which becomes E♯ when raised a half step.' },
+      { q: 'When would I see A♯m7 in real music?', a: 'Essentially never as a working chord symbol. The spelling appears only in Bach\'s systematic key explorations (the WTC) and in dense chromatic late-Romantic music.' },
+    ],
+  },
+
+  'b-flat-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ minor 7 (B♭m7) — B♭, D♭, F, A♭ — is B♭ minor with a minor 7th on top. The chord is the iim7 of A♭ major (B♭m7 → E♭7 → A♭maj7) and a workhorse in flat-side jazz. Many vocal standards modulate through B♭m harmony; the chord is also fundamental to gospel and R&B writing.',
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B♭ minor (= D♭ major)', slug: 'd-flat-major', kind: 'key' },
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭ major 7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-minor', 'b-flat-major-7', 'a-flat-major-7', 'e-flat-dominant-7', 'd-flat-major-7'],
+    commonMistakes:
+      'B♭m7 has D♭ and A♭ as the two flats above the B♭ root, plus F natural as the fifth. The most common error is reading D♭ as D natural, which would produce B♭7 (a dominant chord). On guitar, B♭m7 is most often a 1st-fret A-shape barre.',
+    inProgressions:
+      'B♭m7 is the iim7 of A♭ major (B♭m7 → E♭7 → A♭maj7) and the vim7 of D♭ major. Coltrane\'s "Naima" passes through B♭m harmony; many ballads modulate to A♭ or D♭ specifically because B♭m7 is such a rich chord for cadences.',
+    faq: [
+      { q: 'What notes are in a B♭m7 chord?', a: 'B♭m7 contains four notes: B♭ (root), D♭ (minor third), F (perfect fifth), and A♭ (minor seventh).' },
+      { q: 'What jazz standards use B♭m7?', a: 'Any tune in A♭ major or D♭ major: "Misty" (in A♭) cadences through B♭m7 at points, "Lush Life" (in D♭) uses B♭m7 as a primary iim7 chord, and many bossa-nova tunes modulate through B♭m7 in their bridges.' },
+      { q: 'How do you play B♭m7 on guitar?', a: 'Most commonly a 1st-fret A-shape barre: index across strings 5-1 on fret 1, ring finger on the 3rd fret of the 4th string, middle finger on the 1st fret of the 3rd string, pinky on the 2nd fret of the 2nd string.' },
+      { q: 'Is B♭m7 the same as A♯m7?', a: 'Enharmonically yes, but B♭m7 (five flats) is universal; A♯m7 (seven sharps with E♯) appears only in Bach\'s WTC and dense Romantic music.' },
+    ],
+  },
+
+  'b-minor-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B minor 7 (Bm7) — B, D, F♯, A — is B minor with a minor 7th on top. The chord is the iim7 of A major (Bm7 → E7 → Amaj7), the vim7 of D major, and the im7 of B minor in modal jazz. On guitar, the open Bm7 voicing (x20202) is one of the easiest jazz chords to finger.',
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B minor (= D major)', slug: 'd-major', kind: 'key' },
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: B dominant 7', slug: 'b-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-minor', 'b-dominant-7', 'a-major-7', 'e-dominant-7', 'd-major-7'],
+    commonMistakes:
+      'Bm7 has D as its third and F♯ as its fifth (the F♯ is the only sharp in the chord). The most common error is reading F♯ as F natural, which would make Bdim7-related harmony. On guitar, the open Bm7 voicing (x20202) is widely used because the open strings A and E line up with chord tones.',
+    inProgressions:
+      'Bm7 is the iim7 of A major (Bm7 → E7 → Amaj7), the vim7 of D major, and the im7 of B minor in modal jazz. "Autumn Leaves" transposed to A major would put Bm7 in the iim7 slot; the chord is also fundamental to D-major and A-major folk-rock writing.',
+    faq: [
+      { q: 'What notes are in a Bm7 chord?', a: 'Bm7 contains four notes: B (root), D (minor third), F♯ (perfect fifth), and A (minor seventh).' },
+      { q: 'How do you play Bm7 on guitar?', a: 'The open Bm7 voicing is x20202: mute the low E, then B (2nd fret 5th string), open D, A (2nd fret 3rd string), open B, and open high E. The A and E open strings carry the 7th and 4th naturally.' },
+      { q: 'What pieces use Bm7?', a: 'Many A-major and D-major folk-rock tunes use Bm7 as a primary iim7 or vim7. The Beatles\' "Norwegian Wood" centres in E major but uses Bm-related harmony in its bridge; jazz tunes in A major cadence through Bm7 at every turn.' },
+      { q: 'How is Bm7 different from Bmaj7?', a: 'Two notes change. Bmaj7 has D♯ (major 3rd) and A♯ (major 7th); Bm7 has D natural (minor 3rd) and A natural (minor 7th). Different chord quality and function.' },
+    ],
+  },
+
+  // ─── Phase 3: dominant 7th chords (V7) ────────────────────────────────────
+  // Major triad plus a minor 7th — the unstable chord that pulls toward
+  // the tonic a fourth above. Every blues song is built on dom7 chords;
+  // every jazz ii–V–I has a dom7 in the middle.
+
+  'c-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C dominant 7 (C7) — C, E, G, B♭ — is C major with a minor 7th on top. The chord is the V7 of F major, the V7 of F minor, and the I7 of any blues in C. The defining sound of the blues — every 12-bar blues in C is built on C7, F7, and G7.',
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of F major', slug: 'f-major', kind: 'chord' },
+      { label: 'I7 of C blues', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C major 7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'c-major-7', 'f-major-7', 'g-minor-7', 'f-minor-7'],
+    commonMistakes:
+      'C7 has B♭ as its 7th — a half-step lower than Cmaj7 (which has B natural). The B♭ is the chord\'s "blue note" — it\'s what gives C7 its bluesy, resolution-seeking sound. The most common error is writing Cmaj7 when C7 is meant, or vice versa. On guitar, the open C7 voicing (x32310) is the standard.',
+    inProgressions:
+      'C7 is the V7 of F major (C7 → F is the cadence in F-major blues), the V7 of F minor, and the I7 of C blues. In the 12-bar blues, C7 sits as the I, F7 as the IV, and G7 as the V. The chord is also the centerpiece of every jazz cadence resolving to F.',
+    faq: [
+      { q: 'What notes are in a C7 chord?', a: 'C7 contains four notes: C (root), E (major third), G (perfect fifth), and B♭ (minor seventh — the "blue note").' },
+      { q: 'How is C7 different from Cmaj7?', a: 'Only the seventh changes. C7 has B♭ (minor 7th); Cmaj7 has B natural (major 7th). C7 sounds bluesy and wants to resolve to F; Cmaj7 sounds stable and serves as a tonic.' },
+      { q: 'What does the "7" symbol mean by itself?', a: 'By convention, "C7" means dominant 7th — major triad plus a minor 7th. Major 7th chords are always written "Cmaj7" or "CΔ7" to distinguish them.' },
+      { q: 'Where does C7 appear in famous music?', a: 'Every blues song in C uses C7 as the I, F7 as the IV, G7 as the V. Beethoven\'s Symphony No. 1 famously opens with a deceptive C7 chord (resolving to F major before the C-major home key is even established).' },
+    ],
+  },
+
+  'c-sharp-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯ dominant 7 (C♯7) — C♯, E♯, G♯, B — is C♯ major with a minor 7th. The chord is the V7 of F♯ major and the V7 of F♯ minor. The E♯ (enharmonic to F) is the spelling tell that you\'re inside a sharp-key context; outside F♯-major literature, the same pitches are written D♭7.',
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of F♯ major', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯ major 7', slug: 'c-sharp-major-7', kind: 'chord' },
+      { label: 'Enharmonic: D♭ dominant 7', slug: 'd-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-major', 'c-sharp-major-7', 'd-flat-dominant-7', 'f-sharp-major-7', 'd-sharp-minor-7'],
+    commonMistakes:
+      'C♯7\'s third is E♯, enharmonic to F. In jazz lead-sheet practice the chord is sometimes written with F as the third — strictly incorrect by the seven-letter rule. The same chord is universally written D♭7 in flat-side music; pick the spelling that matches the surrounding key.',
+    inProgressions:
+      'C♯7 is the V7 of F♯ major (C♯7 → F♯maj7) and the V7 of F♯ minor (C♯7 → F♯m). In ii–V–I cadences in F♯ major, the progression runs G♯m7 → C♯7 → F♯maj7. As an altered dominant, C♯7 also appears in jazz reharms substituting for G7 (tritone substitute pointing to C).',
+    faq: [
+      { q: 'What notes are in a C♯7 chord?', a: 'C♯7 contains four notes: C♯ (root), E♯ (major third — same pitch as F), G♯ (perfect fifth), and B (minor seventh).' },
+      { q: 'Is C♯7 the same as D♭7?', a: 'Yes, enharmonically — same four pitches. C♯7 lives in F♯-major contexts; D♭7 (D♭-F-A♭-C♭) lives in G♭-major / A♭-major contexts.' },
+      { q: 'Why is the third E♯ and not F?', a: 'Major scales use each of the seven letters exactly once. The C♯ major scale runs C♯-D♯-E♯-F♯-G♯-A♯-B♯; the third of C♯7 must sit on the E letter, which is E♯.' },
+      { q: 'When would I see C♯7 in real music?', a: 'In music notated in F♯ major or F♯ minor where the V7 needs sharp-side spelling. Bach\'s WTC includes a C♯-major prelude that uses C♯7 inside its cadences.' },
+    ],
+  },
+
+  'd-flat-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭ dominant 7 (D♭7) — D♭, F, A♭, C♭ — is D♭ major with a minor 7th. The C♭ (enharmonic to B) is the spelling tell that you\'re in flat-side territory. The chord is the V7 of G♭ major and the tritone substitute for G7 in jazz reharms (D♭7 and G7 share the same tritone, F-B / F-C♭).',
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of G♭ major', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: D♭ major 7', slug: 'd-flat-major-7', kind: 'chord' },
+      { label: 'Enharmonic: C♯ dominant 7', slug: 'c-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-major', 'd-flat-major-7', 'c-sharp-dominant-7', 'g-flat-major-7', 'a-flat-minor-7'],
+    commonMistakes:
+      'D♭7\'s 7th is C♭ — enharmonic to B natural. In jazz lead-sheet practice the chord is often written D♭7 with B as the 7th letter — strictly incorrect by the seven-letter rule. Inside G♭-major notation, C♭ preserves consistency.',
+    inProgressions:
+      'D♭7 is the V7 of G♭ major (D♭7 → G♭maj7) and a famous tritone substitute for G7 in C-major jazz. In ii–V–I cadences in G♭ major, the progression runs A♭m7 → D♭7 → G♭maj7. As a tritone-sub, D♭7 → Cmaj7 replaces the standard G7 → Cmaj7 with chromatic bass motion.',
+    faq: [
+      { q: 'What notes are in a D♭7 chord?', a: 'D♭7 contains four notes: D♭ (root), F (major third), A♭ (perfect fifth), and C♭ (minor seventh — same as B).' },
+      { q: 'What is a "tritone substitute"?', a: 'A jazz reharmonisation device. D♭7 and G7 share the same tritone (F to B / C♭). Substituting D♭7 for G7 in a cadence to C major creates chromatic bass motion (D♭ → C) and a richer harmonic colour.' },
+      { q: 'Is D♭7 the same as C♯7?', a: 'Yes, enharmonically — same four pitches. D♭7 lives in flat-side contexts; C♯7 lives in F♯-major contexts. Both are valid; the choice depends on surrounding key.' },
+      { q: 'When is D♭7 used in jazz?', a: 'As a tritone substitute for G7 (resolving to C major), in G♭-major ii–V–I cadences, and in chromatic walking-bass progressions. The chord is one of the most common altered dominants in bebop and post-bop jazz.' },
+    ],
+  },
+
+  'd-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D dominant 7 (D7) — D, F♯, A, C — is D major with a minor 7th. The chord is the V7 of G major and the V7 of G minor. On guitar, the open D7 voicing (xx0212) is among the easiest jazz chords; the chord is also a staple of folk and country music.',
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of G major', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: D major 7', slug: 'd-major-7', kind: 'chord' },
+      { label: 'Related: D major triad', slug: 'd-major', kind: 'chord' },
+    ],
+    relatedChords: ['d-major', 'd-major-7', 'g-major-7', 'a-minor-7', 'g-minor-7'],
+    commonMistakes:
+      'D7 has C natural as its 7th — a half-step lower than Dmaj7 (which has C♯). Replacing C with C♯ produces Dmaj7 (a totally different chord function). On guitar, the open D7 (xx0212) keeps the bass D, with F♯, A, and C above. The Beatles\' "Hey Jude" cadence (F → C → G → D) uses D7 as the closing dominant.',
+    inProgressions:
+      'D7 is the V7 of G major (D7 → G is the cadence in every G-major folk and pop tune) and the V7 of G minor. In ii–V–I in G major, the progression runs Am7 → D7 → Gmaj7. D7 is also the centrepiece of the D-major blues — every 12-bar blues in D uses D7, G7, and A7.',
+    faq: [
+      { q: 'What notes are in a D7 chord?', a: 'D7 contains four notes: D (root), F♯ (major third), A (perfect fifth), and C (minor seventh).' },
+      { q: 'How do you play D7 on guitar?', a: 'The open D7 voicing is xx0212: mute strings 6-5, then open D, A (2nd fret 3rd string), C (1st fret 2nd string), and F♯ (2nd fret 1st string).' },
+      { q: 'How is D7 different from Dmaj7?', a: 'Only the seventh changes. D7 has C natural; Dmaj7 has C♯. D7 sounds bluesy and pulls toward G; Dmaj7 sits stably as a tonic.' },
+      { q: 'What pieces use D7?', a: 'Every G-major folk and country song uses D7 as the closing V. The Beatles\' "Hey Jude" cadence (F → C → G → D7 → returning to D as resolution moment) leans heavily on D7\'s pull.' },
+    ],
+  },
+
+  'e-flat-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭ dominant 7 (E♭7) — E♭, G, B♭, D♭ — is E♭ major with a minor 7th. The chord is the V7 of A♭ major and the I7 of E♭ blues. Big-band charts in A♭ use E♭7 constantly as the dominant; jazz blues in E♭ build on E♭7, A♭7, and B♭7 as the three primary chords.',
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of A♭ major', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'I7 of E♭ blues', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭ major 7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-major', 'e-flat-major-7', 'a-flat-major-7', 'b-flat-minor-7', 'a-flat-dominant-7'],
+    commonMistakes:
+      'E♭7 has D♭ as its 7th — a half-step lower than E♭maj7 (which has D natural). Reading D♭ as D natural produces E♭maj7 (a totally different chord function). On guitar, E♭7 is most often a 6th-fret A-shape barre with the 4th-string finger adjusted.',
+    inProgressions:
+      'E♭7 is the V7 of A♭ major (E♭7 → A♭maj7) and the I7 of E♭ blues. In ii–V–I cadences in A♭ major, the progression runs B♭m7 → E♭7 → A♭maj7. The chord is fundamental to big-band jazz and bebop standards in A♭ major.',
+    faq: [
+      { q: 'What notes are in an E♭7 chord?', a: 'E♭7 contains four notes: E♭ (root), G (major third), B♭ (perfect fifth), and D♭ (minor seventh).' },
+      { q: 'How is E♭7 different from E♭maj7?', a: 'Only the seventh changes. E♭7 has D♭ (minor 7th); E♭maj7 has D natural (major 7th). E♭7 wants to resolve to A♭; E♭maj7 sits stably as a tonic.' },
+      { q: 'What jazz standards use E♭7?', a: 'Any tune in A♭ major or E♭ blues. "Misty" cadences through E♭7 → A♭maj7; "Stella by Starlight" uses E♭7 in multiple modulations. Big-band charts in A♭ rely on E♭7 as the primary dominant.' },
+      { q: 'How do you play E♭7 on guitar?', a: 'Most commonly a 6th-fret A-shape barre: index across strings 5-1 on fret 6, ring finger on the 8th fret of the 4th string, middle finger on the 6th fret of the 3rd string, pinky on the 8th fret of the 2nd string.' },
+    ],
+  },
+
+  'e-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E dominant 7 (E7) — E, G♯, B, D — is E major with a minor 7th. On guitar, the open E7 voicing (020100) is the easiest jazz chord on the instrument because every note except G♯ rings on an open string. The chord is the V7 of A major and the I7 of E blues — the most-played blues key on guitar.',
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of A major', slug: 'a-major', kind: 'chord' },
+      { label: 'I7 of E blues', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: E major 7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-major', 'e-major-7', 'a-major-7', 'b-minor-7', 'a-dominant-7'],
+    commonMistakes:
+      'E7 has D natural as its 7th — a half-step lower than Emaj7 (which has D♯). Replacing D with D♯ produces Emaj7 (a stable tonic chord). The blues-defining D natural is what makes E7 sound bluesy and unresolved. On guitar, the open E7 (020100) is among the first jazz chords beginners learn.',
+    inProgressions:
+      'E7 is the V7 of A major (E7 → A is the cadence in every A-major folk and rock tune) and the I7 of E blues. The 12-bar blues in E is built on E7, A7, and B7 — three of the most-played dominant chords on guitar. In ii–V–I in A major, the progression runs Bm7 → E7 → Amaj7.',
+    faq: [
+      { q: 'What notes are in an E7 chord?', a: 'E7 contains four notes: E (root), G♯ (major third), B (perfect fifth), and D (minor seventh).' },
+      { q: 'How do you play E7 on guitar?', a: 'The open E7 voicing is 020100: open low E, B (2nd fret 5th string), open D, G♯ (1st fret 3rd string), open B, open high E. The D 7th rings on an open string, making the chord uniquely playable.' },
+      { q: 'How is E7 different from Emaj7?', a: 'Only the seventh changes. E7 has D natural; Emaj7 has D♯. E7 sounds bluesy and pulls toward A; Emaj7 sits stably as a tonic.' },
+      { q: 'What pieces use E7?', a: 'Every blues in E uses E7, A7, B7. The Beatles\' "Twist and Shout" is built on D-G-A (transposed to E it would be E-A-B7). Chuck Berry\'s riffs are almost all dominant-7 figures built around E7 voicings.' },
+    ],
+  },
+
+  'f-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F dominant 7 (F7) — F, A, C, E♭ — is F major with a minor 7th. The chord is the V7 of B♭ major, the IV7 of C blues, and the I7 of F blues. Most concert-band literature in B♭ uses F7 as the primary dominant; jazz blues in F builds on F7, B♭7, and C7.',
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of B♭ major', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'IV7 of C blues', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: F major 7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'f-major-7', 'b-flat-major-7', 'c-minor-7', 'b-flat-dominant-7'],
+    commonMistakes:
+      'F7 has E♭ as its 7th — a half-step lower than Fmaj7 (which has E natural). The E♭ is the chord\'s "blue note." On guitar, F7 is most often a 1st-fret E-shape barre. The partial voicing (xx3211) avoids the full barre while capturing F, A, C, E♭ on the upper four strings.',
+    inProgressions:
+      'F7 is the V7 of B♭ major (F7 → B♭ is the cadence in B♭ blues and most B♭ band literature), the IV7 of C blues (in 12-bar C blues, F7 is the IV chord), and the I7 of F blues. In ii–V–I in B♭ major, the progression runs Cm7 → F7 → B♭maj7.',
+    faq: [
+      { q: 'What notes are in an F7 chord?', a: 'F7 contains four notes: F (root), A (major third), C (perfect fifth), and E♭ (minor seventh — the "blue note").' },
+      { q: 'How is F7 different from Fmaj7?', a: 'Only the seventh changes. F7 has E♭; Fmaj7 has E natural. F7 sounds bluesy and pulls toward B♭; Fmaj7 sits stably as a tonic.' },
+      { q: 'What pieces use F7?', a: 'Every blues in C uses F7 as the IV chord. Every B♭-major standard cadences through F7 → B♭maj7. Beethoven\'s Symphony No. 1 famously opens on F7 (as the V7 of B♭, a chromatic feint before the C-major home key arrives).' },
+      { q: 'How do you play F7 on guitar?', a: 'Most commonly a 1st-fret E-shape barre with the 4th-string finger lifted. The partial voicing xx3211 (strings 6-5 muted, then F-A-Eb-C-F) works for many styles.' },
+    ],
+  },
+
+  'f-sharp-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯ dominant 7 (F♯7) — F♯, A♯, C♯, E — is F♯ major with a minor 7th. The chord is the V7 of B major and the V7 of B minor. Three sharps plus the natural E (the chord\'s 7th); the E is what gives F♯7 its "needs to resolve" character. The chord is enharmonic to G♭7 in flat-side notation.',
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of B major', slug: 'b-major', kind: 'chord' },
+      { label: 'V7 of B minor', slug: 'b-minor', kind: 'chord' },
+      { label: 'Enharmonic: G♭ dominant 7', slug: 'g-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-major', 'f-sharp-major-7', 'b-major-7', 'c-sharp-minor-7', 'g-flat-dominant-7'],
+    commonMistakes:
+      'F♯7\'s 7th is E natural — a half-step lower than F♯maj7 (which has E♯). The natural E inside a sharp-key context is the chord\'s identity. Replacing E with E♯ produces F♯maj7 (a stable tonic). On guitar, F♯7 is most often a 2nd-fret E-shape barre.',
+    inProgressions:
+      'F♯7 is the V7 of B major (F♯7 → Bmaj7 is the cadence in every B-major jazz tune) and the V7 of B minor. In ii–V–i in B minor, the progression runs C♯m7♭5 → F♯7 → Bm. The chord is also a common tritone substitute for C7 in C-major reharmonisations.',
+    faq: [
+      { q: 'What notes are in an F♯7 chord?', a: 'F♯7 contains four notes: F♯ (root), A♯ (major third), C♯ (perfect fifth), and E (minor seventh).' },
+      { q: 'Is F♯7 the same as G♭7?', a: 'Yes, enharmonically — same four pitches. F♯7 (three sharps + natural) lives in B-major contexts; G♭7 (six flats + natural) lives in flat-side music.' },
+      { q: 'How does F♯7 resolve?', a: 'F♯7 → Bmaj7 is the V → I cadence in B major. F♯7 → Bm is the V → i cadence in B minor. Both use the same dominant chord; the resolution differs only in the third of the tonic chord.' },
+      { q: 'When is F♯7 a tritone substitute?', a: 'F♯7 can substitute for C7 in cadences to F major (since C7 and F♯7 share the same tritone — E to B♭ / E to A♯). The substitution creates chromatic bass motion from F♯ down to F.' },
+    ],
+  },
+
+  'g-flat-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♭ dominant 7 (G♭7) — G♭, B♭, D♭, F♭ — is G♭ major with a minor 7th. The F♭ (enharmonic to E) is the spelling tell that you\'re in deep flat-key territory. The chord is the V7 of C♭ major (= B major enharmonically) and the tritone substitute for C7 in C-major reharms.',
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of C♭ major (= B major)', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: G♭ major 7', slug: 'g-flat-major-7', kind: 'chord' },
+      { label: 'Enharmonic: F♯ dominant 7', slug: 'f-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-flat-major', 'g-flat-major-7', 'f-sharp-dominant-7', 'd-flat-major-7', 'a-flat-minor-7'],
+    commonMistakes:
+      'G♭7\'s 7th is F♭ (enharmonic to E). In jazz lead-sheet practice the chord is sometimes written G♭7 with E as the 7th letter — strictly incorrect by the seven-letter rule. Inside C♭-major or G♭-major notation, F♭ preserves consistency.',
+    inProgressions:
+      'G♭7 is the V7 of C♭ major and a famous tritone substitute for C7 in C-major reharms. The substitution G♭7 → Cmaj7 replaces the standard G7 → Cmaj7 with chromatic bass motion (G♭ → F → E → C-shaped landing). In G♭-major ii–V–I, the cadence runs A♭m7 → D♭7 → G♭maj7 — G♭7 doesn\'t appear in that progression but as the V7 of C♭ it does.',
+    faq: [
+      { q: 'What notes are in a G♭7 chord?', a: 'G♭7 contains four notes: G♭ (root), B♭ (major third), D♭ (perfect fifth), and F♭ (minor seventh — same pitch as E).' },
+      { q: 'Is G♭7 the same as F♯7?', a: 'Yes, enharmonically — same four pitches. G♭7 lives in flat-side contexts; F♯7 lives in B-major / sharp-side contexts.' },
+      { q: 'What is a tritone substitute?', a: 'G♭7 and C7 share the same tritone (B♭-E / B♭-F♭). Substituting G♭7 for C7 in a cadence to F major creates chromatic bass motion (G♭ → F) and richer harmonic colour.' },
+      { q: 'When would I see G♭7 in real music?', a: 'In jazz reharms substituting for C7, in G♭-major and C♭-major contexts (rare), and in dense chromatic Romantic music. Modern lead sheets often use F♯7 instead for readability.' },
+    ],
+  },
+
+  'g-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G dominant 7 (G7) — G, B, D, F — is G major with a minor 7th. All four notes are naturals. The chord is the V7 of C major (G7 → C is the most common cadence in Western tonal music) and the I7 of G blues. On guitar, the open G7 voicing (320001) is one of the very first chords most students learn.',
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of C major', slug: 'c-major', kind: 'chord' },
+      { label: 'I7 of G blues', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: G major 7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'g-major-7', 'c-major-7', 'd-minor-7', 'c-dominant-7'],
+    commonMistakes:
+      'G7 has F natural as its 7th — a half-step lower than Gmaj7 (which has F♯). Replacing F with F♯ produces Gmaj7 (a stable tonic chord). The natural F is what gives G7 its bluesy pull. On guitar, the open G7 voicing (320001) keeps the standard G major shape with F added on the 1st string.',
+    inProgressions:
+      'G7 is the V7 of C major — the most-played dominant chord in tonal music. Every C-major cadence in classical, jazz, folk, and pop uses G7 → C. G7 is also the I7 of G blues (G7, C7, D7 — the three blues chords in G) and a primary chord in any C-major folk progression.',
+    faq: [
+      { q: 'What notes are in a G7 chord?', a: 'G7 contains four notes: G (root), B (major third), D (perfect fifth), and F (minor seventh).' },
+      { q: 'How do you play G7 on guitar?', a: 'The open G7 voicing is 320001: G (3rd fret 6th string), B (2nd fret 5th string), open D, open G, open B, F (1st fret 1st string). The single fingering change from open G major (3rd fret 1st string → 1st fret 1st string) makes G7 one of the easiest dominant 7ths.' },
+      { q: 'How is G7 different from Gmaj7?', a: 'Only the seventh changes. G7 has F natural; Gmaj7 has F♯. G7 sounds bluesy and pulls toward C; Gmaj7 sits stably as a tonic.' },
+      { q: 'What pieces use G7?', a: 'Every C-major piece uses G7 at cadences: Mozart\'s C-major sonatas, Beethoven\'s 5th Symphony (in C), countless folk and pop tunes. "Hey Joe" uses dominant-7 cycles built on G7-derived patterns. G7 → C is the most-played cadence in Western music.' },
+    ],
+  },
+
+  'g-sharp-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯ dominant 7 (G♯7) — G♯, B♯, D♯, F♯ — is G♯ major with a minor 7th. Three sharps plus the sharp-of-sharp B♯ (enharmonic to C). The chord is the V7 of C♯ major and the V7 of C♯ minor; the enharmonic A♭7 is the more common spelling in flat-key contexts.',
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of C♯ major / minor', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Enharmonic: A♭ dominant 7', slug: 'a-flat-dominant-7', kind: 'chord' },
+      { label: 'Related: G♯ major (theoretical)', slug: 'g-sharp-major', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-major', 'a-flat-dominant-7', 'c-sharp-major-7', 'd-sharp-minor-7', 'c-sharp-minor'],
+    commonMistakes:
+      'G♯7 has B♯ as its third (enharmonic to C natural). In sharp-key contexts (C♯ major literature) the B♯ spelling preserves the seven-letter rule; in jazz lead sheets the same chord usually appears as A♭7. The chord is most often encountered as the V7 of C♯ minor — even though G♯ major itself is theoretical.',
+    inProgressions:
+      'G♯7 is the V7 of C♯ major (G♯7 → C♯maj7, in F♯-major contexts) and the V7 of C♯ minor (G♯7 → C♯m). The latter is the more common practical use; Beethoven\'s "Moonlight" Sonata in C♯ minor uses G♯7 → C♯m at every cadence.',
+    faq: [
+      { q: 'What notes are in a G♯7 chord?', a: 'G♯7 contains four notes: G♯ (root), B♯ (major third — same as C), D♯ (perfect fifth), and F♯ (minor seventh).' },
+      { q: 'Is G♯7 the same as A♭7?', a: 'Yes, enharmonically — same four pitches. G♯7 lives in C♯-minor contexts; A♭7 lives in flat-side music. A♭7 is much more common in published jazz charts.' },
+      { q: 'Why is the third B♯ and not C?', a: 'Major scales use each of the seven letters exactly once. The G♯ major scale runs G♯-A♯-B♯-C♯-D♯-E♯-F𝄪; the third of G♯7 must sit on the B letter, which is B♯.' },
+      { q: 'When would I see G♯7 in real music?', a: 'As the V7 of C♯ minor — every C♯-minor cadence in classical and jazz literature uses G♯7. Beethoven\'s "Moonlight" Sonata is the most famous example. In flat-key contexts the same chord is written A♭7.' },
+    ],
+  },
+
+  'a-flat-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭ dominant 7 (A♭7) — A♭, C, E♭, G♭ — is A♭ major with a minor 7th. The chord is the V7 of D♭ major and the tritone substitute for D7 in jazz reharms. Coltrane\'s "Naima" uses A♭7 as a centrepiece chord; many jazz ballads modulate through D♭ major specifically to feature A♭7 → D♭maj7 cadences.',
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of D♭ major', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: A♭ major 7', slug: 'a-flat-major-7', kind: 'chord' },
+      { label: 'Enharmonic: G♯ dominant 7', slug: 'g-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-major', 'a-flat-major-7', 'd-flat-major-7', 'e-flat-minor-7', 'g-sharp-dominant-7'],
+    commonMistakes:
+      'A♭7 has G♭ as its 7th — a half-step lower than A♭maj7 (which has G natural). Reading G♭ as G natural produces A♭maj7 (a stable tonic chord). The chord is enharmonically equivalent to G♯7, but A♭7 is much more common in published jazz literature.',
+    inProgressions:
+      'A♭7 is the V7 of D♭ major (A♭7 → D♭maj7) and a famous tritone substitute for D7 in cadences to G major. In ii–V–I in D♭ major, the progression runs E♭m7 → A♭7 → D♭maj7. Coltrane\'s "Naima" and "Body and Soul" (in D♭) make A♭7 a centerpiece chord.',
+    faq: [
+      { q: 'What notes are in an A♭7 chord?', a: 'A♭7 contains four notes: A♭ (root), C (major third), E♭ (perfect fifth), and G♭ (minor seventh).' },
+      { q: 'Is A♭7 the same as G♯7?', a: 'Yes, enharmonically — same four pitches. A♭7 is the flat-side spelling (used in D♭-major contexts); G♯7 is the sharp-side spelling. A♭7 is universal in jazz.' },
+      { q: 'How is A♭7 different from A♭maj7?', a: 'Only the seventh changes. A♭7 has G♭; A♭maj7 has G natural. A♭7 wants to resolve to D♭; A♭maj7 sits stably as a tonic.' },
+      { q: 'What jazz standards use A♭7?', a: 'Coltrane\'s "Naima," "Body and Soul" (in D♭ major), "What Are You Doing the Rest of Your Life," and many other ballads in D♭. The cadence A♭7 → D♭maj7 is one of the most-played in advanced jazz harmony.' },
+    ],
+  },
+
+  'a-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A dominant 7 (A7) — A, C♯, E, G — is A major with a minor 7th. On guitar, the open A7 voicing (x02020) is one of the easiest chords to finger because open strings carry three of the four notes. The chord is the V7 of D major and the I7 of A blues — a guitar-friendly blues key alongside E.',
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of D major', slug: 'd-major', kind: 'chord' },
+      { label: 'I7 of A blues', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: A major 7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'a-major-7', 'd-major-7', 'e-minor-7', 'd-dominant-7'],
+    commonMistakes:
+      'A7 has G natural as its 7th — a half-step lower than Amaj7 (which has G♯). Replacing G with G♯ produces Amaj7 (a stable tonic chord). The blues-defining G natural is what makes A7 sound bluesy. On guitar, the open A7 (x02020) uses open strings for A, E, and G — making it ring out fully.',
+    inProgressions:
+      'A7 is the V7 of D major (A7 → D is the cadence in every D-major folk and country tune) and the I7 of A blues. The 12-bar blues in A is built on A7, D7, and E7. In ii–V–I in D major, the progression runs Em7 → A7 → Dmaj7.',
+    faq: [
+      { q: 'What notes are in an A7 chord?', a: 'A7 contains four notes: A (root), C♯ (major third), E (perfect fifth), and G (minor seventh).' },
+      { q: 'How do you play A7 on guitar?', a: 'The open A7 voicing is x02020: mute the low E, then open A, E (2nd fret 4th string), open G, C♯ (2nd fret 2nd string), open high E.' },
+      { q: 'How is A7 different from Amaj7?', a: 'Only the seventh changes. A7 has G natural; Amaj7 has G♯. A7 sounds bluesy and pulls toward D; Amaj7 sits stably as a tonic.' },
+      { q: 'What pieces use A7?', a: 'Every D-major folk and country tune uses A7 at cadences. Every A blues uses A7 as the I chord. Hank Williams\' classic country writing in A and D leans heavily on A7. Robert Johnson\'s blues recordings are full of A7 voicings.' },
+    ],
+  },
+
+  'b-flat-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ dominant 7 (B♭7) — B♭, D, F, A♭ — is B♭ major with a minor 7th. The chord is the V7 of E♭ major (B♭7 → E♭maj7) — the cadence in every E♭-major jazz standard from "Misty" to "Stella by Starlight." B♭7 is also the I7 of B♭ blues and the IV7 of F blues.',
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of E♭ major', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'I7 of B♭ blues', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭ major 7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-major', 'b-flat-major-7', 'e-flat-major-7', 'f-minor-7', 'e-flat-dominant-7'],
+    commonMistakes:
+      'B♭7 has A♭ as its 7th — a half-step lower than B♭maj7 (which has A natural). Replacing A♭ with A produces B♭maj7 (a stable tonic chord). On guitar, B♭7 is most often a 1st-fret A-shape barre. The chord is fundamental to big-band jazz because of B♭\'s role as the natural concert key for horns.',
+    inProgressions:
+      'B♭7 is the V7 of E♭ major (B♭7 → E♭maj7 — the cadence in every E♭-major jazz tune), the I7 of B♭ blues, and the IV7 of F blues. In ii–V–I in E♭ major, the progression runs Fm7 → B♭7 → E♭maj7. Charlie Parker\'s "Confirmation" (in F major) uses B♭7-related dominants throughout.',
+    faq: [
+      { q: 'What notes are in a B♭7 chord?', a: 'B♭7 contains four notes: B♭ (root), D (major third), F (perfect fifth), and A♭ (minor seventh).' },
+      { q: 'What jazz standards use B♭7?', a: '"Misty" cadences through B♭7 → E♭maj7. "Stella by Starlight," "There Will Never Be Another You," and most E♭-major standards rely on B♭7 as the primary V7. Big-band charts in E♭ make B♭7 a workhorse chord.' },
+      { q: 'How do you play B♭7 on guitar?', a: 'Most commonly a 1st-fret A-shape barre: index across strings 5-1 on fret 1, ring finger on the 3rd fret of the 4th string, middle finger on the 1st fret of the 3rd string, pinky on the 3rd fret of the 2nd string.' },
+      { q: 'How is B♭7 different from B♭maj7?', a: 'Only the seventh changes. B♭7 has A♭; B♭maj7 has A natural. B♭7 sounds bluesy and pulls toward E♭; B♭maj7 sits stably as a tonic.' },
+    ],
+  },
+
+  'b-dominant-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B dominant 7 (B7) — B, D♯, F♯, A — is B major with a minor 7th. On guitar, the open B7 voicing (x21202) uses open strings cleverly to produce one of the easiest first-position B-rooted chords. The chord is the V7 of E major and the V7 of E minor. Every E-major and E-minor blues cadence uses B7.',
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'V7 of E major', slug: 'e-major', kind: 'chord' },
+      { label: 'V7 of E minor', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: B major 7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-major', 'b-major-7', 'e-major-7', 'f-sharp-minor-7', 'e-dominant-7'],
+    commonMistakes:
+      'B7 has A natural as its 7th — a half-step lower than Bmaj7 (which has A♯). Replacing A with A♯ produces Bmaj7 (a stable tonic chord). On guitar, the open B7 voicing (x21202) makes the chord accessible without needing a full barre; the F♯ and B sound on open strings.',
+    inProgressions:
+      'B7 is the V7 of E major (B7 → Emaj7 is the cadence in every E-major jazz tune and most E-major blues turnarounds) and the V7 of E minor (B7 → Em is the cadence in E minor). In ii–V–I in E major, the progression runs F♯m7 → B7 → Emaj7. The 12-bar blues in E uses E7, A7, B7.',
+    faq: [
+      { q: 'What notes are in a B7 chord?', a: 'B7 contains four notes: B (root), D♯ (major third), F♯ (perfect fifth), and A (minor seventh).' },
+      { q: 'How do you play B7 on guitar?', a: 'The standard open B7 voicing is x21202: mute the low E, B on the 2nd fret of the 5th string, D♯ on the 1st fret of the 4th string, open string 3 (G is not in the chord but is muted by adjacent fingers in practice), A on the open 5th string... For most players, an A-shape barre at the 2nd fret with the 4th-string note adjusted is the cleanest closed-position voicing.' },
+      { q: 'How is B7 different from Bmaj7?', a: 'Only the seventh changes. B7 has A natural; Bmaj7 has A♯. B7 sounds bluesy and pulls toward E; Bmaj7 sits stably as a tonic.' },
+      { q: 'What pieces use B7?', a: 'Every E-major and E-minor cadence in jazz, folk, and rock. "Blackbird" by The Beatles (in G major but with related dominant voicings), countless E-major blues turnarounds, and any E-rooted folk song.' },
     ],
   },
 };

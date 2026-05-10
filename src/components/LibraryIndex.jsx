@@ -25,6 +25,18 @@ const QUALITY_ORDER = Object.keys(QUALITIES).reduce((acc, k, i) => {
   return acc;
 }, {});
 
+// Qualities whose triad spelling is a major triad (or built atop one).
+// Everything else — minor triads, diminished, half-diminished, dim7,
+// and the minor-flavoured extensions — falls into the minor column.
+const MAJOR_FLAVOR_QUALITIES = new Set([
+  'maj', 'aug',
+  'maj6', 'maj7', 'dom7',
+  'maj9', 'dom9', 'add9',
+  'maj11', 'dom11', 'add11',
+  'maj13', 'dom13',
+]);
+const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
+
 // Slug helper for the relative-minor scale page. Mirrors the (private)
 // tonicToSlug helper in scaleContent — accidental-aware so "F#" → "f-sharp".
 const tonicToScaleSlug = (tonic) => {
@@ -59,33 +71,41 @@ const LIBRARIES = {
     // each section, qualities sort by the QUALITIES-table order so triads
     // come first, then sevenths, ninths, and so on.
     grouped: true,
+    // Each group has two columns — major-flavoured chords on the left,
+    // minor/diminished/half-dim on the right. Inside each column the
+    // qualities sort by the QUALITIES-table order.
+    splitByQuality: true,
     getGroups: () => {
       const buckets = PC_GROUP_LABELS.map((label) => ({
         label,
-        items: [],
+        majorItems: [],
+        minorItems: [],
       }));
       for (const slug of getLiveChordSlugs()) {
         const meta = slugToChord(slug);
         if (!meta) continue;
         const pc = noteToPc(meta.root);
         if (pc < 0) continue;
-        buckets[pc].items.push({
+        const item = {
           slug,
           to: `/chords/${slug}`,
           title: `${meta.displayName} chord`,
           sub: meta.qualityLabel,
-          // Stable sort key inside the group: QUALITIES order, then by the
-          // root spelling so e.g. C# major sits next to C# minor under
-          // "C♯ / D♭" before any Db-spelled entries.
+          // Stable sort key: QUALITIES-table order, then root spelling so
+          // C# major sits next to C# minor under "C♯ / D♭" ahead of Db.
           _sortKey: (QUALITY_ORDER[meta.qualityKey] ?? 99) * 100 + meta.root.length,
           _root: meta.root,
-        });
+        };
+        const target = isMajorFlavor(meta.qualityKey) ? 'majorItems' : 'minorItems';
+        buckets[pc][target].push(item);
       }
+      const byKey = (a, b) => a._sortKey - b._sortKey || a._root.localeCompare(b._root);
       return buckets
-        .filter((b) => b.items.length > 0)
+        .filter((b) => b.majorItems.length > 0 || b.minorItems.length > 0)
         .map((b) => ({
-          ...b,
-          items: b.items.sort((a, b) => a._sortKey - b._sortKey || a._root.localeCompare(b._root)),
+          label: b.label,
+          majorItems: b.majorItems.sort(byKey),
+          minorItems: b.minorItems.sort(byKey),
         }));
     },
   },
@@ -193,7 +213,11 @@ export default function LibraryIndex({ library }) {
   const items = config.grouped ? null : config.getItems();
   const groups = config.grouped ? config.getGroups() : null;
   const isEmpty = config.grouped
-    ? !groups || groups.every((g) => g.items.length === 0)
+    ? !groups || groups.every((g) =>
+        config.splitByQuality
+          ? g.majorItems.length === 0 && g.minorItems.length === 0
+          : g.items.length === 0
+      )
     : items.length === 0;
   const canonical = `https://theory-trainer.com${config.canonicalPath}`;
 
@@ -241,17 +265,52 @@ export default function LibraryIndex({ library }) {
           // Per-root grouped layout (chord library). Each section heading
           // shows the root pitch class — enharmonic spellings (C♯ / D♭)
           // share a heading so users hunting either name find the section.
+          // When `splitByQuality` is on, each section is two columns:
+          // major-flavour chords on the left, minor/dim/half-dim on the right.
           <div className="library-groups">
             {groups.map((group) => (
               <section key={group.label} className="library-group">
                 <h2 className="library-group-title">{group.label}</h2>
-                <ul className="library-grid">
-                  {group.items.map((item) => (
-                    <li key={item.slug}>
-                      <LibraryCard item={item} />
-                    </li>
-                  ))}
-                </ul>
+                {config.splitByQuality ? (
+                  <div className="library-split">
+                    <div className="library-split-column">
+                      <h3 className="library-split-title">Major</h3>
+                      {group.majorItems.length === 0 ? (
+                        <p className="library-split-empty">No major chords yet.</p>
+                      ) : (
+                        <ul className="library-grid library-grid-stack">
+                          {group.majorItems.map((item) => (
+                            <li key={item.slug}>
+                              <LibraryCard item={item} />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <div className="library-split-column">
+                      <h3 className="library-split-title">Minor</h3>
+                      {group.minorItems.length === 0 ? (
+                        <p className="library-split-empty">No minor chords yet.</p>
+                      ) : (
+                        <ul className="library-grid library-grid-stack">
+                          {group.minorItems.map((item) => (
+                            <li key={item.slug}>
+                              <LibraryCard item={item} />
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <ul className="library-grid">
+                    {group.items.map((item) => (
+                      <li key={item.slug}>
+                        <LibraryCard item={item} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </section>
             ))}
           </div>
@@ -373,6 +432,37 @@ const styles = `
     border-bottom: 1px dotted var(--ink-soft);
     letter-spacing: 0.02em;
   }
+  /* Two-column split per root: major-flavour chords on the left,
+     minor/diminished/half-dim on the right. Stacks vertically on mobile,
+     side-by-side on tablets and up. */
+  .library-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 600px) {
+    .library-split { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  }
+  .library-split-column { min-width: 0; }
+  .library-split-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.6rem;
+    font-weight: 400;
+  }
+  .library-split-empty {
+    font-style: italic;
+    color: var(--ink-soft);
+    opacity: 0.6;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  /* Inside a split column, cards stack vertically regardless of viewport
+     width — the column itself is already narrow. */
+  .library-grid-stack { grid-template-columns: 1fr !important; }
   .library-grid {
     list-style: none;
     margin: 0;

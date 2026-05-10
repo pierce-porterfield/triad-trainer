@@ -7,7 +7,7 @@ import { getLiveScaleSlugs, slugToScale } from '../data/scaleContent';
 import { getLiveLearnSlugs, getLearnPageContent } from '../data/learnContent';
 import { notesInKey } from '../data/keys';
 import { noteToPc } from '../data/pitchClass';
-import { QUALITIES } from '../data/triads';
+import { QUALITIES, buildChord } from '../data/triads';
 
 // Display labels for the 12 pitch-class buckets used to group chord pages.
 // Enharmonic spellings share a heading (e.g. "C♯ / D♭") so users hunting
@@ -130,14 +130,23 @@ const LIBRARIES = {
         if (!meta) continue;
         const pc = noteToPc(meta.root);
         if (pc < 0) continue;
+        // Pitch classes of every note in the chord — drives the mini piano
+        // diagram on the card. buildChord returns spelled notes; we map to
+        // pitch class so the highlight works regardless of enharmonic
+        // spelling.
+        const chordNotes = buildChord(meta.root, meta.qualityKey);
+        const pitchClasses = chordNotes
+          .map((n) => noteToPc(n))
+          .filter((pc) => pc >= 0);
         const item = {
           slug,
           to: `/chords/${slug}`,
           title: `${meta.displayName} chord`,
           sub: meta.qualityLabel,
-          // Chord-card extras: lead-sheet shorthand + colour category.
+          // Chord-card extras: lead-sheet shorthand + colour category + piano.
           shorthand: formatChordSymbol(meta.chordName),
           colorKey: QUALITY_COLOR[meta.qualityKey] || 'other',
+          pitchClasses,
           // Stable sort key: QUALITIES-table order, then root spelling so
           // C# major sits next to C# minor under "C♯ / D♭" ahead of Db.
           _sortKey: (QUALITY_ORDER[meta.qualityKey] ?? 99) * 100 + meta.root.length,
@@ -243,6 +252,62 @@ const LIBRARIES = {
   },
 };
 
+// Compact single-octave piano keyboard with chord notes highlighted.
+// Pulls its fill colour from the parent's `--spine` CSS variable so the
+// highlight always matches the chord-quality colour of the card it sits in.
+//
+// Black keys sit centred on the boundary between adjacent white keys —
+// good enough for a 100-px-wide decorative diagram.
+function MiniPiano({ pitchClasses }) {
+  const WHITE_PCS = [0, 2, 4, 5, 7, 9, 11];           // C D E F G A B
+  const BLACK_PCS_AT_BOUNDARY = [                       // pc → which boundary
+    { pc: 1,  after: 0 },                               // C♯/D♭ between C and D
+    { pc: 3,  after: 1 },                               // D♯/E♭ between D and E
+    { pc: 6,  after: 3 },                               // F♯/G♭ between F and G
+    { pc: 8,  after: 4 },                               // G♯/A♭ between G and A
+    { pc: 10, after: 5 },                               // A♯/B♭ between A and B
+  ];
+  const whiteW = 14;
+  const whiteH = 40;
+  const blackW = 10;
+  const blackH = 25;
+  const totalW = whiteW * 7;
+  const set = new Set(pitchClasses);
+
+  return (
+    <svg
+      className="library-card-chord-piano"
+      width={totalW}
+      height={whiteH}
+      viewBox={`0 0 ${totalW} ${whiteH}`}
+      aria-hidden="true"
+    >
+      {/* White keys */}
+      {WHITE_PCS.map((pc, i) => (
+        <rect
+          key={`w-${pc}`}
+          x={i * whiteW}
+          y={0}
+          width={whiteW}
+          height={whiteH}
+          className={`mp-key mp-white${set.has(pc) ? ' is-on' : ''}`}
+        />
+      ))}
+      {/* Black keys */}
+      {BLACK_PCS_AT_BOUNDARY.map(({ pc, after }) => (
+        <rect
+          key={`b-${pc}`}
+          x={(after + 1) * whiteW - blackW / 2}
+          y={0}
+          width={blackW}
+          height={blackH}
+          className={`mp-key mp-black${set.has(pc) ? ' is-on' : ''}`}
+        />
+      ))}
+    </svg>
+  );
+}
+
 // Renders one card for a single library entry. Two visual variants:
 //   - chord cards (when `shorthand` is present): big lead-sheet symbol on
 //     top with a small quality label underneath, plus a coloured spine on
@@ -256,8 +321,11 @@ function LibraryCard({ item }) {
         className="library-card library-card-chord"
         data-color={item.colorKey}
       >
-        <span className="library-card-chord-symbol">{item.shorthand}</span>
-        {item.sub && <span className="library-card-chord-label">{item.sub}</span>}
+        <div className="library-card-chord-head">
+          <span className="library-card-chord-symbol">{item.shorthand}</span>
+          {item.sub && <span className="library-card-chord-label">{item.sub}</span>}
+        </div>
+        {item.pitchClasses && <MiniPiano pitchClasses={item.pitchClasses} />}
       </Link>
     );
   }
@@ -605,8 +673,12 @@ const styles = `
   .library-card-chord {
     --spine: var(--paper-shadow);
     position: relative;
-    padding: 0.85rem 1rem 0.85rem 1.35rem;
-    gap: 0.15rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    padding: 0.7rem 0.85rem 0.7rem 1.2rem;
     overflow: hidden;
   }
   .library-card-chord::before {
@@ -619,6 +691,13 @@ const styles = `
     background: var(--spine);
   }
   .library-card-chord:hover { box-shadow: 6px 6px 0 var(--spine); border-color: var(--spine); }
+  .library-card-chord-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+  }
   .library-card-chord-symbol {
     font-family: 'Italiana', serif;
     font-size: 1.55rem;
@@ -634,6 +713,23 @@ const styles = `
     color: var(--ink-soft);
     opacity: 0.85;
   }
+  /* Mini piano diagram on the right side of each chord card. White keys
+     stay paper-coloured when off; highlighted keys flood with the chord-
+     quality spine colour. Black keys are dark by default, take on the
+     spine colour when highlighted. */
+  .library-card-chord-piano {
+    flex: 0 0 auto;
+    display: block;
+  }
+  .mp-key {
+    stroke: var(--ink);
+    stroke-width: 0.75;
+    transition: fill 0.15s ease;
+  }
+  .mp-white          { fill: var(--paper); }
+  .mp-white.is-on    { fill: var(--spine); }
+  .mp-black          { fill: var(--ink); }
+  .mp-black.is-on    { fill: var(--spine); }
   /* Quality colour palette — vintage-friendly, muted but distinguishable.
      Adjust here and the index, the chord-list legend, and every card
      update together. */

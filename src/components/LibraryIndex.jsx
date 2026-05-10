@@ -37,6 +37,50 @@ const MAJOR_FLAVOR_QUALITIES = new Set([
 ]);
 const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
 
+// Color category per quality — drives the coloured spine on each chord card
+// in the chord-library index. Major and minor get their own colours;
+// dominants (V chords in disguise) stand out in red; diminished family
+// shares a purple range; augmented sits apart in gold.
+const QUALITY_COLOR = {
+  // Major triad + its non-dominant extensions
+  maj:    'major',
+  maj6:   'major',
+  maj7:   'major',
+  maj9:   'major',
+  add9:   'major',
+  maj11:  'major',
+  add11:  'major',
+  maj13:  'major',
+  // Minor triad + its extensions
+  min:    'minor',
+  min6:   'minor',
+  min7:   'minor',
+  min9:   'minor',
+  madd9:  'minor',
+  min11:  'minor',
+  madd11: 'minor',
+  min13:  'minor',
+  // Dominant family (major triad + minor 7th, or extended)
+  dom7:   'dominant',
+  dom9:   'dominant',
+  dom11:  'dominant',
+  dom13:  'dominant',
+  // Diminished family
+  dim:    'diminished',
+  dim7:   'diminished',
+  m7b5:   'half-dim',
+  // Augmented stands alone
+  aug:    'augmented',
+};
+
+// Prettify a chord symbol for display: convert ASCII "b" / "#" in the root
+// to proper ♭ / ♯ glyphs. The QUALITIES table already uses Unicode for °
+// and ♭5, so only the root letter needs touching up.
+const formatChordSymbol = (name) =>
+  name
+    .replace(/^([A-G])b/, '$1♭')
+    .replace(/^([A-G])#/, '$1♯');
+
 // Slug helper for the relative-minor scale page. Mirrors the (private)
 // tonicToSlug helper in scaleContent — accidental-aware so "F#" → "f-sharp".
 const tonicToScaleSlug = (tonic) => {
@@ -91,6 +135,9 @@ const LIBRARIES = {
           to: `/chords/${slug}`,
           title: `${meta.displayName} chord`,
           sub: meta.qualityLabel,
+          // Chord-card extras: lead-sheet shorthand + colour category.
+          shorthand: formatChordSymbol(meta.chordName),
+          colorKey: QUALITY_COLOR[meta.qualityKey] || 'other',
           // Stable sort key: QUALITIES-table order, then root spelling so
           // C# major sits next to C# minor under "C♯ / D♭" ahead of Db.
           _sortKey: (QUALITY_ORDER[meta.qualityKey] ?? 99) * 100 + meta.root.length,
@@ -196,9 +243,24 @@ const LIBRARIES = {
   },
 };
 
-// Renders one card for a single library entry. Extracted so both the flat
-// grid (scales/learn) and the per-root grouped grid (chords) share markup.
+// Renders one card for a single library entry. Two visual variants:
+//   - chord cards (when `shorthand` is present): big lead-sheet symbol on
+//     top with a small quality label underneath, plus a coloured spine on
+//     the left to make qualities scannable
+//   - default cards (scales, keys, guides): two-line title + sub
 function LibraryCard({ item }) {
+  if (item.shorthand) {
+    return (
+      <Link
+        to={item.to}
+        className="library-card library-card-chord"
+        data-color={item.colorKey}
+      >
+        <span className="library-card-chord-symbol">{item.shorthand}</span>
+        {item.sub && <span className="library-card-chord-label">{item.sub}</span>}
+      </Link>
+    );
+  }
   return (
     <Link to={item.to} className="library-card">
       <span className="library-card-title">{item.title}</span>
@@ -537,6 +599,51 @@ const styles = `
     color: var(--ink-soft);
     opacity: 0.65;
   }
+  /* Chord-card variant: lead-sheet shorthand on top, quality label below,
+     and a coloured spine on the left edge keyed to chord quality. The
+     spine is the entire visual cue — easy to scan a long index by colour. */
+  .library-card-chord {
+    --spine: var(--paper-shadow);
+    position: relative;
+    padding: 0.85rem 1rem 0.85rem 1.35rem;
+    gap: 0.15rem;
+    overflow: hidden;
+  }
+  .library-card-chord::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: var(--spine);
+  }
+  .library-card-chord:hover { box-shadow: 6px 6px 0 var(--spine); border-color: var(--spine); }
+  .library-card-chord-symbol {
+    font-family: 'Italiana', serif;
+    font-size: 1.55rem;
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .library-card-chord-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    opacity: 0.85;
+  }
+  /* Quality colour palette — vintage-friendly, muted but distinguishable.
+     Adjust here and the index, the chord-list legend, and every card
+     update together. */
+  .library-card-chord[data-color="major"]      { --spine: #4a6b54; }
+  .library-card-chord[data-color="minor"]      { --spine: #4a5980; }
+  .library-card-chord[data-color="dominant"]   { --spine: #a64535; }
+  .library-card-chord[data-color="diminished"] { --spine: #5e3a6b; }
+  .library-card-chord[data-color="half-dim"]   { --spine: #846a92; }
+  .library-card-chord[data-color="augmented"]  { --spine: #a88734; }
+
   .library-card-title {
     font-family: 'Italiana', serif;
     font-size: 1.15rem;

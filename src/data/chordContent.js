@@ -8,14 +8,29 @@
 import { buildChord, QUALITIES } from './triads.js';
 import { isLive } from './publishSchedule.js';
 
-// Convert a root + quality slug ("c-major", "a-flat-minor") to a chord descriptor.
+// Mapping from URL-quality token to internal QUALITIES key + the human-
+// readable display name we use in headings and link labels. Keep slug
+// tokens stable — they ship in URLs that may already be indexed.
+const QUALITY_SLUG_MAP = {
+  'major':            { key: 'maj',  display: 'major' },
+  'minor':            { key: 'min',  display: 'minor' },
+  'diminished':       { key: 'dim',  display: 'diminished' },
+  'augmented':        { key: 'aug',  display: 'augmented' },
+  'diminished-7':     { key: 'dim7', display: 'diminished 7' },
+  'half-diminished':  { key: 'm7b5', display: 'half-diminished' },
+};
+const QUALITY_TOKENS = Object.keys(QUALITY_SLUG_MAP).join('|');
+const SLUG_RE = new RegExp(`^([a-g])(?:-(sharp|flat))?-(${QUALITY_TOKENS})$`);
+
+// Convert a root + quality slug ("c-major", "a-flat-minor", "f-sharp-diminished-7")
+// to a chord descriptor. Returns null for unparseable or unsupported slugs.
 export const slugToChord = (slug) => {
-  const m = slug.match(/^([a-g])(?:-(sharp|flat))?-(major|minor|diminished|augmented)$/);
+  const m = slug.match(SLUG_RE);
   if (!m) return null;
   const [, letter, accidental, quality] = m;
   const root = letter.toUpperCase()
     + (accidental === 'sharp' ? '#' : accidental === 'flat' ? 'b' : '');
-  const qualityKey = { major: 'maj', minor: 'min', diminished: 'dim', augmented: 'aug' }[quality];
+  const { key: qualityKey, display: qualityDisplay } = QUALITY_SLUG_MAP[quality];
   const q = QUALITIES[qualityKey];
   return {
     root,
@@ -23,7 +38,7 @@ export const slugToChord = (slug) => {
     quality,
     qualityLabel: q.label,
     chordName: `${root}${q.symbol}`,
-    displayName: `${root} ${quality}`,
+    displayName: `${root} ${qualityDisplay}`,
   };
 };
 
@@ -883,6 +898,1298 @@ const CONTENT = {
       { q: 'Is D♭ minor the same as C♯ minor?', a: 'Yes, enharmonically — same three pitches. D♭ minor would have eight flats (theoretical); C♯ minor has four sharps. C♯ minor is the only practical spelling.' },
       { q: 'When would I see D♭ minor in real music?', a: 'Essentially never as a tonic. The spelling appears only briefly inside chromatic passages of dense flat-key music — and even then most editors silently respell it as C♯ minor.' },
       { q: 'Why is the third F♭ instead of E?', a: 'The minor scale uses each of the seven letters exactly once. The D♭ natural minor scale would run D♭-E♭-F♭-G♭-A♭-B𝄫-C♭ — using D-E-F-G-A-B-C in order. Calling the third "E" would skip the F letter entirely.' },
+    ],
+  },
+
+  // ─── Phase 2: diminished triads ───────────────────────────────────────────
+  // Two stacked minor 3rds. Most often the vii° of a major key or the ii°
+  // of a minor key — both functions point hard toward the tonic and create
+  // some of the strongest cadential pull in tonal music.
+
+  'c-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'C diminished is built by stacking two minor thirds: C, E♭, G♭. The chord is symmetric in semitones (3 + 3 = 6), and its tritone between root and fifth gives it a distinctly tense, unresolved sound. C° most often appears as the ii° chord of B♭ minor or as a passing chord between diatonic neighbours in flat-side keys.',
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Gb', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In B♭ minor (ii° chord)', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Parallel: C major', slug: 'c-major', kind: 'chord' },
+      { label: 'Parallel: C minor', slug: 'c-minor', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'c-minor', 'b-flat-minor', 'd-flat-major', 'a-flat-major'],
+    commonMistakes:
+      'The trap with C diminished is the fifth — G♭, not G natural. Replacing G♭ with G voices a C minor chord (C–E♭–G), a much more stable harmony. The diminished fifth is what gives C° its tritone-driven pull. On guitar there\'s no fully-open voicing; you\'ll usually see a small barre on the upper four strings or a partial three-string voicing.',
+    inProgressions:
+      'C° is the ii° chord of B♭ minor (where it precedes V = F major and resolves to i = B♭ minor) and a common passing chord between B♭ major and D♭ major in chromatic harmony. Bach uses dim triads constantly as transitional sonorities — they\'re unstable enough to demand resolution but flexible enough to bridge many chord pairs.',
+    faq: [
+      { q: 'What notes are in a C diminished chord?', a: 'C diminished contains three notes: C (the root), E♭ (the minor third), and G♭ (the diminished fifth).' },
+      { q: 'How is C diminished different from C minor?', a: 'Only the fifth changes. C minor (C–E♭–G) has a perfect fifth; C diminished (C–E♭–G♭) lowers that fifth a half step. The result sounds tenser and demands resolution.' },
+      { q: 'What does the ° symbol mean?', a: 'The ° (degree sign) is the standard chord-symbol notation for diminished. C° means "C diminished triad"; C°7 means "C diminished seventh."' },
+      { q: 'Where does C diminished appear in real music?', a: 'Most commonly as a passing chord in flat-side keys, or as the ii° of B♭ minor leading to F major. It\'s also frequently used as a chromatic neighbour to C major in late-Romantic harmony.' },
+    ],
+  },
+
+  'c-sharp-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯ diminished is the leading-tone (vii°) chord of D major — one of the most common functional roles for any diminished triad. The chord stacks two minor thirds: C♯, E, G. Its tritone between C♯ and G generates strong pull toward D, making C♯° a textbook cadential preparation in D major.',
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'G', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In D major (vii° chord)', slug: 'd-major', kind: 'chord' },
+      { label: 'In B minor (ii° chord)', slug: 'b-minor', kind: 'chord' },
+      { label: 'Parallel: C♯ minor', slug: 'c-sharp-minor', kind: 'chord' },
+    ],
+    relatedChords: ['d-major', 'b-minor', 'c-sharp-minor', 'a-major', 'e-major'],
+    commonMistakes:
+      'C♯° contains C♯ and E natural; the fifth is G natural (not G♯ — that would make a C♯ minor chord). The combination of one sharp (C♯) and two naturals (E, G) is what gives C♯° its specific tritone colour. On piano the chord falls comfortably under the hand: black-white-white starting from C♯.',
+    inProgressions:
+      'C♯° is the vii° of D major (resolving to D) and the ii° of B minor (resolving through V = F♯ major to i = B minor). In the cadence vii° → I, the root C♯ rises to D, the third E falls or holds, and the fifth G falls to F♯ — the classic leading-tone resolution.',
+    faq: [
+      { q: 'What notes are in a C♯ diminished chord?', a: 'C♯ diminished contains three notes: C♯ (the root), E (the minor third), and G (the diminished fifth).' },
+      { q: 'What key is C♯ diminished from?', a: 'C♯° is the vii° (leading-tone) chord of D major and the ii° chord of B minor. Both keys share the same two-sharp signature.' },
+      { q: 'How does C♯ diminished resolve?', a: 'In D major, C♯° resolves to D major (I): C♯ rises to D, E falls or holds, and G drops to F♯. The voice-leading is among the strongest in tonal music.' },
+      { q: 'Is C♯ diminished the same as D♭ diminished?', a: 'They\'d be enharmonic in pitch, but D♭° spelling (D♭–F♭–A𝄫) requires a double-flat, so it\'s essentially never written. C♯° is the practical spelling for this chord.' },
+    ],
+  },
+
+  'd-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'D diminished — D, F, A♭ — is the ii° of C minor and a common chromatic passing chord in flat-side keys. The chord stacks two minor thirds with a tritone between root and fifth, producing the unstable, "needs-to-resolve" sound that defines diminished harmony.',
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'Ab', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In C minor (ii° chord)', slug: 'c-minor', kind: 'chord' },
+      { label: 'In E♭ major (vii° chord)', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Parallel: D minor', slug: 'd-minor', kind: 'chord' },
+    ],
+    relatedChords: ['d-minor', 'c-minor', 'e-flat-major', 'b-flat-major', 'f-major'],
+    commonMistakes:
+      'The fifth of D° is A♭, not A natural. Replacing A♭ with A makes a D minor chord — much less tense. The chord\'s flat in the middle of two naturals makes it visually distinctive in score; missing the A♭ is the most common reading error in C minor literature, where D° appears constantly as the supertonic chord.',
+    inProgressions:
+      'D° → G7 → C minor is the classic ii° → V → i cadence in C minor — one of the most common cadential patterns in Baroque and Classical music. Bach uses D° extensively in his C minor preludes and fugues. In E♭ major, D° serves as the vii° leading back to E♭ at section ends.',
+    faq: [
+      { q: 'What notes are in a D diminished chord?', a: 'D diminished contains three notes: D (the root), F (the minor third), and A♭ (the diminished fifth).' },
+      { q: 'What key uses D diminished as ii°?', a: 'C minor — D° → G7 → Cm is one of the most common cadences in Baroque and Classical music in C minor.' },
+      { q: 'How is D diminished different from D minor?', a: 'Only the fifth changes. D minor (D–F–A) has a perfect fifth; D diminished (D–F–A♭) lowers that fifth, generating the tritone that drives toward resolution.' },
+      { q: 'Where is D diminished used in jazz?', a: 'As the ii of a ii–V–i in C minor, often extended to Dm7♭5 (the half-diminished version). Standards like "Autumn Leaves" use this exact chord at every C-minor section.' },
+    ],
+  },
+
+  'd-sharp-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♯ diminished — D♯, F♯, A — is the vii° of E major. The chord\'s tritone (D♯ to A) drives the resolution to E in the strongest cadence available in E major. D♯° appears regularly in any music in E or its relative minor, C♯ minor.',
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'A', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In E major (vii° chord)', slug: 'e-major', kind: 'chord' },
+      { label: 'In C♯ minor (ii° chord)', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: E♭ diminished', slug: 'e-flat-major', kind: 'chord' },
+    ],
+    relatedChords: ['e-major', 'c-sharp-minor', 'b-major', 'a-major', 'f-sharp-minor'],
+    commonMistakes:
+      'D♯° contains both D♯ and F♯ as sharps but A natural as the fifth. Reading the A as A♯ would make a D♯ minor chord; reading it as A♭ would respell the entire chord enharmonically. The mixed-accidental signature is part of why diminished triads in sharp keys can be tricky to read at sight.',
+    inProgressions:
+      'D♯° → E (vii° → I) is a textbook cadence in E major. In C♯ minor, D♯° → G♯ → C♯m (ii° → V → i) is the most-common cadential pattern. Beethoven\'s Piano Sonata Op. 14 No. 1 uses D♯° at multiple points to set up the home key.',
+    faq: [
+      { q: 'What notes are in a D♯ diminished chord?', a: 'D♯ diminished contains three notes: D♯ (the root), F♯ (the minor third), and A (the diminished fifth).' },
+      { q: 'What key uses D♯ diminished as vii°?', a: 'E major — D♯° is built on the 7th scale degree of E and resolves cadentially to E major (the I chord).' },
+      { q: 'Is D♯ diminished the same as E♭ diminished?', a: 'Enharmonically yes — the pitches sound identical. But E♭° (E♭–G♭–B𝄫) requires a double-flat, so it\'s rarely written. D♯° is the standard spelling.' },
+      { q: 'How do you play D♯ diminished on guitar?', a: 'A small partial barre on the middle strings: index finger on the 6th fret of the 4th string (D♯), middle finger on the 7th fret of the 3rd string (A) and 4th-fret stop... typically played as a closed-position 4-string voicing rather than an open chord.' },
+    ],
+  },
+
+  'e-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'E diminished — E, G, B♭ — is the vii° of F major and the ii° of D minor. It\'s one of the more common diminished triads in standard repertoire because both of its parent keys (F major / D minor) appear constantly in classical and folk literature. The single flat (B♭) marks the chord visually in score.',
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'Bb', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In F major (vii° chord)', slug: 'f-major', kind: 'chord' },
+      { label: 'In D minor (ii° chord)', slug: 'd-minor', kind: 'chord' },
+      { label: 'Parallel: E major', slug: 'e-major', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'd-minor', 'e-major', 'e-minor', 'b-flat-major'],
+    commonMistakes:
+      'E° contains E, G, B♭. The most common error is reading B♭ as B natural — which produces an E minor chord (E–G–B). The flat lives implicitly in the F-major key signature; without that signature on lead sheets, E° has to be marked with an explicit flat or the chord-symbol "°" warns the reader.',
+    inProgressions:
+      'E° → F major (vii° → I) is a textbook cadence. E° → A7 → D minor (ii° → V → i) is the standard minor-key cadence — and one Bach uses constantly in his D-minor literature, including the famous Toccata and Fugue. In jazz, E°7 (the seventh extension) substitutes for A7♭9 in D-minor cadences.',
+    faq: [
+      { q: 'What notes are in an E diminished chord?', a: 'E diminished contains three notes: E (the root), G (the minor third), and B♭ (the diminished fifth).' },
+      { q: 'What key signature uses E diminished?', a: 'F major (one flat: B♭) — E° is built on the 7th degree and resolves to F. D minor uses the same signature; E° is the ii° there.' },
+      { q: 'How is E° different from E minor?', a: 'Only the fifth changes. E minor is E–G–B; E° lowers the B to B♭. That single half-step transforms a stable minor chord into an unstable diminished one.' },
+      { q: 'Where does E diminished appear in famous music?', a: 'Constantly in Bach\'s D minor works (the Toccata and Fugue, the Chaconne), in Mozart\'s F major piano sonatas, and in folk music throughout the F-major / D-minor zone.' },
+    ],
+  },
+
+  'f-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'F diminished — F, A♭, C♭ — is a chromatic chord rather than a diatonic one. The C♭ (enharmonic to B) gives the chord away as borrowed harmony or a passing chord. F° most often appears as a chromatic neighbour to F major, or briefly as a vii° in G♭ major.',
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Cb', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In G♭ major (vii° chord)', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Parallel: F major', slug: 'f-major', kind: 'chord' },
+      { label: 'Parallel: F minor', slug: 'f-minor', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'f-minor', 'g-flat-major', 'e-flat-minor', 'd-flat-major'],
+    commonMistakes:
+      'The fifth is C♭, enharmonic to B natural. In sharp-key contexts, the chord is more often written as F° using B as the fifth letter — strictly speaking that violates the seven-letter rule, but in chord-symbol practice the substitution is common. In flat-key contexts (the chord\'s natural home), C♭ is the proper spelling.',
+    inProgressions:
+      'F° rarely appears as a tonic; it\'s a chromatic colour chord. The most common contexts are passing harmony between F major and G♭ major, or as a chromatic neighbour to F major in late-Romantic writing. The chord\'s identity depends heavily on its surroundings.',
+    faq: [
+      { q: 'What notes are in an F diminished chord?', a: 'F diminished contains three notes: F (the root), A♭ (the minor third), and C♭ (the diminished fifth — same pitch as B).' },
+      { q: 'Why is the fifth C♭ instead of B?', a: 'The diminished triad uses each of three letters in a stacked-thirds pattern. Starting from F, the letters go F-A-C; the fifth must be the C letter, which is C♭ when lowered a half step from C natural.' },
+      { q: 'What key does F diminished come from?', a: 'F° appears most naturally in G♭ major (where it\'s the vii°) and as a chromatic chord in F major. It\'s rarer than the more common diminished triads.' },
+      { q: 'Is F diminished the same as F#°?', a: 'No — they\'re different pitch classes. F° is F–A♭–C♭ (= B); F♯° is F♯–A–C. Different chords entirely.' },
+    ],
+  },
+
+  'f-sharp-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯ diminished — F♯, A, C — is the vii° of G major and the ii° of E minor. It\'s one of the most common diminished triads in popular music because both G major and E minor are guitar-friendly keys. The mixed accidentals (one sharp, two naturals) make F♯° visually distinctive.',
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'C', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In G major (vii° chord)', slug: 'g-major', kind: 'chord' },
+      { label: 'In E minor (ii° chord)', slug: 'e-minor', kind: 'chord' },
+      { label: 'Parallel: F♯ minor', slug: 'f-sharp-minor', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'e-minor', 'f-sharp-minor', 'd-major', 'b-minor'],
+    commonMistakes:
+      'F♯° contains F♯ (the root) but A and C are both natural. Reading A as A♯ produces an F♯ minor chord; reading C as C♯ produces a different chord again. The sharp-natural-natural pattern is the chord\'s signature visually. On guitar, F♯° is most often a small barre on the upper strings rather than a full chord shape.',
+    inProgressions:
+      'F♯° → G major (vii° → I) is a strong cadence in G; F♯° → B7 → E minor (ii° → V → i) is the cadence in E minor. The progression Em → F♯° → G major (i → ii° → III in E minor) is a common modal motion in folk and rock.',
+    faq: [
+      { q: 'What notes are in an F♯ diminished chord?', a: 'F♯ diminished contains three notes: F♯ (the root), A (the minor third), and C (the diminished fifth).' },
+      { q: 'What key uses F♯ diminished?', a: 'F♯° is the vii° of G major and the ii° of E minor. Both keys share the same one-sharp signature.' },
+      { q: 'How does F♯ diminished resolve?', a: 'In G major, F♯° resolves to G: F♯ rises to G, A holds or rises, C falls to B. The voice-leading is among the strongest cadential motions in tonal music.' },
+      { q: 'What\'s the difference between F♯° and F°?', a: 'They\'re different chords entirely. F♯° is F♯–A–C; F° is F–A♭–C♭. The roots are different pitches and the chords belong to different key areas.' },
+    ],
+  },
+
+  'g-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'G diminished — G, B♭, D♭ — is the ii° of F minor and the vii° of A♭ major. It\'s a flat-side diminished triad with two flats stacked on a natural root. The chord\'s tritone (G to D♭) drives strong cadential motion in both parent keys.',
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Db', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In A♭ major (vii° chord)', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'In F minor (ii° chord)', slug: 'f-minor', kind: 'chord' },
+      { label: 'Parallel: G major', slug: 'g-major', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'g-minor', 'f-minor', 'a-flat-major', 'e-flat-major'],
+    commonMistakes:
+      'G° contains B♭ and D♭ — both flats are essential. The most common error is reading either as natural; B natural makes a G major chord, and D natural makes a G minor chord. The four-flat signature of A♭ major (or F minor) makes this chord visually compact in score, but on lead sheets without a key signature both flats need explicit accidentals.',
+    inProgressions:
+      'G° → C7 → F minor (ii° → V → i) is the standard cadence in F minor. G° → A♭ (vii° → I) caps cadences in A♭ major. In jazz, G°7 substitutes for C7♭9 in F-minor cadences — an expanded version of the same harmonic logic.',
+    faq: [
+      { q: 'What notes are in a G diminished chord?', a: 'G diminished contains three notes: G (the root), B♭ (the minor third), and D♭ (the diminished fifth).' },
+      { q: 'What key uses G diminished?', a: 'G° is the vii° of A♭ major and the ii° of F minor. Both keys share a four-flat signature.' },
+      { q: 'How is G diminished different from G minor?', a: 'Only the fifth changes. G minor is G–B♭–D; G° lowers the D to D♭. The tritone D♭–G generates the chord\'s instability.' },
+      { q: 'Where is G diminished used in classical music?', a: 'Bach\'s F-minor and A♭-major works rely on G° as a primary cadential preparation. Mozart\'s K. 397 Fantasia in D minor uses parallel diminished motion; the same logic applies in G°.' },
+    ],
+  },
+
+  'g-sharp-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯ diminished — G♯, B, D — is the vii° of A major and the ii° of F♯ minor. It\'s a common chord in guitar-friendly sharp keys, with one sharp (G♯) on the root and two naturals above. Its tritone (G♯ to D) creates strong pull toward A.',
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'D', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In A major (vii° chord)', slug: 'a-major', kind: 'chord' },
+      { label: 'In F♯ minor (ii° chord)', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: G♯ minor', slug: 'g-sharp-minor', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'f-sharp-minor', 'g-sharp-minor', 'e-major', 'd-major'],
+    commonMistakes:
+      'G♯° has G♯ as the root, then B and D natural. Reading B as B♯ or D as D♯ destroys the diminished quality — turning the chord into G♯ minor or another harmony. The three-sharp signature of A major is dense enough that beginners sometimes apply sharps too liberally; G♯° is a useful reminder that not every note in a sharp key is sharp.',
+    inProgressions:
+      'G♯° → A major (vii° → I) is the cadence in A major. G♯° → C♯7 → F♯m (ii° → V → i) is the cadence in F♯ minor. Bach uses G♯° in his F♯ minor literature; the chord\'s strong pull toward A also makes it useful as a borrowed leading-tone chord in C♯ minor.',
+    faq: [
+      { q: 'What notes are in a G♯ diminished chord?', a: 'G♯ diminished contains three notes: G♯ (the root), B (the minor third), and D (the diminished fifth).' },
+      { q: 'What key uses G♯ diminished?', a: 'G♯° is the vii° of A major and the ii° of F♯ minor. Both keys share the three-sharp signature.' },
+      { q: 'How does G♯ diminished resolve?', a: 'In A major, G♯° resolves to A: G♯ rises to A, B holds or rises, D falls to C♯. The voice-leading is the textbook leading-tone cadence.' },
+      { q: 'Is G♯ diminished the same as A♭ diminished?', a: 'Enharmonically yes, but A♭° (A♭–C♭–E𝄫) requires a double-flat, so it\'s rarely written. G♯° is the standard spelling.' },
+    ],
+  },
+
+  'a-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'A diminished — A, C, E♭ — is the ii° of G minor and the vii° of B♭ major. The chord has one flat (E♭) on top of two naturals, a visual signature that makes it easy to recognise in flat-side scores.',
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'Eb', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In B♭ major (vii° chord)', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'In G minor (ii° chord)', slug: 'g-minor', kind: 'chord' },
+      { label: 'Parallel: A major', slug: 'a-major', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'a-minor', 'g-minor', 'b-flat-major', 'd-minor'],
+    commonMistakes:
+      'A° has E♭ as the fifth, not E natural. Reading the fifth as E natural makes an A minor chord — same root, but a stable minor harmony rather than an unstable diminished one. In B♭ major literature, the E♭ is implicit in the key signature; on lead sheets the flat needs to be explicit.',
+    inProgressions:
+      'A° → D7 → G minor (ii° → V → i) is one of the most-used cadences in Baroque and Classical music in G minor — Mozart\'s G minor symphonies (No. 25 and No. 40) use this pattern repeatedly. In B♭ major, A° → B♭ caps phrases as the leading-tone cadence.',
+    faq: [
+      { q: 'What notes are in an A diminished chord?', a: 'A diminished contains three notes: A (the root), C (the minor third), and E♭ (the diminished fifth).' },
+      { q: 'What key uses A diminished?', a: 'A° is the ii° of G minor and the vii° of B♭ major. Both keys share a two-flat signature.' },
+      { q: 'How is A diminished different from A minor?', a: 'Only the fifth changes. A minor is A–C–E; A° is A–C–E♭. The half-step lower fifth is what creates the diminished tritone.' },
+      { q: 'Where does A diminished appear in famous music?', a: 'Mozart\'s Symphony No. 40 in G minor uses A° at every cadence. Bach\'s B♭ major preludes use it as the standard leading-tone preparation. It\'s one of the most-played diminished triads in classical literature.' },
+    ],
+  },
+
+  'a-sharp-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♯ diminished — A♯, C♯, E — is the vii° of B major and the ii° of G♯ minor. The chord uses two sharps (A♯, C♯) plus a natural fifth (E). It\'s rarer than its enharmonic neighbour B♭° because B major and G♯ minor are themselves less common keys, but the spelling is correct in those contexts.',
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'A#', to: 'E', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In B major (vii° chord)', slug: 'b-major', kind: 'chord' },
+      { label: 'In G♯ minor (ii° chord)', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: B♭ diminished', slug: 'b-flat-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['b-major', 'g-sharp-minor', 'b-flat-diminished', 'f-sharp-major', 'c-sharp-minor'],
+    commonMistakes:
+      'A♯° pairs two sharps with a natural fifth — an unusual visual signature that beginners sometimes mis-spell as A♯-C♯-E♯ (which would make a different chord). The B-major key signature provides the sharps automatically; outside that context the chord is more often written as B♭° (Bb-Db-Fb), which uses the same pitches.',
+    inProgressions:
+      'A♯° → B major (vii° → I) is the cadence in B major. A♯° → D♯7 → G♯m (ii° → V → i) is the cadence in G♯ minor. The chord appears in Beethoven\'s late string quartets and Liszt\'s sharp-key piano writing.',
+    faq: [
+      { q: 'What notes are in an A♯ diminished chord?', a: 'A♯ diminished contains three notes: A♯ (the root), C♯ (the minor third), and E (the diminished fifth).' },
+      { q: 'Is A♯ diminished the same as B♭ diminished?', a: 'Enharmonically yes — same three pitches. A♯° is the spelling inside B major; B♭° is the spelling inside C minor / D♭ major.' },
+      { q: 'What key uses A♯ diminished?', a: 'A♯° is the vii° of B major and the ii° of G♯ minor. Both keys share the five-sharp signature.' },
+      { q: 'When would I write A♯° instead of B♭°?', a: 'Whenever the surrounding harmony is in B major or G♯ minor — keeping the same accidental family avoids confusing key changes for the reader.' },
+    ],
+  },
+
+  'b-flat-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ diminished — B♭, D♭, F♭ — is a five-flat chord that appears in dense flat-side music and as a chromatic passing chord. The F♭ (enharmonic to E natural) is the give-away that you\'re in serious flat-key territory: the chord arrives most naturally in C♭ major or as a borrowed harmony in flat-mode literature.',
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Fb', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In C♭ major (vii° chord) / B major', slug: 'b-major', kind: 'chord' },
+      { label: 'Enharmonic: A♯ diminished', slug: 'a-sharp-diminished', kind: 'chord' },
+      { label: 'Parallel: B♭ minor', slug: 'b-flat-minor', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-minor', 'b-flat-major', 'a-sharp-diminished', 'b-major', 'd-flat-major'],
+    commonMistakes:
+      'The fifth is F♭, enharmonic to E natural. In chord-symbol practice, B♭° is sometimes written with E as the fifth letter — strictly incorrect by the seven-letter rule, but common on lead sheets. In notated music inside C♭ major, the F♭ spelling preserves consistency with the surrounding flat-side harmony.',
+    inProgressions:
+      'B♭° most often appears as a chromatic passing chord rather than a primary cadential preparation. In B♭ minor passages it sometimes appears as a chromatic neighbour to the tonic, and in jazz it\'s used as a passing dim on its way to a B♭ major chord (a "i°7 → I" colour effect).',
+    faq: [
+      { q: 'What notes are in a B♭ diminished chord?', a: 'B♭ diminished contains three notes: B♭ (the root), D♭ (the minor third), and F♭ (the diminished fifth — same pitch as E).' },
+      { q: 'Is B♭ diminished the same as A♯ diminished?', a: 'Enharmonically yes — same three pitches, different spellings. B♭° lives in flat keys; A♯° lives in B major / G♯ minor.' },
+      { q: 'Why is the fifth F♭ instead of E?', a: 'The diminished triad uses three consecutive odd-numbered letters: B-D-F. The fifth must be on the F letter, which becomes F♭ when lowered a half step.' },
+      { q: 'When does B♭ diminished appear in music?', a: 'Mostly as a chromatic passing chord. It\'s rare as a tonal-functional preparation because the F♭ requires entering deep flat-side keys. In jazz it shows up as a passing chord between Am7 and B♭ in F-major progressions.' },
+    ],
+  },
+
+  'b-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'B diminished — B, D, F — is the vii° of C major and the ii° of A minor. As the diminished triad of the most common key in Western music, B° is by far the most-played diminished chord in the literature. All three notes are naturals, making it visually the cleanest dim triad of all twelve.',
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'F', name: 'diminished 5th', semitones: 6 },
+    ],
+    relatedKeys: [
+      { label: 'In C major (vii° chord)', slug: 'c-major', kind: 'chord' },
+      { label: 'In A minor (ii° chord)', slug: 'a-minor', kind: 'chord' },
+      { label: 'Parallel: B major', slug: 'b-major', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'a-minor', 'b-minor', 'b-major', 'g-major'],
+    commonMistakes:
+      'B° is all naturals (B–D–F) — no sharps, no flats. The most common error is misreading it as B minor (B–D–F♯) by accidentally adding the sharp. The plain-natural fifth (F) is what creates the diminished tritone B–F. On guitar, B° is rarely played as a full chord shape; it\'s usually a partial three-note voicing on the upper strings.',
+    inProgressions:
+      'B° → C major (vii° → I) is the textbook leading-tone cadence in C major. B° → E7 → A minor (ii° → V → i) is the textbook minor-key cadence. Bach\'s C major preludes use B° at almost every cadence; Beethoven, Mozart, and Haydn all rely on it as a primary cadential preparation in their C-major literature.',
+    faq: [
+      { q: 'What notes are in a B diminished chord?', a: 'B diminished contains three notes: B (the root), D (the minor third), and F (the diminished fifth).' },
+      { q: 'What key uses B diminished?', a: 'B° is the vii° of C major and the ii° of A minor. Both keys have no sharps or flats; B° also uses no accidentals (all naturals).' },
+      { q: 'How is B diminished different from B minor?', a: 'Only the fifth changes. B minor is B–D–F♯; B° is B–D–F. The half-step difference in the fifth turns a stable minor chord into an unstable diminished one.' },
+      { q: 'Where does B diminished appear in famous music?', a: 'Constantly throughout C-major literature — Bach\'s C major Prelude WTC I, Mozart\'s C major Sonata K. 545, Beethoven\'s 5th Symphony finale (in C major). It\'s the most-played diminished triad in Western music.' },
+    ],
+  },
+
+  // ─── Phase 2: augmented triads ────────────────────────────────────────────
+  // Two stacked major thirds. Symmetric in 12-tone space — only three
+  // unique augmented triads exist (every fourth root inverts to the same
+  // chord). Most common as V+ or III+ in harmonic-minor cadences and as a
+  // chromatic-mediant colour in late-Romantic harmony.
+
+  'c-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'C augmented — C, E, G♯ — stacks two major thirds on top of each other. The chord is symmetric: C+, E+, and A♭+ are all the same three pitches, just inverted. C+ most often appears as the III+ of A harmonic minor or as a chromatic-mediant colour in major-key writing.',
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'G#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In A harmonic minor (III+)', slug: 'a-minor', kind: 'chord' },
+      { label: 'Parallel: C major', slug: 'c-major', kind: 'chord' },
+      { label: 'Parallel: C minor', slug: 'c-minor', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'c-minor', 'a-minor', 'e-major', 'a-flat-major'],
+    commonMistakes:
+      'The fifth is G♯, not G natural. Replacing G♯ with G makes a C major chord — a completely different harmonic colour. The augmented fifth is what creates the chord\'s "floating," unresolved sound. On piano, C+ is white-white-black; on guitar it\'s typically a small voicing on three strings, since the augmented fifth doesn\'t fit any standard barre shape.',
+    inProgressions:
+      'In A harmonic minor, C+ functions as the III+ chord: an augmented colour created by raising the leading tone (G♯ instead of G). The progression Am → C+ → F (i → III+ → VI) is a common Romantic-era turn. The Beatles\' "Oh! Darling" uses an augmented chord at its opening for exactly this kind of suspended, anticipatory feel.',
+    faq: [
+      { q: 'What notes are in a C augmented chord?', a: 'C augmented contains three notes: C (the root), E (the major third), and G♯ (the augmented fifth).' },
+      { q: 'What does the + symbol mean?', a: 'The + sign is the standard chord-symbol notation for augmented. C+ means "C augmented triad." Some scores write it as "C(♯5)" or "Caug" instead.' },
+      { q: 'Why are augmented chords symmetric?', a: 'Two stacked major thirds (4 + 4 semitones) total 8 semitones. Adding another major third reaches 12 — back to the root. So C+, E+, and G♯/A♭+ all contain the same three pitches in different inversions.' },
+      { q: 'Where does C augmented appear in music?', a: 'In any harmonic-minor music in A minor (III+ chord), in chromatic-mediant Romantic harmony (C → C+ → F), and as a colour chord in jazz piano voicings. The Beatles\' "Oh! Darling" opens with one.' },
+    ],
+  },
+
+  'd-flat-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭ augmented — D♭, F, A — stacks two major thirds. Like all augmented triads it\'s symmetric — D♭+, F+, and A+ share the same three pitches in different inversions. The chord most commonly appears as a chromatic-mediant colour or as the III+ of B♭ harmonic minor.',
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'Db', to: 'A', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In B♭ harmonic minor (III+)', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Parallel: D♭ major', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: C♯ augmented', slug: 'c-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-major', 'b-flat-minor', 'f-augmented', 'a-augmented', 'g-flat-major'],
+    commonMistakes:
+      'D♭+ contains D♭, F, and A. The fifth A is natural, not A♭ — replacing A with A♭ makes a D♭ major chord. The mixed accidentals (one flat, two naturals) are the visual signature of D♭+. The chord is enharmonically the same set of pitches as F+ and A+; on a recording you can\'t tell them apart.',
+    inProgressions:
+      'D♭+ functions as III+ of B♭ harmonic minor. The progression B♭m → D♭+ → G♭ (i → III+ → VI) is a Romantic-era harmonic turn. In jazz, D♭+ also appears as an altered dominant in F minor — a substitute for the V chord with the augmented fifth as a tension to resolve into the i chord.',
+    faq: [
+      { q: 'What notes are in a D♭ augmented chord?', a: 'D♭ augmented contains three notes: D♭ (the root), F (the major third), and A (the augmented fifth).' },
+      { q: 'Is D♭ augmented the same as F augmented?', a: 'Enharmonically yes — same three pitches, just inverted. D♭+, F+, and A+ all contain D♭, F, and A. Which one you write depends on which root sits at the bottom in context.' },
+      { q: 'How is D♭+ different from D♭ major?', a: 'Only the fifth changes. D♭ major has A♭ as the fifth; D♭+ raises that fifth to A natural. The augmented fifth gives the chord its floating, unresolved sound.' },
+      { q: 'Where does D♭ augmented appear in music?', a: 'In B♭ minor harmonic-minor passages (as III+), in chromatic-mediant motion in flat-side keys, and as an altered dominant in jazz voicings. It\'s less common than C+ or A+ but theoretically equivalent.' },
+    ],
+  },
+
+  'd-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'D augmented — D, F♯, A♯ — stacks two major thirds. The chord is part of the symmetric augmented triad family; D+, F♯+, and A♯+ all spell the same three pitches in different inversions. D+ functions as III+ of B harmonic minor and as a chromatic colour chord in major-key writing.',
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'A#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In B harmonic minor (III+)', slug: 'b-minor', kind: 'chord' },
+      { label: 'Parallel: D major', slug: 'd-major', kind: 'chord' },
+      { label: 'Enharmonic: F♯ augmented', slug: 'f-sharp-major', kind: 'chord' },
+    ],
+    relatedChords: ['d-major', 'b-minor', 'f-sharp-major', 'a-sharp-diminished', 'g-major'],
+    commonMistakes:
+      'The fifth of D+ is A♯, not A natural. The chord stacks a major third on top of D-F♯ to land on A♯. Replacing A♯ with A makes a D major chord — same root, but a stable major harmony rather than the augmented colour. The two-sharp pattern (F♯, A♯) is the chord\'s key signature inside D-major contexts.',
+    inProgressions:
+      'D+ functions as III+ of B harmonic minor: Bm → D+ → G is i → III+ → VI. In major-key writing, D+ often appears as a chromatic-mediant approach to G major or B♭ major. Jazz uses it as an altered dominant in G minor cadences.',
+    faq: [
+      { q: 'What notes are in a D augmented chord?', a: 'D augmented contains three notes: D (the root), F♯ (the major third), and A♯ (the augmented fifth).' },
+      { q: 'Is D augmented the same as F♯ augmented?', a: 'Enharmonically yes — same three pitches in different inversions. D+, F♯+, and A♯+ are all the same chord in pitch class.' },
+      { q: 'How does D augmented resolve?', a: 'In B minor, D+ resolves to G major (III+ → VI) by lowering the A♯ to A or B. In major-key writing, D+ often acts as a chromatic preparation for G major.' },
+      { q: 'What\'s the difference between D+ and D major?', a: 'Only the fifth changes. D major is D–F♯–A; D+ raises the A to A♯. That single semitone shift turns a stable major chord into an unstable augmented one.' },
+    ],
+  },
+
+  'e-flat-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭ augmented — E♭, G, B — stacks two major thirds. Like all augmented triads, E♭+ is symmetric and shares its three pitches with G+ and B+ in different inversions. The chord most often appears as III+ of C harmonic minor or as a chromatic colour in flat-side keys.',
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'B', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In C harmonic minor (III+)', slug: 'c-minor', kind: 'chord' },
+      { label: 'Parallel: E♭ major', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: G augmented', slug: 'g-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-major', 'c-minor', 'g-augmented', 'b-augmented', 'a-flat-major'],
+    commonMistakes:
+      'E♭+ has E♭ and G as the lower notes (the same as E♭ major), but the fifth is B natural — not B♭. Replacing B with B♭ makes an E♭ major chord. The chord\'s mix of one flat and two naturals (B is the natural here) is unusual in flat-key contexts and visually distinctive.',
+    inProgressions:
+      'E♭+ functions as III+ of C harmonic minor — the III chord raised by the harmonic-minor leading-tone (B instead of B♭). The progression Cm → E♭+ → A♭ (i → III+ → VI) is a common Romantic-era turn. Mahler used augmented sonorities like this constantly.',
+    faq: [
+      { q: 'What notes are in an E♭ augmented chord?', a: 'E♭ augmented contains three notes: E♭ (the root), G (the major third), and B (the augmented fifth).' },
+      { q: 'Is E♭ augmented the same as G augmented?', a: 'Enharmonically yes — same three pitches, different roots. E♭+, G+, and B+ all share E♭, G, and B in pitch.' },
+      { q: 'How is E♭+ different from E♭ major?', a: 'Only the fifth changes. E♭ major has B♭ as the fifth; E♭+ raises that fifth to B natural. The half-step shift creates the augmented colour.' },
+      { q: 'Where does E♭ augmented appear in music?', a: 'In C minor harmonic-minor cadences (as III+), in chromatic-mediant motion in flat keys, and in late-Romantic harmony as a colour chord. Mahler\'s symphonies use augmented triads constantly.' },
+    ],
+  },
+
+  'e-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'E augmented — E, G♯, B♯ — stacks two major thirds. The B♯ (enharmonic to C natural) is the chord\'s tell that you\'re in serious sharp-key territory. E+ functions as III+ of C♯ harmonic minor and as a chromatic colour chord in A major or E major.',
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'B#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In C♯ harmonic minor (III+)', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: E major', slug: 'e-major', kind: 'chord' },
+      { label: 'Enharmonic: A♭ augmented', slug: 'a-flat-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['e-major', 'c-sharp-minor', 'g-sharp-minor', 'a-flat-augmented', 'a-major'],
+    commonMistakes:
+      'The fifth is B♯, enharmonic to C natural. Reading it as C is technically wrong inside a sharp-key context but the pitch is identical. In jazz lead-sheet practice the chord is sometimes written E+ with C as the fifth; in classical notation B♯ is the proper spelling inside C♯-minor key areas.',
+    inProgressions:
+      'E+ functions as III+ of C♯ harmonic minor — the natural minor III chord raised by the harmonic-minor leading-tone B♯. The progression C♯m → E+ → A (i → III+ → VI) is a classic Romantic-era turn. Beethoven\'s "Moonlight" Sonata uses augmented sonorities for similar dramatic colour.',
+    faq: [
+      { q: 'What notes are in an E augmented chord?', a: 'E augmented contains three notes: E (the root), G♯ (the major third), and B♯ (the augmented fifth — same pitch as C).' },
+      { q: 'Why is the fifth B♯ instead of C?', a: 'The augmented triad uses each of three letters in a stacked-thirds pattern: E-G-B. The fifth must sit on the B letter, which becomes B♯ when raised a half step from B natural.' },
+      { q: 'Is E augmented the same as A♭ augmented?', a: 'Enharmonically yes — same three pitches, different roots. E+, G♯+, and B♯+ (= C+) all share E, G♯, and C in pitch.' },
+      { q: 'How does E augmented resolve?', a: 'In C♯ minor, E+ resolves to A major (III+ → VI). In E major, E+ often acts as a chromatic neighbour to the tonic, with the augmented fifth resolving up to C♯ (the sixth scale degree).' },
+    ],
+  },
+
+  'f-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'F augmented — F, A, C♯ — stacks two major thirds. F+ is enharmonically the same chord as A+ and D♭+ (or C♯+). The chord most often appears as III+ of D harmonic minor, or as an altered dominant in B♭ major.',
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'C#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In D harmonic minor (III+)', slug: 'd-minor', kind: 'chord' },
+      { label: 'Parallel: F major', slug: 'f-major', kind: 'chord' },
+      { label: 'Enharmonic: A augmented', slug: 'a-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'd-minor', 'a-augmented', 'd-flat-augmented', 'b-flat-major'],
+    commonMistakes:
+      'F+ has F and A as the lower notes (same as F major) but the fifth is C♯, not C natural. The mix of two naturals and one sharp is unusual in flat-key contexts. Replacing C♯ with C makes an F major chord — the augmented colour disappears.',
+    inProgressions:
+      'F+ functions as III+ of D harmonic minor: Dm → F+ → B♭ (i → III+ → VI) is a common minor-key colour cadence. In B♭ major, F+ acts as an altered dominant — instead of resolving F → B♭ with a perfect fifth, the augmented fifth (C♯) creates extra tension before resolving to D in the tonic chord.',
+    faq: [
+      { q: 'What notes are in an F augmented chord?', a: 'F augmented contains three notes: F (the root), A (the major third), and C♯ (the augmented fifth).' },
+      { q: 'Is F augmented the same as A augmented?', a: 'Enharmonically yes — same three pitches in different inversions. F+, A+, and D♭+ all spell F, A, and C♯ (= D♭) in pitch class.' },
+      { q: 'How does F augmented resolve?', a: 'In D minor, F+ resolves to B♭ major (III+ → VI). As an altered V in B♭ major, F+ resolves to B♭ with the augmented fifth (C♯) leading up to D in the tonic.' },
+      { q: 'What\'s the difference between F+ and F major?', a: 'Only the fifth changes. F major is F–A–C; F+ raises the C to C♯. The half-step shift creates the augmented fifth and the chord\'s floating, unresolved sound.' },
+    ],
+  },
+
+  'g-flat-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♭ augmented — G♭, B♭, D — stacks two major thirds. The chord is enharmonic to F♯+ (and to A♯+/B♭+, D+ in inversion). G♭+ appears in flat-side music as a chromatic colour chord; it\'s less common than its enharmonic neighbour F♯+ because flat-side augmented harmony is rarer than sharp-side.',
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'Gb', to: 'D', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In E♭ harmonic minor (III+)', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Parallel: G♭ major', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: F♯ augmented', slug: 'f-sharp-major', kind: 'chord' },
+    ],
+    relatedChords: ['g-flat-major', 'e-flat-minor', 'd-flat-major', 'b-flat-augmented', 'd-augmented'],
+    commonMistakes:
+      'G♭+ has G♭ and B♭ as the lower notes (matching G♭ major) but the fifth is D natural, not D♭. The mix of two flats and one natural is unusual in flat-key writing. Replacing D with D♭ produces a G♭ major chord; the half-step difference is the entire identity of the augmented colour.',
+    inProgressions:
+      'G♭+ functions as III+ of E♭ harmonic minor: E♭m → G♭+ → C♭ (i → III+ → VI) is a Romantic-era harmonic colour. In modern music, G♭+ also appears in chromatic-mediant progressions where it pivots between flat-side and sharp-side keys.',
+    faq: [
+      { q: 'What notes are in a G♭ augmented chord?', a: 'G♭ augmented contains three notes: G♭ (the root), B♭ (the major third), and D (the augmented fifth).' },
+      { q: 'Is G♭ augmented the same as F♯ augmented?', a: 'Enharmonically yes — same three pitches. G♭+ uses flat-side spelling; F♯+ uses sharp-side. They\'re identical in sound.' },
+      { q: 'How is G♭+ different from G♭ major?', a: 'Only the fifth changes. G♭ major has D♭ as the fifth; G♭+ raises that fifth to D natural. The chord then loses its stable major character and gains the augmented "floating" quality.' },
+      { q: 'Where does G♭ augmented appear in music?', a: 'In E♭ minor harmonic-minor passages (as III+), in chromatic-mediant motion through flat keys, and as a pivot chord between flat and sharp tonal areas in modulating music.' },
+    ],
+  },
+
+  'g-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'G augmented — G, B, D♯ — stacks two major thirds. G+ is enharmonically equivalent to E♭+ and B+ in inversion. The chord most often functions as III+ of E harmonic minor (where the harmonic-minor leading tone D♯ raises the III chord), or as an altered V in C minor.',
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'D#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In E harmonic minor (III+)', slug: 'e-minor', kind: 'chord' },
+      { label: 'In C minor (V+ altered dominant)', slug: 'c-minor', kind: 'chord' },
+      { label: 'Parallel: G major', slug: 'g-major', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'e-minor', 'c-minor', 'e-flat-augmented', 'b-augmented'],
+    commonMistakes:
+      'G+ has G and B as the lower notes (matching G major) but the fifth is D♯, not D natural. The single sharp on D is the chord\'s identity; replacing it with D natural makes a G major chord. On guitar, G+ is most often a closed-position three-string voicing — the augmented fifth doesn\'t fit any of the standard barre shapes.',
+    inProgressions:
+      'G+ functions as III+ of E harmonic minor: Em → G+ → C (i → III+ → VI). It also functions as an altered V chord in C minor: G+ → Cm replaces the standard V → i with the augmented fifth (D♯) leading to E♭ in the tonic. The "Bond chord" (the iconic James Bond theme opener) is a similar augmented sonority.',
+    faq: [
+      { q: 'What notes are in a G augmented chord?', a: 'G augmented contains three notes: G (the root), B (the major third), and D♯ (the augmented fifth).' },
+      { q: 'How does G augmented resolve?', a: 'In E minor, G+ resolves to C major (III+ → VI). As V+ in C minor, G+ resolves to C minor with D♯ rising to E♭ in the tonic chord.' },
+      { q: 'How is G+ different from G major?', a: 'Only the fifth changes. G major is G–B–D; G+ raises the D to D♯. The half-step shift creates the chord\'s floating, suspended sound.' },
+      { q: 'Where does G augmented appear in famous music?', a: 'In E minor harmonic-minor cadences, in C minor altered-dominant progressions (Beethoven uses these constantly in his C-minor works), and in Romantic chromatic harmony as a colour chord.' },
+    ],
+  },
+
+  'a-flat-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭ augmented — A♭, C, E — stacks two major thirds. A♭+ is enharmonically equivalent to C+ and E+ in inversion. The chord functions as III+ of F harmonic minor and as an altered V in D♭ major.',
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'E', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In F harmonic minor (III+)', slug: 'f-minor', kind: 'chord' },
+      { label: 'Parallel: A♭ major', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: C augmented', slug: 'c-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-major', 'f-minor', 'c-augmented', 'e-augmented', 'd-flat-major'],
+    commonMistakes:
+      'A♭+ has A♭ and C as the lower notes (matching A♭ major) but the fifth is E natural, not E♭. The single natural inside a flat-key chord is unusual visually. Replacing E with E♭ makes an A♭ major chord — the augmented colour vanishes.',
+    inProgressions:
+      'A♭+ functions as III+ of F harmonic minor: Fm → A♭+ → D♭ (i → III+ → VI). In D♭ major, A♭+ acts as an altered V chord, with the augmented fifth (E natural) resolving up to F in the tonic D♭ chord.',
+    faq: [
+      { q: 'What notes are in an A♭ augmented chord?', a: 'A♭ augmented contains three notes: A♭ (the root), C (the major third), and E (the augmented fifth).' },
+      { q: 'Is A♭ augmented the same as C augmented?', a: 'Enharmonically yes — same three pitches in different inversions. A♭+, C+, and E+ all spell A♭, C, and E in pitch class.' },
+      { q: 'How is A♭+ different from A♭ major?', a: 'Only the fifth changes. A♭ major has E♭ as the fifth; A♭+ raises that fifth to E natural. The half-step shift creates the augmented fifth and the chord\'s floating quality.' },
+      { q: 'Where does A♭ augmented appear in music?', a: 'In F harmonic-minor cadences (as III+), in D♭-major altered-dominant progressions, and in chromatic-mediant motion through flat keys. Chopin\'s F minor literature uses A♭+ regularly.' },
+    ],
+  },
+
+  'a-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'A augmented — A, C♯, E♯ — stacks two major thirds. A+ is enharmonically the same chord as C♯+ and F+ in inversion. The E♯ (= F natural) is the spelling tell that you\'re inside a sharp-key context. A+ functions as III+ of F♯ harmonic minor and as an altered V in D major.',
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'E#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In F♯ harmonic minor (III+)', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: A major', slug: 'a-major', kind: 'chord' },
+      { label: 'Enharmonic: F augmented', slug: 'f-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'f-sharp-minor', 'f-augmented', 'd-major', 'd-flat-augmented'],
+    commonMistakes:
+      'The fifth is E♯, enharmonic to F natural. In jazz chord-symbol practice, the chord is sometimes written A+ with F as the fifth letter — strictly incorrect by the seven-letter rule, but common on lead sheets. In notated classical music inside F♯-minor key areas, E♯ preserves spelling consistency.',
+    inProgressions:
+      'A+ functions as III+ of F♯ harmonic minor: F♯m → A+ → D (i → III+ → VI). In D major, A+ acts as an altered V chord with E♯ leading up to F♯ in the tonic chord. Schubert\'s late piano sonatas use augmented sonorities like this for chromatic mediant colour.',
+    faq: [
+      { q: 'What notes are in an A augmented chord?', a: 'A augmented contains three notes: A (the root), C♯ (the major third), and E♯ (the augmented fifth — same pitch as F).' },
+      { q: 'Why is the fifth E♯ instead of F?', a: 'The augmented triad stacks thirds on consecutive odd-numbered letters: A-C-E. The fifth must sit on the E letter, which becomes E♯ when raised a half step from E natural.' },
+      { q: 'Is A augmented the same as F augmented?', a: 'Enharmonically yes — same three pitches in different inversions. A+, C♯+, and F+ all share A, C♯ (= D♭), and F (= E♯) in pitch class.' },
+      { q: 'How does A augmented resolve?', a: 'In F♯ minor, A+ resolves to D major (III+ → VI). In D major, A+ resolves to D with E♯ rising to F♯ — a stronger pull than the standard V → I cadence.' },
+    ],
+  },
+
+  'b-flat-augmented': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ augmented — B♭, D, F♯ — stacks two major thirds. B♭+ is enharmonically the same chord as D+ and F♯+ (= G♭+) in inversion. The chord functions as III+ of G harmonic minor and as an altered V in E♭ major.',
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'F#', name: 'augmented 5th', semitones: 8 },
+    ],
+    relatedKeys: [
+      { label: 'In G harmonic minor (III+)', slug: 'g-minor', kind: 'chord' },
+      { label: 'Parallel: B♭ major', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: D augmented', slug: 'd-augmented', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-major', 'g-minor', 'd-augmented', 'g-flat-augmented', 'e-flat-major'],
+    commonMistakes:
+      'B♭+ has B♭ and D as the lower notes (matching B♭ major) but the fifth is F♯, not F natural. The mix of one flat (B♭) and one sharp (F♯) is unusual visually — most chords use only one accidental type. Replacing F♯ with F makes a B♭ major chord; the augmented colour vanishes.',
+    inProgressions:
+      'B♭+ functions as III+ of G harmonic minor: Gm → B♭+ → E♭ (i → III+ → VI) is a colour cadence Mozart and Schubert both used in their G-minor works. As an altered V in E♭ major, B♭+ resolves to E♭ with F♯ leading up to G in the tonic.',
+    faq: [
+      { q: 'What notes are in a B♭ augmented chord?', a: 'B♭ augmented contains three notes: B♭ (the root), D (the major third), and F♯ (the augmented fifth).' },
+      { q: 'Is B♭ augmented the same as D augmented?', a: 'Enharmonically yes — same three pitches in different inversions. B♭+, D+, and F♯+ all share B♭, D, and F♯ in pitch class.' },
+      { q: 'How is B♭+ different from B♭ major?', a: 'Only the fifth changes. B♭ major is B♭–D–F; B♭+ raises the F to F♯. The half-step shift creates the augmented fifth and the chord\'s suspended quality.' },
+      { q: 'Where does B♭ augmented appear in music?', a: 'In G minor harmonic-minor cadences (as III+) — Mozart\'s K. 550 G minor symphony uses similar augmented colours. In E♭ major, B♭+ functions as an altered dominant for a more dramatic resolution to the tonic.' },
+    ],
+  },
+
+  // ─── Phase 2: diminished 7th chords ───────────────────────────────────────
+  // Four notes stacked in minor thirds (3+3+3 = 9 semitones; the missing
+  // fourth m3 closes the octave back to the root). Fully symmetric — only
+  // three unique dim7 chords exist (every fourth root inverts to the same
+  // pitch set). Common as vii°7 in minor keys and as a V7♭9 substitute.
+
+  'c-sharp-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯°7 — C♯, E, G, B♭ — is the vii°7 chord of D minor (and enharmonically the vii°7 of D major when the leading-tone harmony borrows from the parallel minor). The chord stacks three minor thirds, producing a fully symmetric four-note structure; rotating any note to the bass yields E°7, G°7, or B♭°7 — all the same four pitches.',
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In D minor (vii°7)', slug: 'd-minor', kind: 'chord' },
+      { label: 'Parallel: C♯ minor', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: E°7, G°7, B♭°7', slug: 'e-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-diminished', 'd-minor', 'e-diminished-7', 'a-diminished-7', 'b-flat-major'],
+    commonMistakes:
+      'The seventh is B♭ (a diminished 7th from C♯, enharmonic to A♯). Replacing it with B natural makes a half-diminished chord (C♯m7♭5); the diminished 7th distinction is the lowered B♭. Bach uses C♯°7 constantly in his D-minor literature — the Toccata and Fugue is full of these chords as cadential preparations.',
+    inProgressions:
+      'C♯°7 → D minor is the strongest cadence in D minor — every voice resolves by half-step or whole-step to the tonic chord. C♯°7 also substitutes for A7♭9 as an altered dominant (omit the A and you have C♯°7). Liszt uses dim7 chords as modulation pivots throughout his Hungarian Rhapsodies.',
+    faq: [
+      { q: 'What notes are in a C♯ diminished 7 chord?', a: 'C♯°7 contains four notes: C♯ (root), E (minor third), G (diminished fifth), and B♭ (diminished seventh).' },
+      { q: 'How does C♯°7 resolve?', a: 'In D minor: C♯ rises to D, E holds or falls to D, G falls to F, and B♭ falls to A — every voice moves by half-step or whole-step to a chord tone of D minor.' },
+      { q: 'Why are dim7 chords symmetric?', a: 'Every interval is a minor third (3 semitones). 3+3+3+3 = 12 semitones = an octave. So C♯°7, E°7, G°7, and B♭°7 all contain the same four pitches in different inversions.' },
+      { q: 'Where does C♯°7 appear in famous music?', a: 'Bach\'s Toccata and Fugue in D Minor uses it constantly. Mozart\'s K. 397 Fantasia in D minor opens with parallel diminished sonorities. Beethoven\'s "Pathétique" Sonata Op. 13 opens with C°7 → resolution.' },
+    ],
+  },
+
+  'd-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D°7 — D, F, A♭, C♭ — is the vii°7 of E♭ minor and a chromatic dim7 in flat-side keys. The C♭ (enharmonic to B) is the spelling tell that the chord lives inside a deep flat-side context. Like all dim7s, D°7 is symmetric; rotating bass tones produces F°7, A♭°7, and C♭°7 — all the same pitches.',
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In E♭ minor (vii°7)', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Parallel: D minor', slug: 'd-minor', kind: 'chord' },
+      { label: 'Enharmonic: F°7, A♭°7, C♭°7 (= B°7)', slug: 'b-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-diminished', 'e-flat-minor', 'b-diminished-7', 'd-flat-major', 'g-flat-major'],
+    commonMistakes:
+      'The diminished 7th is C♭, enharmonic to B natural. In flat-key contexts (E♭ minor, G♭ major) the C♭ spelling preserves consistency with the surrounding harmony; in sharp-key writing the same chord would respell as B°7 (B-D-F-A♭, often written B-D-F-G♯). Both are correct in their respective contexts.',
+    inProgressions:
+      'D°7 → E♭ minor is the leading-tone cadence in E♭ minor. D°7 also appears as a passing chord between D minor and E♭ minor in chromatically-modulating music. In jazz, D°7 functions as a B♭7♭9 with omitted root.',
+    faq: [
+      { q: 'What notes are in a D diminished 7 chord?', a: 'D°7 contains four notes: D (root), F (minor third), A♭ (diminished fifth), and C♭ (diminished seventh — same pitch as B).' },
+      { q: 'Why is the seventh C♭ instead of B?', a: 'The diminished 7th interval requires the seventh letter from the root. From D, the seventh letter is C; the diminished version of that letter is C♭. Calling the note B would skip the C letter and use B twice in the chord spelling.' },
+      { q: 'Is D°7 the same as B°7?', a: 'Enharmonically yes — both contain the same four pitches. D°7 (D-F-A♭-C♭) is a flat-side spelling; B°7 (B-D-F-A♭) is the sharp-or-natural-side spelling.' },
+      { q: 'When does D°7 appear in music?', a: 'In E♭ minor cadences (where it\'s the proper local spelling) and in chromatically-modulating music that pivots through dim7 sonorities. Wagner uses dim7 chords this way constantly.' },
+    ],
+  },
+
+  'd-sharp-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♯°7 — D♯, F♯, A, C — is the vii°7 of E minor (and E major when borrowing from parallel minor). All three intervals are minor thirds, making the chord fully symmetric. D♯°7 is enharmonically equivalent to F°7, A°7, and C°7 (an altered dominant context).',
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In E minor (vii°7)', slug: 'e-minor', kind: 'chord' },
+      { label: 'In E major (borrowed vii°7)', slug: 'e-major', kind: 'chord' },
+      { label: 'Enharmonic: F°7, A°7, C°7', slug: 'a-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-sharp-diminished', 'e-minor', 'a-diminished-7', 'c-sharp-diminished-7', 'b-major'],
+    commonMistakes:
+      'D♯°7 mixes two sharps (D♯, F♯) with two naturals (A, C). The mixed-accidental signature is part of its visual identity. In jazz, the chord is sometimes written E♭°7 instead — same pitches, but the flat-side spelling. Both are valid depending on surrounding harmony.',
+    inProgressions:
+      'D♯°7 → E minor is the leading-tone cadence in E minor. As an altered V/V/V (chains of secondary dominants), the chord pivots through multiple minor keys in chromatically modulating music. The "diminished sequence" in classical literature often climbs through D♯°7 → E°7 → F°7 → ... before resolving.',
+    faq: [
+      { q: 'What notes are in a D♯ diminished 7 chord?', a: 'D♯°7 contains four notes: D♯ (root), F♯ (minor third), A (diminished fifth), and C (diminished seventh).' },
+      { q: 'How does D♯°7 resolve?', a: 'In E minor: D♯ rises to E, F♯ holds or rises to G, A holds, and C falls to B. Every voice moves by half-step or whole-step to a chord tone of E minor.' },
+      { q: 'Is D♯°7 the same as E♭°7?', a: 'Enharmonically yes — same four pitches. D♯°7 spells the chord in sharp-key contexts (E minor); E♭°7 (E♭-G♭-B♭♭-D♭♭) is essentially never written because of double flats.' },
+      { q: 'Where does D♯°7 appear in music?', a: 'In E-minor and E-major leading-tone cadences. Mendelssohn\'s "Italian" Symphony finale (in F♯ minor) uses adjacent dim7 chords; D♯°7 also appears in jazz progressions through E minor.' },
+    ],
+  },
+
+  'e-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'E°7 — E, G, B♭, D♭ — is the vii°7 of F minor and a chromatic dim7 in flat-side keys. The chord is enharmonically the same pitch set as G°7, B♭°7, and D♭°7 — all share the same four pitches in different inversions.',
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In F minor (vii°7)', slug: 'f-minor', kind: 'chord' },
+      { label: 'Parallel: E minor', slug: 'e-minor', kind: 'chord' },
+      { label: 'Enharmonic: G°7, B♭°7, D♭°7 (= C♯°7)', slug: 'c-sharp-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-diminished', 'f-minor', 'c-sharp-diminished-7', 'g-diminished-7', 'a-flat-major'],
+    commonMistakes:
+      'E°7 spells the chord with E as the root, G as the minor third, B♭ as the diminished fifth, and D♭ as the diminished 7th. Replacing D♭ with D natural makes Em7♭5 (a half-diminished chord) — different harmony entirely. The mix of E (natural) plus B♭ and D♭ (flats) places this chord firmly in F-minor territory.',
+    inProgressions:
+      'E°7 → F minor is the strongest cadence in F minor. The chord also appears as a chromatic passing harmony between Em and Fm in modulating music. In jazz, E°7 functions as C7♭9 with the C omitted — a tritone-substitute relationship.',
+    faq: [
+      { q: 'What notes are in an E diminished 7 chord?', a: 'E°7 contains four notes: E (root), G (minor third), B♭ (diminished fifth), and D♭ (diminished seventh).' },
+      { q: 'How does E°7 resolve?', a: 'In F minor: E rises to F, G holds or rises to A♭, B♭ holds or falls to A♭, and D♭ falls to C. Every voice moves by step to a chord tone of F minor.' },
+      { q: 'Is E°7 the same as G°7?', a: 'Enharmonically yes — same four pitches in different inversions. E°7, G°7, B♭°7, and D♭°7 all share E, G, B♭, and D♭.' },
+      { q: 'When does E°7 appear in music?', a: 'In F-minor cadences (where it\'s the proper local spelling), in chromatically-modulating music as a pivot, and in jazz as a substitute for C7♭9.' },
+    ],
+  },
+
+  'f-sharp-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯°7 — F♯, A, C, E♭ — is the vii°7 of G minor and a common chromatic dim7 in sharp-side keys. F♯°7 is enharmonically equivalent to A°7, C°7, and E♭°7 — all four roots of the same symmetric pitch set.',
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In G minor (vii°7)', slug: 'g-minor', kind: 'chord' },
+      { label: 'Parallel: F♯ minor', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: A°7, C°7, E♭°7', slug: 'a-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-diminished', 'g-minor', 'a-diminished-7', 'd-sharp-diminished-7', 'b-flat-major'],
+    commonMistakes:
+      'F♯°7 mixes one sharp (F♯) with two naturals (A, C) and one flat (E♭). The four-accidental-type variety can be confusing visually — but each one is necessary for the seven-letter rule. Replacing E♭ with E natural makes F♯m7♭5 (half-diminished); the diminished 7th distinction is the lowered E♭.',
+    inProgressions:
+      'F♯°7 → G minor is the leading-tone cadence in G minor. Mozart\'s G-minor symphonies (No. 25, No. 40) use this exact preparation. The chord also appears as a substitute for D7♭9 (a tritone-related dominant) in jazz harmony.',
+    faq: [
+      { q: 'What notes are in an F♯ diminished 7 chord?', a: 'F♯°7 contains four notes: F♯ (root), A (minor third), C (diminished fifth), and E♭ (diminished seventh).' },
+      { q: 'How does F♯°7 resolve?', a: 'In G minor: F♯ rises to G, A holds or rises to B♭, C falls to B♭, and E♭ falls to D — every voice moves by half-step or whole-step to a tone of G minor.' },
+      { q: 'Why does F♯°7 spell the seventh as E♭ instead of D♯?', a: 'The diminished 7th interval requires the seventh letter (E from F). The diminished version of E natural is E♭. Calling the note D♯ would put the chord on the wrong letter and break the seven-letter spelling rule.' },
+      { q: 'Where does F♯°7 appear in music?', a: 'In Mozart\'s G-minor symphonies, in Bach\'s G-minor preludes and fugues, and in countless jazz minor-key cadences. It\'s one of the most-played dim7 chords in classical literature.' },
+    ],
+  },
+
+  'g-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G°7 — G, B♭, D♭, F♭ — is the vii°7 of A♭ minor and a deeply flat-side chromatic chord. The F♭ (enharmonic to E natural) signals you\'re in serious flat-key territory. Like all dim7s, G°7 is symmetric and equals B♭°7, D♭°7, and F♭°7 in pitch class.',
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In A♭ minor (vii°7)', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Parallel: G minor', slug: 'g-minor', kind: 'chord' },
+      { label: 'Enharmonic: B♭°7, D♭°7, F♭°7 (= E°7)', slug: 'e-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-diminished', 'a-flat-minor', 'e-diminished-7', 'b-diminished-7', 'a-flat-major'],
+    commonMistakes:
+      'The seventh F♭ is enharmonic to E natural. Inside A♭-minor key context, F♭ preserves consistency with the surrounding flats; outside that context the chord usually respells as E°7 (E-G-B♭-D♭) or as one of its other inversions. The four-accidental spelling (G natural, plus three flats) is unusual visually.',
+    inProgressions:
+      'G°7 → A♭ minor is the cadence in A♭ minor — though A♭ minor itself is rare as a tonic. More commonly, G°7 appears as a chromatic passing chord or as a substitute for E♭7♭9 (tritone-related dominant) in jazz minor-key progressions.',
+    faq: [
+      { q: 'What notes are in a G diminished 7 chord?', a: 'G°7 contains four notes: G (root), B♭ (minor third), D♭ (diminished fifth), and F♭ (diminished seventh — same pitch as E).' },
+      { q: 'Why is the seventh F♭ instead of E?', a: 'The diminished 7th interval requires the seventh letter (F from G). The diminished version of F natural is F♭. Calling the note E would skip the F letter and use E twice if combined with surrounding harmony in flat keys.' },
+      { q: 'Is G°7 the same as E°7?', a: 'Enharmonically yes — both contain the same four pitches. G°7 is the spelling inside flat-key contexts (A♭ minor); E°7 is the more common spelling in F-minor contexts.' },
+      { q: 'When would I write G°7 instead of E°7?', a: 'When the surrounding harmony is firmly in A♭ minor or G♭ major — the all-flat key signature makes G°7 easier to read than respelling as E°7 with multiple naturals.' },
+    ],
+  },
+
+  'g-sharp-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯°7 — G♯, B, D, F — is the vii°7 of A minor and one of the most common dim7 chords in standard repertoire. The chord stacks three minor thirds and resolves powerfully to A minor. G♯°7 is enharmonically equivalent to B°7, D°7, and F°7.',
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In A minor (vii°7)', slug: 'a-minor', kind: 'chord' },
+      { label: 'Parallel: G♯ minor', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: B°7, D°7, F°7', slug: 'b-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-diminished', 'a-minor', 'b-diminished-7', 'a-sharp-diminished-7', 'c-major'],
+    commonMistakes:
+      'G♯°7 is one of the most common dim7s in classical literature precisely because A minor is one of the most common keys. The chord mixes one sharp (G♯) with three naturals (B, D, F). The strong G♯ → A leading-tone resolution is what makes this chord function so powerfully.',
+    inProgressions:
+      'G♯°7 → A minor is the textbook leading-tone cadence in A minor — every voice resolves by half-step or whole-step to a tone of A minor (G♯ rises to A, B holds, D holds or falls to C, F falls to E). Bach uses G♯°7 constantly in his A-minor literature.',
+    faq: [
+      { q: 'What notes are in a G♯ diminished 7 chord?', a: 'G♯°7 contains four notes: G♯ (root), B (minor third), D (diminished fifth), and F (diminished seventh).' },
+      { q: 'How does G♯°7 resolve?', a: 'In A minor: G♯ rises to A (the leading-tone resolution), B holds, D falls to C, and F falls to E. Every voice moves by half-step or whole-step to a chord tone.' },
+      { q: 'Is G♯°7 the same as B°7?', a: 'Enharmonically yes — same four pitches in different inversions. G♯°7, B°7, D°7, and F°7 all share G♯, B, D, and F.' },
+      { q: 'Where does G♯°7 appear in famous music?', a: 'Throughout A-minor literature: Bach\'s A-minor preludes and fugues, Mozart\'s A-minor sonata K. 310, Beethoven\'s "Pathétique" Sonata (which uses C°7 / G♯°7 enharmonically). It\'s one of the most-played dim7 chords in Western music.' },
+    ],
+  },
+
+  'a-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A°7 — A, C, E♭, G♭ — is the vii°7 of B♭ minor and an enharmonic equivalent of F♯°7, C°7, and E♭°7. The chord lives most naturally inside flat-side keys (B♭ minor, D♭ major) where its three flats integrate cleanly into the surrounding signature.',
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In B♭ minor (vii°7)', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Parallel: A minor', slug: 'a-minor', kind: 'chord' },
+      { label: 'Enharmonic: C°7, E♭°7, G♭°7 (= F♯°7)', slug: 'f-sharp-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-diminished', 'b-flat-minor', 'f-sharp-diminished-7', 'd-flat-major', 'g-minor'],
+    commonMistakes:
+      'A°7\'s seventh is G♭, enharmonic to F♯. Inside flat-key context the G♭ spelling preserves consistency. In jazz lead-sheet practice, the chord is sometimes written A°7 with F♯ as the seventh — strictly incorrect by the seven-letter rule, but common.',
+    inProgressions:
+      'A°7 → B♭ minor is the leading-tone cadence in B♭ minor. The chord also appears in D♭ major as a borrowed harmony from the parallel D♭ minor. In jazz, A°7 substitutes for F7♭9 (a tritone-related dominant) in certain D-minor or D♭-major progressions.',
+    faq: [
+      { q: 'What notes are in an A diminished 7 chord?', a: 'A°7 contains four notes: A (root), C (minor third), E♭ (diminished fifth), and G♭ (diminished seventh — same pitch as F♯).' },
+      { q: 'How does A°7 resolve?', a: 'In B♭ minor: A rises to B♭, C holds or rises to D♭, E♭ holds, G♭ falls to F. Every voice moves by half-step or whole-step.' },
+      { q: 'Is A°7 the same as F♯°7?', a: 'Enharmonically yes — same four pitches in different inversions. A°7 is the flat-side spelling; F♯°7 is the sharp-side. Composers pick one based on surrounding harmony.' },
+      { q: 'Where does A°7 appear in music?', a: 'In B♭-minor cadences (where it\'s the proper local spelling), in chromatically-modulating music as a pivot chord, and as a tritone substitute in jazz dominant cycles.' },
+    ],
+  },
+
+  'a-sharp-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♯°7 — A♯, C♯, E, G — is the vii°7 of B minor and a sharp-side dim7 chord. The chord is enharmonically equivalent to C♯°7, E°7, and G°7 — all the same four pitches. Most often appears inside B-minor classical and folk literature as the standard cadential preparation.',
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In B minor (vii°7)', slug: 'b-minor', kind: 'chord' },
+      { label: 'Parallel: A♯ minor', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: C♯°7, E°7, G°7', slug: 'c-sharp-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-sharp-diminished', 'b-minor', 'c-sharp-diminished-7', 'g-diminished-7', 'd-major'],
+    commonMistakes:
+      'A♯°7 mixes two sharps (A♯, C♯) with two naturals (E, G). The seventh G is natural, not G♯ — replacing it with G♯ destroys the diminished 7th interval and produces a different chord. The two-sharp signature of D major (which contains B minor as its relative minor) provides the sharps automatically.',
+    inProgressions:
+      'A♯°7 → B minor is the cadence in B minor — Bach uses this exact resolution constantly in his B-minor literature, including the famous Mass in B minor. Tchaikovsky\'s "Pathétique" Symphony No. 6 (in B minor) uses A♯°7 throughout its development sections.',
+    faq: [
+      { q: 'What notes are in an A♯ diminished 7 chord?', a: 'A♯°7 contains four notes: A♯ (root), C♯ (minor third), E (diminished fifth), and G (diminished seventh).' },
+      { q: 'How does A♯°7 resolve?', a: 'In B minor: A♯ rises to B, C♯ holds, E falls to D, G falls to F♯. Every voice moves by half-step or whole-step to a tone of B minor.' },
+      { q: 'Is A♯°7 the same as B♭°7?', a: 'Enharmonically yes (both are four pitches with intervals of m3). A♯°7 is the spelling in B-minor key contexts; B♭°7 (B♭-D♭-F♭-A𝄫) is rare because of the double-flat seventh.' },
+      { q: 'Where does A♯°7 appear in music?', a: 'Bach\'s Mass in B minor uses A♯°7 at every cadence. Tchaikovsky\'s "Pathétique" Symphony, Schubert\'s "Unfinished," and countless other B-minor works rely on this chord as the primary cadential preparation.' },
+    ],
+  },
+
+  'b-diminished-7': {
+    publishAt: '2020-01-01',
+    intro:
+      'B°7 — B, D, F, A♭ — is the vii°7 of C minor and one of the most-played dim7 chords in classical literature. The chord is enharmonically equivalent to D°7, F°7, and A♭°7 — all share the same four pitches. The single flat (A♭) on top of three naturals is its visual signature.',
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'diminished 7th', semitones: 9 },
+    ],
+    relatedKeys: [
+      { label: 'In C minor (vii°7)', slug: 'c-minor', kind: 'chord' },
+      { label: 'In C major (borrowed from parallel minor)', slug: 'c-major', kind: 'chord' },
+      { label: 'Enharmonic: D°7, F°7, A♭°7', slug: 'd-diminished-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-diminished', 'c-minor', 'd-diminished-7', 'g-sharp-diminished-7', 'e-flat-major'],
+    commonMistakes:
+      'B°7 has B-D-F-A♭ — three naturals plus the flat seventh. The most common error is reading A♭ as A natural, which produces Bm7♭5 (half-diminished). The diminished 7th distinction is the lowered seventh, which gives the chord its full symmetry and its strong cadential pull.',
+    inProgressions:
+      'B°7 → C minor is the textbook leading-tone cadence in C minor. Beethoven\'s "Pathétique" Sonata Op. 13 opens with this exact dim7 → tonic-minor resolution. The chord also appears in C major as a borrowed harmony from the parallel C minor — a colour Beethoven and Schubert used constantly.',
+    faq: [
+      { q: 'What notes are in a B diminished 7 chord?', a: 'B°7 contains four notes: B (root), D (minor third), F (diminished fifth), and A♭ (diminished seventh).' },
+      { q: 'How does B°7 resolve?', a: 'In C minor: B rises to C (the leading-tone resolution), D holds or rises to E♭, F holds, A♭ falls to G. Every voice moves to a chord tone of C minor.' },
+      { q: 'Is B°7 the same as D°7?', a: 'Enharmonically yes — both contain the same four pitches in different inversions. B°7, D°7, F°7, and A♭°7 are inversions of each other.' },
+      { q: 'Where does B°7 appear in famous music?', a: 'Beethoven\'s "Pathétique" Sonata Op. 13 (which opens with this exact chord), Mozart\'s C minor sonata K. 457, and Schubert\'s C-minor literature all use B°7 as the primary cadential preparation.' },
+    ],
+  },
+
+  // ─── Phase 2: half-diminished chords (m7♭5) ──────────────────────────────
+  // Minor triad with a flatted fifth and a minor seventh on top — written
+  // m7♭5 or with the ø symbol. The "ii" chord of every minor key (the most
+  // common context). Famous as the opening chord of Wagner's Tristan und
+  // Isolde, where it's also called "the Tristan chord."
+
+  'c-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'C half-diminished (Cm7♭5 or Cø) — C, E♭, G♭, B♭ — is the iiø7 chord of B♭ minor and a centrepiece of jazz minor-key harmony. The chord stacks two minor thirds and a major third, distinguishing it from the fully-symmetric diminished 7th. It\'s one of the most evocative four-note sonorities in tonal music.',
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In B♭ minor (iiø7 → V → i)', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Parallel: C minor', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: C diminished', slug: 'c-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['c-diminished', 'c-minor', 'b-flat-minor', 'd-half-diminished', 'f-minor'],
+    commonMistakes:
+      'The seventh is B♭ (a minor 7th from C), not B natural (which would be a major 7th, making this a different chord — C°maj7, virtually never used). The "half" in half-diminished refers to the upper interval being a minor 7th rather than the diminished 7th of the fully-diminished chord. C°7 has B𝄫; Cm7♭5 has B♭.',
+    inProgressions:
+      'Cm7♭5 → F7 → B♭m is the textbook ii–V–i in B♭ minor — one of the most-used cadences in jazz. Standards like "Autumn Leaves" and "Blue Bossa" use exactly this pattern at every minor-key turnaround. The chord also appears as a colour chord in late-Romantic music, where its instability invites slow chromatic resolution.',
+    faq: [
+      { q: 'What notes are in a C half-diminished chord?', a: 'C half-diminished contains four notes: C (root), E♭ (minor third), G♭ (diminished fifth), and B♭ (minor seventh).' },
+      { q: 'How is half-diminished different from fully diminished?', a: 'Both share the diminished triad below (root, ♭3, ♭5). The difference is the seventh: half-diminished uses a minor 7th (B♭ from C); fully diminished uses a diminished 7th (B𝄫 / A from C).' },
+      { q: 'What does the ø symbol mean?', a: 'ø is the standard chord-symbol notation for half-diminished. Cø7 = Cm7♭5 = "C half-diminished seventh." Some writers use the ø without the 7 implied.' },
+      { q: 'Where does C half-diminished appear in music?', a: 'In every B♭-minor jazz standard ("Autumn Leaves," "Stella by Starlight," etc.) as the iiø7 chord. In classical literature, the Tristan chord (Wagner\'s most famous opening) is essentially a half-diminished sonority transposed.' },
+    ],
+  },
+
+  'c-sharp-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯ half-diminished (C♯m7♭5 or C♯ø) — C♯, E, G, B — is the iiø7 of B minor. The chord drives the B-minor minor-key cadence and shows up constantly in any jazz tune in B minor, plus countless classical works in B minor or D major (where it\'s a chromatic colour).',
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In B minor (iiø7 → V → i)', slug: 'b-minor', kind: 'chord' },
+      { label: 'Parallel: C♯ minor', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯ diminished', slug: 'c-sharp-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-diminished', 'c-sharp-minor', 'b-minor', 'd-half-diminished', 'f-sharp-major'],
+    commonMistakes:
+      'C♯m7♭5 contains C♯ (the only sharp) plus three naturals: E, G, B. The seventh B is the chord\'s major third away from G — a wider interval than dim7 chords use. Replacing B with B♭ would produce C♯°7 (fully diminished); the half-diminished colour requires the minor 7th (B natural).',
+    inProgressions:
+      'C♯m7♭5 → F♯7 → Bm is the ii–V–i in B minor, used in every B-minor jazz standard and most classical B-minor cadences. The chord also appears in D major as a chromatic colour (the ii of the parallel minor borrowed into the major). Schubert uses these borrowings constantly in his late piano sonatas.',
+    faq: [
+      { q: 'What notes are in a C♯ half-diminished chord?', a: 'C♯ half-diminished contains four notes: C♯ (root), E (minor third), G (diminished fifth), and B (minor seventh).' },
+      { q: 'How does C♯m7♭5 resolve?', a: 'In B minor: C♯m7♭5 → F♯7 → Bm. The C♯m7♭5 sets up the V chord (F♯7), which then resolves to the tonic Bm.' },
+      { q: 'Is C♯ half-diminished the same as C♯ diminished?', a: 'No — different chords. C♯° (the triad) is C♯-E-G; C♯m7♭5 (the four-note chord) adds a minor 7th (B) on top. The half-diminished version is a stacked version of the diminished triad.' },
+      { q: 'Where does C♯ half-diminished appear in jazz?', a: 'In every jazz standard in B minor — "Beautiful Love," "Solar," and many others use C♯m7♭5 as the standard iiø7 setup before resolving to F♯7 → Bm.' },
+    ],
+  },
+
+  'd-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'D half-diminished (Dm7♭5 or Dø) — D, F, A♭, C — is the iiø7 of C minor and one of the most-used jazz chords. It opens minor-key turnarounds in countless standards, and shows up in classical literature any time C minor needs a darker, jazz-tinged supertonic. Bach uses it constantly in his C-minor preludes and fugues.',
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In C minor (iiø7 → V → i)', slug: 'c-minor', kind: 'chord' },
+      { label: 'Parallel: D minor', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: D diminished', slug: 'd-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['d-diminished', 'd-minor', 'c-minor', 'g-minor', 'e-half-diminished'],
+    commonMistakes:
+      'Dm7♭5 has D-F-A♭-C — one flat, three naturals. The most common error is reading A♭ as A natural, which makes Dm7 (a regular minor seventh, much less tense). The flat fifth (A♭) is what produces the half-diminished colour and the strong tension that pulls toward G7 → Cm.',
+    inProgressions:
+      'Dm7♭5 → G7 → Cm is the ii–V–i in C minor — the most-used cadence in any C-minor jazz tune. "Autumn Leaves" (the most-played jazz standard ever) contains Dm7♭5 → G7 → Cm at its main cadence. In classical, Bach uses the same harmonic preparation in his C-minor literature.',
+    faq: [
+      { q: 'What notes are in a D half-diminished chord?', a: 'D half-diminished contains four notes: D (root), F (minor third), A♭ (diminished fifth), and C (minor seventh).' },
+      { q: 'How does Dm7♭5 resolve?', a: 'In C minor: Dm7♭5 → G7 → Cm. The chord sets up the V (G7), which then resolves to the tonic Cm. This is the most-used minor-key cadence in jazz.' },
+      { q: 'Is Dm7♭5 the same as F minor 6?', a: 'Enharmonically the chord shares notes with Fm6 (F-A♭-C-D = same four pitches). But functionally they\'re different: Dm7♭5 is the iiø7 of C minor; Fm6 is the iv6 of C minor. Same notes, different roles.' },
+      { q: 'What jazz standards use D half-diminished?', a: '"Autumn Leaves," "Solar," "Beautiful Love," and many other minor-key standards. It\'s the default iiø7 chord in C-minor jazz harmony.' },
+    ],
+  },
+
+  'd-sharp-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♯ half-diminished (D♯m7♭5 or D♯ø) — D♯, F♯, A, C♯ — is the iiø7 of C♯ minor. The chord lives in sharp-side keys and serves the same minor-key-cadence role as its enharmonic neighbour E♭m7♭5 (which spells the same pitches in flat keys). Bach\'s C♯-minor fugue (WTC I) uses this chord at its primary cadence.',
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In C♯ minor (iiø7 → V → i)', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: D♯ minor', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: E♭m7♭5', slug: 'e-flat-major', kind: 'chord' },
+    ],
+    relatedChords: ['d-sharp-diminished', 'd-sharp-minor', 'c-sharp-minor', 'f-sharp-minor', 'g-sharp-minor'],
+    commonMistakes:
+      'D♯m7♭5 mixes three sharps (D♯, F♯, C♯) with one natural (A). The single natural is the flat-five — the chord\'s identity. Replacing A with A♯ produces D♯m7 (a regular minor seventh); the flat fifth is what makes the chord half-diminished.',
+    inProgressions:
+      'D♯m7♭5 → G♯7 → C♯m is the ii–V–i in C♯ minor. The chord appears in every C♯-minor jazz tune (rare but they exist) and in classical C♯-minor literature including Beethoven\'s "Moonlight" Sonata Op. 27 No. 2 and Rachmaninoff\'s C♯-minor Prelude.',
+    faq: [
+      { q: 'What notes are in a D♯ half-diminished chord?', a: 'D♯ half-diminished contains four notes: D♯ (root), F♯ (minor third), A (diminished fifth), and C♯ (minor seventh).' },
+      { q: 'How does D♯m7♭5 resolve?', a: 'In C♯ minor: D♯m7♭5 → G♯7 → C♯m. The chord prepares the dominant G♯7, which then resolves to the C♯m tonic.' },
+      { q: 'Is D♯m7♭5 the same as E♭m7♭5?', a: 'Enharmonically the same set of pitches, but spelled differently. D♯m7♭5 lives in C♯-minor sharp-key contexts; E♭m7♭5 (E♭-G♭-B♭♭-D♭) is essentially never written because of the double-flat fifth.' },
+      { q: 'Where does D♯m7♭5 appear in music?', a: 'In C♯-minor cadences in classical and jazz literature. Beethoven\'s "Moonlight" Sonata, Rachmaninoff\'s C♯-minor Prelude, and any C♯-minor jazz tune use this chord as the standard iiø7 preparation.' },
+    ],
+  },
+
+  'e-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'E half-diminished (Em7♭5 or Eø) — E, G, B♭, D — is the iiø7 of D minor, one of the most common minor keys in classical and jazz music. The chord shows up at every D-minor cadence in standard repertoire — Bach\'s D-minor toccatas, Mozart\'s K. 397 Fantasia, countless jazz tunes.',
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In D minor (iiø7 → V → i)', slug: 'd-minor', kind: 'chord' },
+      { label: 'Parallel: E minor', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: E diminished', slug: 'e-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['e-diminished', 'e-minor', 'd-minor', 'a-minor', 'd-half-diminished'],
+    commonMistakes:
+      'Em7♭5 has E-G-B♭-D. The flat fifth (B♭) is what distinguishes it from Em7 (which has B natural). The natural seventh (D) distinguishes it from Em6 (which would have a different fifth). The chord sits comfortably under the hand on piano: E-G-B♭ is white-white-black, plus D on top.',
+    inProgressions:
+      'Em7♭5 → A7 → Dm is the ii–V–i in D minor — the cadence in every D-minor jazz standard. "Solar" (Miles Davis) opens with exactly this chord. Bach\'s D-minor Toccata and Fugue uses Em7♭5 as a primary cadential preparation.',
+    faq: [
+      { q: 'What notes are in an E half-diminished chord?', a: 'E half-diminished contains four notes: E (root), G (minor third), B♭ (diminished fifth), and D (minor seventh).' },
+      { q: 'How does Em7♭5 resolve?', a: 'In D minor: Em7♭5 → A7 → Dm. The chord prepares the dominant A7, which then resolves to the Dm tonic.' },
+      { q: 'Is Em7♭5 the same as Em7?', a: 'No — different chords. Em7 (E-G-B-D) has a perfect fifth; Em7♭5 (E-G-B♭-D) lowers that fifth a half step, producing the half-diminished colour and the iiø7 function in D minor.' },
+      { q: 'Where does E half-diminished appear in music?', a: 'In D-minor cadences throughout classical and jazz literature: Bach\'s D-minor works, Miles Davis\'s "Solar," "Stella by Starlight," and any standard with a D-minor turnaround.' },
+    ],
+  },
+
+  'f-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'F half-diminished (Fm7♭5 or Fø) — F, A♭, C♭, E♭ — is the iiø7 of E♭ minor, a deeply flat-side chord. The C♭ (enharmonic to B) signals the chord\'s flat-key home. Like all half-diminished chords, Fm7♭5 sets up minor-key cadences with a darker, jazz-tinged colour.',
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In E♭ minor (iiø7 → V → i)', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Parallel: F minor', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: F diminished', slug: 'f-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['f-diminished', 'f-minor', 'e-flat-minor', 'b-flat-minor', 'a-flat-major'],
+    commonMistakes:
+      'The fifth is C♭, enharmonic to B natural. In jazz lead-sheet practice, the chord is sometimes written Fm7♭5 with B as the fifth letter — strictly incorrect by the seven-letter rule, but common. Inside E♭-minor key contexts, C♭ preserves consistency with the surrounding flat-side harmony.',
+    inProgressions:
+      'Fm7♭5 → B♭7 → E♭m is the ii–V–i in E♭ minor. The chord appears in any E♭-minor jazz tune and in classical E♭-minor literature including Bach\'s WTC I prelude and fugue in E♭ minor.',
+    faq: [
+      { q: 'What notes are in an F half-diminished chord?', a: 'F half-diminished contains four notes: F (root), A♭ (minor third), C♭ (diminished fifth — same pitch as B), and E♭ (minor seventh).' },
+      { q: 'How does Fm7♭5 resolve?', a: 'In E♭ minor: Fm7♭5 → B♭7 → E♭m. The chord prepares the dominant B♭7, which then resolves to the tonic E♭m.' },
+      { q: 'Why is the fifth C♭ instead of B?', a: 'The half-diminished chord builds on the diminished triad (root, ♭3, ♭5). From F, the fifth letter is C; the diminished version of C natural is C♭. Calling the note B would skip the C letter.' },
+      { q: 'Where does F half-diminished appear in music?', a: 'In E♭-minor cadences in classical and jazz. Bach\'s WTC I prelude in E♭ minor uses Fm7♭5; jazz pianists like Bill Evans use it constantly in their darker minor-key voicings.' },
+    ],
+  },
+
+  'f-sharp-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯ half-diminished (F♯m7♭5 or F♯ø) — F♯, A, C, E — is the iiø7 of E minor and the famous "Tristan chord" (Wagner\'s opening to Tristan und Isolde, the chord that arguably launched late-Romantic chromaticism). The chord\'s harmonic ambiguity made it a touchstone for everything from Wagner to Debussy.',
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In E minor (iiø7 → V → i)', slug: 'e-minor', kind: 'chord' },
+      { label: 'Parallel: F♯ minor', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯ diminished', slug: 'f-sharp-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-diminished', 'f-sharp-minor', 'e-minor', 'a-minor', 'b-minor'],
+    commonMistakes:
+      'F♯m7♭5 has F♯-A-C-E. The seventh E is natural (a minor 7th from F♯), not E♯. The flat fifth C is natural too; replacing it with C♯ makes F♯m7. The famous Tristan chord context uses this exact spelling — Wagner\'s opening note B in the bass plus F♯, A, C, E above creates a dense, ambiguous half-diminished colour that resolves only after several measures of suspense.',
+    inProgressions:
+      'F♯m7♭5 → B7 → Em is the ii–V–i in E minor — used in every E-minor jazz standard. In Wagner\'s Tristan, the famous opening F♯m7♭5 lingers and resolves through chromatic voice-leading to E7 (rather than the expected B7), launching an entire era of harmonic ambiguity.',
+    faq: [
+      { q: 'What notes are in an F♯ half-diminished chord?', a: 'F♯ half-diminished contains four notes: F♯ (root), A (minor third), C (diminished fifth), and E (minor seventh).' },
+      { q: 'What is the Tristan chord?', a: 'The famous opening chord of Wagner\'s Tristan und Isolde — F-B-D♯-G♯ in his actual notation, which is enharmonically a half-diminished sonority. It\'s often analysed as F♯m7♭5 reinterpreted enharmonically. The chord\'s ambiguous resolution defined late-Romantic harmonic language.' },
+      { q: 'How does F♯m7♭5 resolve?', a: 'In E minor: F♯m7♭5 → B7 → Em. The chord prepares the dominant B7, which then resolves to the tonic Em. In Wagner\'s Tristan, the chord deliberately doesn\'t resolve in the standard way — it sets up an entire opera of harmonic suspense.' },
+      { q: 'Where does F♯m7♭5 appear in music?', a: 'Wagner\'s Tristan und Isolde (the most famous appearance), every E-minor jazz standard, and countless classical E-minor cadences. It\'s one of the most-studied chords in Western music history.' },
+    ],
+  },
+
+  'g-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'G half-diminished (Gm7♭5 or Gø) — G, B♭, D♭, F — is the iiø7 of F minor. The chord serves the standard minor-key-cadence role and shows up in every F-minor jazz tune as well as classical F-minor literature including Beethoven\'s "Appassionata" Sonata.',
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In F minor (iiø7 → V → i)', slug: 'f-minor', kind: 'chord' },
+      { label: 'Parallel: G minor', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: G diminished', slug: 'g-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['g-diminished', 'g-minor', 'f-minor', 'c-minor', 'a-flat-major'],
+    commonMistakes:
+      'Gm7♭5 has G-B♭-D♭-F. The two flats (B♭, D♭) plus two naturals (G, F) is the chord\'s signature. Replacing D♭ with D natural makes Gm7 (regular minor seventh, no flat fifth); the chord then loses its half-diminished function. The natural seventh F is what distinguishes Gm7♭5 from G°7 (which has F♭).',
+    inProgressions:
+      'Gm7♭5 → C7 → Fm is the ii–V–i in F minor. Beethoven\'s "Appassionata" Sonata uses exactly this preparation throughout its first movement. In jazz, Gm7♭5 appears in any F-minor tune — "Stella by Starlight" has a Gm7♭5 → C7 → Fm6 cadence at one of its primary moments.',
+    faq: [
+      { q: 'What notes are in a G half-diminished chord?', a: 'G half-diminished contains four notes: G (root), B♭ (minor third), D♭ (diminished fifth), and F (minor seventh).' },
+      { q: 'How does Gm7♭5 resolve?', a: 'In F minor: Gm7♭5 → C7 → Fm. The chord prepares the dominant C7, which resolves to the tonic Fm.' },
+      { q: 'Is Gm7♭5 the same as G°7?', a: 'No — different chords. G°7 (G-B♭-D♭-F♭) has a diminished 7th (F♭); Gm7♭5 (G-B♭-D♭-F) has a minor 7th (F natural). The half-diminished version is functionally a iiø7; the fully-diminished is a vii°7.' },
+      { q: 'Where does G half-diminished appear in music?', a: 'In F-minor cadences in classical and jazz: Beethoven\'s "Appassionata" Sonata, Chopin\'s F-minor Ballade, "Stella by Starlight," and many other F-minor works.' },
+    ],
+  },
+
+  'g-sharp-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯ half-diminished (G♯m7♭5 or G♯ø) — G♯, B, D, F♯ — is the iiø7 of F♯ minor. The chord serves the standard minor-key cadence in F♯-minor literature and jazz. It shares its pitch set with neighbouring half-diminished chords through specific voice-leading relationships, but functionally it\'s the F♯-minor iiø7.',
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In F♯ minor (iiø7 → V → i)', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: G♯ minor', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯ diminished', slug: 'g-sharp-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-diminished', 'g-sharp-minor', 'f-sharp-minor', 'c-sharp-minor', 'b-major'],
+    commonMistakes:
+      'G♯m7♭5 has G♯-B-D-F♯. Two sharps (G♯, F♯) plus two naturals (B, D). The natural fifth (D, lowered from D♯ which would be in G♯ minor) is what creates the half-diminished colour. Replacing D with D♯ makes G♯m7 (regular minor seventh).',
+    inProgressions:
+      'G♯m7♭5 → C♯7 → F♯m is the ii–V–i in F♯ minor. The chord appears in every F♯-minor jazz tune and in classical F♯-minor literature including Mendelssohn\'s "Italian" Symphony finale.',
+    faq: [
+      { q: 'What notes are in a G♯ half-diminished chord?', a: 'G♯ half-diminished contains four notes: G♯ (root), B (minor third), D (diminished fifth), and F♯ (minor seventh).' },
+      { q: 'How does G♯m7♭5 resolve?', a: 'In F♯ minor: G♯m7♭5 → C♯7 → F♯m. The chord prepares the dominant C♯7, which resolves to the F♯m tonic.' },
+      { q: 'Is G♯m7♭5 the same as G♯ diminished?', a: 'No — G♯° (the triad) is just three notes (G♯-B-D); G♯m7♭5 adds a minor 7th (F♯) on top, creating a four-note half-diminished chord with different harmonic function.' },
+      { q: 'Where does G♯ half-diminished appear in music?', a: 'In F♯-minor cadences across classical and jazz literature. Mendelssohn\'s "Italian" Symphony finale, Tchaikovsky\'s First Piano Concerto cadenza, and any F♯-minor jazz tune use this chord as the standard iiø7 setup.' },
+    ],
+  },
+
+  'a-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'A half-diminished (Am7♭5 or Aø) — A, C, E♭, G — is the iiø7 of G minor and a workhorse jazz chord. Mozart\'s G-minor symphonies (No. 25 and No. 40) use this exact chord at every primary cadence; in jazz, "Solar," "Beautiful Love," and many other G-minor standards open with Am7♭5.',
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In G minor (iiø7 → V → i)', slug: 'g-minor', kind: 'chord' },
+      { label: 'Parallel: A minor', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: A diminished', slug: 'a-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['a-diminished', 'a-minor', 'g-minor', 'd-minor', 'b-flat-major'],
+    commonMistakes:
+      'Am7♭5 has A-C-E♭-G. Three naturals plus the flat fifth (E♭) is the chord\'s signature. The most common error is reading E♭ as E natural, which makes Am7 (regular minor seventh, no flat fifth); the half-diminished colour requires the lowered fifth. The natural seventh G distinguishes Am7♭5 from A°7 (which has G♭).',
+    inProgressions:
+      'Am7♭5 → D7 → Gm is the ii–V–i in G minor — Mozart\'s most-used cadence in his G-minor symphonies. In jazz, the same progression underlies "Solar" (Miles Davis), "Beautiful Love," and many other G-minor standards.',
+    faq: [
+      { q: 'What notes are in an A half-diminished chord?', a: 'A half-diminished contains four notes: A (root), C (minor third), E♭ (diminished fifth), and G (minor seventh).' },
+      { q: 'How does Am7♭5 resolve?', a: 'In G minor: Am7♭5 → D7 → Gm. The chord prepares the dominant D7, which resolves to the Gm tonic. This is one of the most-used cadences in Western music.' },
+      { q: 'Is Am7♭5 the same as Am7?', a: 'No — different chords. Am7 (A-C-E-G) has a perfect fifth; Am7♭5 (A-C-E♭-G) lowers that fifth a half step, producing the half-diminished colour and the iiø7 function in G minor.' },
+      { q: 'Where does A half-diminished appear in famous music?', a: 'Mozart\'s Symphony No. 40 in G minor uses Am7♭5 at every primary cadence. Bach\'s G-minor preludes and fugues, "Solar" by Miles Davis, "Beautiful Love" — anywhere G minor appears in standard repertoire.' },
+    ],
+  },
+
+  'a-sharp-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♯ half-diminished (A♯m7♭5 or A♯ø) — A♯, C♯, E, G♯ — is the iiø7 of G♯ minor. The chord serves the minor-key cadence in G♯-minor literature, which though rarer than C♯ or A♯ minor as tonics, does appear in Beethoven (Op. 106 development) and Liszt.',
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In G♯ minor (iiø7 → V → i)', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Parallel: A♯ minor', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: A♯ diminished', slug: 'a-sharp-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['a-sharp-diminished', 'a-sharp-minor', 'g-sharp-minor', 'd-sharp-minor', 'b-major'],
+    commonMistakes:
+      'A♯m7♭5 has three sharps (A♯, C♯, G♯) plus one natural (E). The natural fifth (E, lowered from E♯ in A♯ minor) is the chord\'s flat-five — the half-diminished identity. The chord is enharmonically the same set of pitches as B♭m7♭5 (B♭-D♭-F♭-A♭), but the sharp-side spelling preserves consistency in G♯-minor key contexts.',
+    inProgressions:
+      'A♯m7♭5 → D♯7 → G♯m is the ii–V–i in G♯ minor. Beethoven\'s "Hammerklavier" Sonata Op. 106 uses dense chromatic minor-key harmony where A♯m7♭5 appears as part of the development\'s tonal explorations.',
+    faq: [
+      { q: 'What notes are in an A♯ half-diminished chord?', a: 'A♯ half-diminished contains four notes: A♯ (root), C♯ (minor third), E (diminished fifth), and G♯ (minor seventh).' },
+      { q: 'Is A♯m7♭5 the same as B♭m7♭5?', a: 'Enharmonically yes — same four pitches in different spellings. A♯m7♭5 lives inside G♯-minor key contexts; B♭m7♭5 (B♭-D♭-F♭-A♭) is rarer in practice because of the F♭.' },
+      { q: 'How does A♯m7♭5 resolve?', a: 'In G♯ minor: A♯m7♭5 → D♯7 → G♯m. The chord prepares the dominant D♯7, which resolves to the G♯m tonic.' },
+      { q: 'Where does A♯ half-diminished appear in music?', a: 'In G♯-minor cadences in classical literature — Beethoven\'s late piano sonatas, Liszt\'s sharp-key piano works, and any other deep sharp-side music in G♯ minor.' },
+    ],
+  },
+
+  'b-flat-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭ half-diminished (B♭m7♭5 or B♭ø) — B♭, D♭, F♭, A♭ — is the iiø7 of A♭ minor (theoretical) and a deeply flat-side chord. The F♭ (enharmonic to E natural) is the spelling tell. In practice the chord is more often written as A♯m7♭5 in sharp-key contexts, but flat-side music inside A♭ minor uses this spelling.',
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In A♭ minor (iiø7) — theoretical', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Parallel: B♭ minor', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Enharmonic: A♯m7♭5', slug: 'a-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-minor', 'a-flat-minor', 'a-sharp-half-diminished', 'd-flat-major', 'g-flat-major'],
+    commonMistakes:
+      'B♭m7♭5\'s fifth is F♭, enharmonic to E. Inside A♭-minor key context (which itself is rare) the F♭ spelling preserves consistency. In jazz lead-sheet practice the chord is sometimes written B♭m7♭5 with E as the fifth — strictly incorrect but common. The all-flat spelling is unusual visually because most flat-key chords use only one or two flats.',
+    inProgressions:
+      'B♭m7♭5 → E♭7 → A♭m is the theoretical ii–V–i in A♭ minor. Since A♭ minor is essentially never used as a tonic, this progression is rare. The chord appears more often as a chromatic colour in late-Romantic harmony or as a tritone-substitute setup in jazz.',
+    faq: [
+      { q: 'What notes are in a B♭ half-diminished chord?', a: 'B♭ half-diminished contains four notes: B♭ (root), D♭ (minor third), F♭ (diminished fifth — same pitch as E), and A♭ (minor seventh).' },
+      { q: 'Is B♭m7♭5 the same as A♯m7♭5?', a: 'Enharmonically yes — same four pitches. B♭m7♭5 is the flat-side spelling; A♯m7♭5 is the sharp-side. In practice both are rare; G♯m7♭5 covers the most common harmonic territory for this pitch set.' },
+      { q: 'Why is the fifth F♭ instead of E?', a: 'The half-diminished chord builds on a diminished triad (root, ♭3, ♭5). From B♭, the fifth letter is F; the diminished version of F natural is F♭. Calling the note E would skip the F letter entirely.' },
+      { q: 'When would I see B♭m7♭5 in real music?', a: 'Rarely as a tonic-key iiø7 — A♭ minor is essentially never used. The chord appears in late-Romantic chromatic harmony as a colour or in jazz as a substitute for E7♭9 (tritone-related dominant).' },
+    ],
+  },
+
+  'b-half-diminished': {
+    publishAt: '2020-01-01',
+    intro:
+      'B half-diminished (Bm7♭5 or Bø) — B, D, F, A — is the iiø7 of A minor and one of the most common half-diminished chords in standard repertoire. As the iiø7 of A minor — a key in which Bach, Mozart, Beethoven, and countless jazz musicians wrote — Bm7♭5 appears at the primary cadences of an enormous slice of Western music.',
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'In A minor (iiø7 → V → i)', slug: 'a-minor', kind: 'chord' },
+      { label: 'Parallel: B minor', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: B diminished', slug: 'b-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['b-diminished', 'b-minor', 'a-minor', 'e-minor', 'd-minor'],
+    commonMistakes:
+      'Bm7♭5 has all naturals: B-D-F-A. No sharps, no flats — the cleanest half-diminished spelling on the page. The most common error is reading F as F♯, which makes Bm7 (regular minor seventh, no flat fifth); the half-diminished colour requires the lowered fifth (F natural). On guitar, Bm7♭5 is a common closed-position chord on the upper strings — easier to finger than many half-diminished voicings.',
+    inProgressions:
+      'Bm7♭5 → E7 → Am is the ii–V–i in A minor — used in countless classical works (Bach\'s A-minor literature is full of it) and in every A-minor jazz standard. Mozart\'s K. 310 piano sonata, Beethoven\'s "Pathétique" (which uses related half-diminished colours), and "Autumn Leaves" (in the relative-minor cadence) all rely on this chord.',
+    faq: [
+      { q: 'What notes are in a B half-diminished chord?', a: 'B half-diminished contains four notes: B (root), D (minor third), F (diminished fifth), and A (minor seventh).' },
+      { q: 'How does Bm7♭5 resolve?', a: 'In A minor: Bm7♭5 → E7 → Am. The chord prepares the dominant E7, which resolves to the Am tonic. This is one of the most-used cadences in tonal music.' },
+      { q: 'Is Bm7♭5 the same as Bm7?', a: 'No — different chords. Bm7 (B-D-F♯-A) has a perfect fifth; Bm7♭5 (B-D-F-A) lowers that fifth a half step, producing the half-diminished colour and the iiø7 function in A minor.' },
+      { q: 'Where does B half-diminished appear in famous music?', a: 'Throughout A-minor literature: Bach\'s A-minor preludes and fugues, Mozart\'s K. 310 sonata, Beethoven\'s "Moonlight" Sonata third movement (in C♯ minor but borrowing related sonorities), and every A-minor jazz standard.' },
     ],
   },
 };

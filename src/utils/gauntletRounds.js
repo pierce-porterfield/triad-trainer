@@ -9,7 +9,7 @@
 import { ROOTS } from '../data/notes';
 import { QUALITIES, buildChord } from '../data/triads';
 import { INTERVALS, INTERVAL_BY_ID, buildIntervalNote } from '../data/intervals';
-import { MAJOR_KEYS, MINOR_KEYS, KEYS, notesInKey } from '../data/keys';
+import { MAJOR_KEYS, MINOR_KEYS, KEYS, notesByLetter } from '../data/keys';
 
 const pickOne = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const shuffle = (arr) => {
@@ -180,7 +180,9 @@ const buildCofRound = () => {
   const cards = keys.map((k) => ({
     id: `${k.tonic}-${k.mode}`,
     ...k,
-    scaleNotes: notesInKey(k),
+    // Alphabetical so the first chip isn't the answer when the round
+    // direction is notes-to-key.
+    scaleNotes: notesByLetter(k),
   }));
   return {
     type: 'cof',

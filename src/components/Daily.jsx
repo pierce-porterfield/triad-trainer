@@ -10,7 +10,7 @@ import { notesMatch, formatNote } from '../data/notes';
 import { chordNameMatch, guitarOptionalPcs, octavesForChord } from '../data/triads';
 import { pickFingering } from '../data/guitarFingerings';
 import { pcSetMatchWithOptional } from '../data/pitchClass';
-import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey } from '../data/keys';
+import { KEY_LETTERS, accidentalFor, answersMatch, keyNameMatch, keyNameMatchOrRelative, notesInKey, notesByLetter } from '../data/keys';
 import TrainerLayout from './TrainerLayout.jsx';
 import NotePicker from './NotePicker.jsx';
 import ChordPicker from './ChordPicker.jsx';
@@ -82,7 +82,9 @@ function CardFront({ round, card }) {
     );
   }
   if (round.type === 'key' && round.direction === 'notes-to-key') {
-    const notes = notesInKey(card);
+    // Alphabetical, not tonic-first — otherwise the answer is just the
+    // first chip on the card.
+    const notes = notesByLetter(card);
     return (
       <>
         <div className="d-card-label">— Notes of the {card.mode} scale —</div>

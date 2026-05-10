@@ -15,6 +15,7 @@ import {
   KEYS,
   accidentalFor,
   notesInKey,
+  notesByLetter,
   answersMatch,
   keyNameMatch,
   relativeKeyOf,
@@ -987,7 +988,9 @@ export default function CircleOfFifthsTrainer() {
                   <>
                     <div className="cof-card-label">— Notes of the {current.mode} scale —</div>
                     <div className="cof-notes-display">
-                      {notesInKey(current).map((n, i, arr) => (
+                      {/* Alphabetical, not tonic-first — otherwise the
+                          first chip is always the answer. */}
+                      {notesByLetter(current).map((n, i, arr) => (
                         <React.Fragment key={i}>
                           <span className="cof-note-chip">{formatName(n)}</span>
                           {i < arr.length - 1 && <span className="cof-note-sep">·</span>}
@@ -1273,7 +1276,7 @@ export default function CircleOfFifthsTrainer() {
                   promptStr = formatName(r.card.tonic) + ' ' + r.card.mode;
                   correctStr = accidentalStr;
                 } else if (direction === 'notes-to-key') {
-                  promptStr = notesInKey(r.card).map(formatName).join(' · ');
+                  promptStr = notesByLetter(r.card).map(formatName).join(' · ');
                   correctStr = formatName(r.card.tonic) + ' ' + r.card.mode;
                 } else { // relative-minor
                   promptStr = formatName(r.card.tonic) + ' major';

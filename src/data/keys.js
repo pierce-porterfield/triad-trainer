@@ -61,6 +61,15 @@ export const notesInKey = (key) => {
   return scaleLetters.map((l) => l + accidentalFor(key, l));
 };
 
+// Same notes as `notesInKey`, but sorted alphabetically by letter (A→G)
+// instead of starting from the tonic. Used wherever we present the notes
+// of a scale and ask the user to identify the key — sorting from the
+// tonic let the user just answer with the first note shown, defeating
+// the analysis the prompt is trying to test. Alphabetical ordering hides
+// the root regardless of which key is on screen.
+export const notesByLetter = (key) =>
+  KEY_LETTERS.map((l) => l + accidentalFor(key, l));
+
 // Compare a user's letter→accidental map against a key.
 export const answersMatch = (userMap, key) => {
   for (const letter of KEY_LETTERS) {

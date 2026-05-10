@@ -6,6 +6,24 @@ import { getLiveKeySlugs, slugToKey } from '../data/keyContent';
 import { getLiveScaleSlugs, slugToScale } from '../data/scaleContent';
 import { getLiveLearnSlugs, getLearnPageContent } from '../data/learnContent';
 import { notesInKey } from '../data/keys';
+import { noteToPc } from '../data/pitchClass';
+import { QUALITIES } from '../data/triads';
+
+// Display labels for the 12 pitch-class buckets used to group chord pages.
+// Enharmonic spellings share a heading (e.g. "C♯ / D♭") so users hunting
+// either name find the section, but each individual chord card still uses
+// its true spelling underneath. Bucket index = pitch class 0..11.
+const PC_GROUP_LABELS = [
+  'C', 'C♯ / D♭', 'D', 'D♯ / E♭', 'E', 'F',
+  'F♯ / G♭', 'G', 'G♯ / A♭', 'A', 'A♯ / B♭', 'B',
+];
+
+// Order of qualities within a root group — matches the QUALITIES table in
+// triads.js so the grid reads triads → 6ths → 7ths → 9ths → ... left-to-right.
+const QUALITY_ORDER = Object.keys(QUALITIES).reduce((acc, k, i) => {
+  acc[k] = i;
+  return acc;
+}, {});
 
 // Slug helper for the relative-minor scale page. Mirrors the (private)
 // tonicToSlug helper in scaleContent — accidental-aware so "F#" → "f-sharp".
@@ -35,18 +53,41 @@ const LIBRARIES = {
     canonicalPath: '/chords',
     drillTo: '/triads',
     drillLabel: 'Chord Trainer',
-    getItems: () =>
-      getLiveChordSlugs().map((slug) => {
+    // Group cards by root pitch class — all qualities for a given root
+    // (C major, C minor, C7, etc.) sit together in the same section, with
+    // enharmonic spellings (C♯ / D♭) merged under a single heading. Inside
+    // each section, qualities sort by the QUALITIES-table order so triads
+    // come first, then sevenths, ninths, and so on.
+    grouped: true,
+    getGroups: () => {
+      const buckets = PC_GROUP_LABELS.map((label) => ({
+        label,
+        items: [],
+      }));
+      for (const slug of getLiveChordSlugs()) {
         const meta = slugToChord(slug);
-        return meta
-          ? {
-              slug,
-              to: `/chords/${slug}`,
-              title: `${meta.displayName} chord`,
-              sub: meta.qualityLabel,
-            }
-          : null;
-      }).filter(Boolean),
+        if (!meta) continue;
+        const pc = noteToPc(meta.root);
+        if (pc < 0) continue;
+        buckets[pc].items.push({
+          slug,
+          to: `/chords/${slug}`,
+          title: `${meta.displayName} chord`,
+          sub: meta.qualityLabel,
+          // Stable sort key inside the group: QUALITIES order, then by the
+          // root spelling so e.g. C# major sits next to C# minor under
+          // "C♯ / D♭" before any Db-spelled entries.
+          _sortKey: (QUALITY_ORDER[meta.qualityKey] ?? 99) * 100 + meta.root.length,
+          _root: meta.root,
+        });
+      }
+      return buckets
+        .filter((b) => b.items.length > 0)
+        .map((b) => ({
+          ...b,
+          items: b.items.sort((a, b) => a._sortKey - b._sortKey || a._root.localeCompare(b._root)),
+        }));
+    },
   },
   keys: {
     title: 'Key Library',
@@ -135,10 +176,25 @@ const LIBRARIES = {
   },
 };
 
+// Renders one card for a single library entry. Extracted so both the flat
+// grid (scales/learn) and the per-root grouped grid (chords) share markup.
+function LibraryCard({ item }) {
+  return (
+    <Link to={item.to} className="library-card">
+      <span className="library-card-title">{item.title}</span>
+      {item.sub && <span className="library-card-sub">{item.sub}</span>}
+    </Link>
+  );
+}
+
 export default function LibraryIndex({ library }) {
   const config = LIBRARIES[library];
   if (!config) return null;
-  const items = config.getItems();
+  const items = config.grouped ? null : config.getItems();
+  const groups = config.grouped ? config.getGroups() : null;
+  const isEmpty = config.grouped
+    ? !groups || groups.every((g) => g.items.length === 0)
+    : items.length === 0;
   const canonical = `https://theory-trainer.com${config.canonicalPath}`;
 
   return (
@@ -176,11 +232,29 @@ export default function LibraryIndex({ library }) {
       </header>
 
       <main className="library-container library-main">
-        {items.length === 0 ? (
+        {isEmpty ? (
           <p className="library-empty">
             No pages have rolled live yet — check back soon. (Pages publish on a
             staggered schedule per the SEO strategy.)
           </p>
+        ) : config.grouped ? (
+          // Per-root grouped layout (chord library). Each section heading
+          // shows the root pitch class — enharmonic spellings (C♯ / D♭)
+          // share a heading so users hunting either name find the section.
+          <div className="library-groups">
+            {groups.map((group) => (
+              <section key={group.label} className="library-group">
+                <h2 className="library-group-title">{group.label}</h2>
+                <ul className="library-grid">
+                  {group.items.map((item) => (
+                    <li key={item.slug}>
+                      <LibraryCard item={item} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
         ) : (
           <ul className="library-grid">
             {items.map((item) => (
@@ -208,10 +282,7 @@ export default function LibraryIndex({ library }) {
                     )}
                   </div>
                 ) : (
-                  <Link to={item.to} className="library-card">
-                    <span className="library-card-title">{item.title}</span>
-                    {item.sub && <span className="library-card-sub">{item.sub}</span>}
-                  </Link>
+                  <LibraryCard item={item} />
                 )}
               </li>
             ))}
@@ -283,6 +354,24 @@ const styles = `
     color: var(--ink-soft);
     text-align: center;
     padding: 2rem 0;
+  }
+  /* Per-root grouped layout (chord library). Each section is one root,
+     with a divider heading and its own card grid below. */
+  .library-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+  }
+  .library-group { margin: 0; }
+  .library-group-title {
+    font-family: 'Italiana', serif;
+    font-weight: 400;
+    font-size: 1.7rem;
+    color: var(--accent);
+    margin: 0 0 0.85rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dotted var(--ink-soft);
+    letter-spacing: 0.02em;
   }
   .library-grid {
     list-style: none;

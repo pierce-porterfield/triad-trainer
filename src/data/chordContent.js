@@ -16,6 +16,8 @@ const QUALITY_SLUG_MAP = {
   'minor':            { key: 'min',  display: 'minor' },
   'diminished':       { key: 'dim',  display: 'diminished' },
   'augmented':        { key: 'aug',  display: 'augmented' },
+  'major-6':          { key: 'maj6', display: 'major 6' },
+  'minor-6':          { key: 'min6', display: 'minor 6' },
   'major-7':          { key: 'maj7', display: 'major 7' },
   'minor-7':          { key: 'min7', display: 'minor 7' },
   'dominant-7':       { key: 'dom7', display: 'dominant 7' },
@@ -3421,6 +3423,826 @@ const CONTENT = {
       { q: 'How do you play B7 on guitar?', a: 'The standard open B7 voicing is x21202: mute the low E, B on the 2nd fret of the 5th string, D♯ on the 1st fret of the 4th string, open string 3 (G is not in the chord but is muted by adjacent fingers in practice), A on the open 5th string... For most players, an A-shape barre at the 2nd fret with the 4th-string note adjusted is the cleanest closed-position voicing.' },
       { q: 'How is B7 different from Bmaj7?', a: 'Only the seventh changes. B7 has A natural; Bmaj7 has A♯. B7 sounds bluesy and pulls toward E; Bmaj7 sits stably as a tonic.' },
       { q: 'What pieces use B7?', a: 'Every E-major and E-minor cadence in jazz, folk, and rock. "Blackbird" by The Beatles (in G major but with related dominant voicings), countless E-major blues turnarounds, and any E-rooted folk song.' },
+    ],
+  },
+
+  // ─── Phase 4: 6th chords ──────────────────────────────────────────────────
+  // Major triad + major 6th (or minor triad + major 6th, despite the name).
+  // The 6 chord is the jazz workhorse for "I chord with a softer landing"
+  // and the bossa-nova staple at every tonic moment.
+
+  'c-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'C6 (C major 6) — C, E, G, A — is a C major triad with an added major sixth. The chord sounds gentler and more complete than a plain triad, and softer than Cmaj7 (whose major 7th creates more tension). Bossa nova players reach for C6 as a tonic chord because of its open, satisfied quality.',
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'A', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C major', slug: 'c-major', kind: 'key' },
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C major 7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-major', 'c-major-7', 'c-minor-6', 'a-minor-7', 'f-major-7'],
+    commonMistakes:
+      'C6 and Am7 share the same four pitches (C, E, G, A) — they\'re different chord symbols for the same pitch set, differentiated only by which note sits in the bass. With C in the bass it\'s C6; with A in the bass it\'s Am7. Be careful not to confuse C6 with Cmaj7: C6 has A as the top extension; Cmaj7 has B. The half-step difference makes Cmaj7 noticeably more pungent.',
+    inProgressions:
+      'C6 most often appears as the I chord in C major (a softer alternative to Cmaj7) and at the end of jazz tunes as a "final tonic" chord. Bossa nova in C uses C6 constantly; jazz piano voicings frequently substitute C6 for plain C major to enrich the harmony without adding tension.',
+    faq: [
+      { q: 'What notes are in a C6 chord?', a: 'C6 contains four notes: C (root), E (major third), G (perfect fifth), and A (major sixth).' },
+      { q: 'Is C6 the same as A minor 7?', a: 'They share the same four pitches but function differently. C6 has C as its root and serves as a major tonic; Am7 has A as its root and serves as the relative minor or as a ii chord.' },
+      { q: 'How is C6 different from Cmaj7?', a: 'Only the top note changes. C6 has A (major sixth); Cmaj7 has B (major seventh). C6 sounds softer and more "resolved"; Cmaj7 has more tension from the half-step between B and C.' },
+      { q: 'When is C6 used in jazz?', a: 'As a final tonic at the end of pieces in C major, as a substitute for plain C major in bossa-nova progressions, and as a softer "I chord" in ballads where Cmaj7 would be too rich.' },
+    ],
+  },
+
+  'c-sharp-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯6 — C♯, E♯, G♯, A♯ — is a C♯ major triad with an added major sixth. All four notes are sharps. The chord is enharmonic to D♭6 and is most often written as D♭6 in jazz charts; the C♯ spelling appears inside F♯ major or C♯ major key areas.',
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'A#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Enharmonic: D♭ major 6', slug: 'd-flat-major-6', kind: 'chord' },
+      { label: 'Related: C♯ major 7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-major', 'c-sharp-major-7', 'd-flat-major-6', 'a-sharp-minor-7', 'f-sharp-major-7'],
+    commonMistakes:
+      'The third (E♯) is enharmonic to F natural. In jazz lead-sheet practice, the chord is usually written D♭6 to avoid the E♯. The four sharps of C♯6 vs. the three flats + B♭ of D♭6 — same sound, easier reading on the flat side.',
+    inProgressions:
+      'C♯6 functions as a softer I chord in C♯ major and as a tonic alternative in F♯ major (where it\'s the IV chord). The enharmonic D♭6 covers the same harmonic territory in flat-key music.',
+    faq: [
+      { q: 'What notes are in a C♯6 chord?', a: 'C♯6 contains four notes: C♯ (root), E♯ (major third — same pitch as F), G♯ (perfect fifth), and A♯ (major sixth).' },
+      { q: 'Is C♯6 the same as D♭6?', a: 'Yes, enharmonically — same four pitches. C♯6 has four sharps (including E♯); D♭6 has three flats plus B♭. D♭6 is the standard practical spelling.' },
+      { q: 'Is C♯6 the same as A♯ minor 7?', a: 'Enharmonically the same four pitches but different functions. C♯6 has C♯ as root (major-flavoured tonic); A♯m7 has A♯ as root (minor 7th).' },
+      { q: 'When would I see C♯6 in real music?', a: 'In music notated in C♯ major or F♯ major where the surrounding harmony already uses sharps. In jazz lead sheets the chord is universally D♭6.' },
+    ],
+  },
+
+  'd-flat-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭6 — D♭, F, A♭, B♭ — is a D♭ major triad with an added major sixth. The chord sits comfortably in flat-side jazz; many ballads in D♭ major use D♭6 as a final tonic chord. It\'s enharmonic to B♭ minor 7, which shares the same four pitches.',
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Bb', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D♭ major', slug: 'd-flat-major', kind: 'key' },
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: B♭ minor 7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-major', 'd-flat-major-7', 'b-flat-minor-7', 'c-sharp-major-6', 'a-flat-major-7'],
+    commonMistakes:
+      'D♭6 uses three flats (D♭, A♭, B♭) plus F natural — a comfortable spelling for jazz musicians used to flat keys. Don\'t confuse D♭6 with D♭maj7: D♭6 has B♭ on top; D♭maj7 has C on top. The half-step difference completely changes the chord\'s character.',
+    inProgressions:
+      'D♭6 functions as a tonic chord in D♭ major, often substituted for plain D♭ or D♭maj7 for a softer landing. Many bossa-nova tunes that modulate to D♭ use D♭6 throughout the D♭ section because the chord\'s mellow colour suits the genre.',
+    faq: [
+      { q: 'What notes are in a D♭6 chord?', a: 'D♭6 contains four notes: D♭ (root), F (major third), A♭ (perfect fifth), and B♭ (major sixth).' },
+      { q: 'Is D♭6 the same as B♭ minor 7?', a: 'Enharmonically yes — same four pitches. D♭6 has D♭ as root (major-flavoured tonic); B♭m7 has B♭ as root (minor 7th with different function).' },
+      { q: 'How is D♭6 different from D♭maj7?', a: 'Only the top note changes. D♭6 has B♭ (major sixth); D♭maj7 has C (major seventh). D♭6 sounds gentler; D♭maj7 has more harmonic richness.' },
+      { q: 'When is D♭6 used in jazz?', a: 'As a final tonic chord in D♭-major ballads, as a substitute for plain D♭ in bossa-nova progressions, and in any context where the soft landing of a 6 chord is preferred over the more pungent maj7.' },
+    ],
+  },
+
+  'd-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'D6 — D, F♯, A, B — is a D major triad with an added major sixth. On guitar, the open D6 voicing (xx0202) is one of the easiest jazz chords to finger because three of the four notes ring on open strings or the second fret. The chord is a folk and country staple as well as a jazz tonic.',
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'B', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D major', slug: 'd-major', kind: 'key' },
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Enharmonic: B minor 7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['d-major', 'd-major-7', 'b-minor-7', 'a-major-7', 'g-major-7'],
+    commonMistakes:
+      'D6 has B natural as its sixth — a half-step lower than Dmaj7 (which has C♯). Reading B as Bb produces a different chord. On guitar, the open D6 voicing (xx0202) uses the open A and adds B on the high E string. Don\'t confuse D6 with D7: D6 has B (major sixth); D7 has C (minor seventh).',
+    inProgressions:
+      'D6 is the I chord in D major (a softer alternative to Dmaj7). The chord appears in many country and folk tunes as the tonic; jazz musicians use D6 as a final cadence chord at the end of D-major pieces. Bossa-nova standards in D major use D6 throughout.',
+    faq: [
+      { q: 'What notes are in a D6 chord?', a: 'D6 contains four notes: D (root), F♯ (major third), A (perfect fifth), and B (major sixth).' },
+      { q: 'How do you play D6 on guitar?', a: 'The open D6 voicing is xx0202: mute strings 6-5, then open D, A (2nd fret 3rd string), open B, and F♯ (2nd fret 1st string).' },
+      { q: 'Is D6 the same as B minor 7?', a: 'Enharmonically yes — same four pitches. D6 has D as root (major-flavoured); Bm7 has B as root (minor 7th).' },
+      { q: 'When is D6 used in music?', a: 'As a tonic chord in D major folk, country, and jazz. The Beatles\' "Norwegian Wood" passes through D6-related harmony; many country ballads in D use D6 at final cadences.' },
+    ],
+  },
+
+  'e-flat-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭6 — E♭, G, B♭, C — is an E♭ major triad with an added major sixth. The chord is fundamental to big-band jazz because E♭ is a horn-friendly key; E♭6 appears at every primary cadence in E♭-major arrangements. It\'s enharmonic to C minor 7, sharing the same four pitches.',
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'C', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E♭ major', slug: 'e-flat-major', kind: 'key' },
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: C minor 7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-major', 'e-flat-major-7', 'c-minor-7', 'a-flat-major-7', 'b-flat-dominant-7'],
+    commonMistakes:
+      'E♭6 has C natural as its sixth — a half-step lower than E♭maj7 (which has D natural). Reading C as C♭ or D would produce different chords. On piano, the chord falls comfortably as black-white-black-white starting from E♭.',
+    inProgressions:
+      'E♭6 is the I chord in E♭ major (often used as a softer alternative to E♭maj7) and a final cadence chord in big-band arrangements. "Misty" (in E♭) often resolves to E♭6 at the end. The chord is also fundamental to bebop in E♭ and to many Charlie Parker compositions.',
+    faq: [
+      { q: 'What notes are in an E♭6 chord?', a: 'E♭6 contains four notes: E♭ (root), G (major third), B♭ (perfect fifth), and C (major sixth).' },
+      { q: 'Is E♭6 the same as C minor 7?', a: 'Enharmonically yes — same four pitches. E♭6 has E♭ as root (major tonic); Cm7 has C as root (minor 7th).' },
+      { q: 'How is E♭6 different from E♭maj7?', a: 'Only the top note changes. E♭6 has C (major sixth); E♭maj7 has D (major seventh). E♭6 sounds softer; E♭maj7 has more tension from the half-step between D and E♭.' },
+      { q: 'When is E♭6 used in big-band jazz?', a: 'As a tonic chord at the end of arrangements in E♭ major. The 6th adds a softer, more "complete" feel than a plain E♭ triad, and it avoids the major-7 dissonance against the root.' },
+    ],
+  },
+
+  'e-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'E6 — E, G♯, B, C♯ — is an E major triad with an added major sixth. The chord is a guitar favourite because the open E string anchors it and the C♯ on top adds the major-6 colour. Many country and folk songs in E use E6 as a tonic alternative; jazz uses it as a final-tonic resolution.',
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'C#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E major', slug: 'e-major', kind: 'key' },
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Enharmonic: C♯ minor 7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['e-major', 'e-major-7', 'c-sharp-minor-7', 'a-major-7', 'b-dominant-7'],
+    commonMistakes:
+      'E6 has C♯ as its sixth — a half-step lower than Emaj7 (which has D♯). Reading C♯ as C natural produces a different chord. On guitar, an open E6 voicing keeps the open E string and replaces the standard E shape\'s 3rd-string finger to grab the sixth.',
+    inProgressions:
+      'E6 is the I chord in E major (a softer alternative to Emaj7). Country and rockabilly in E use E6 at tonic moments because of its bright, complete sound. The Beatles\' "I Want to Hold Your Hand" hovers around G major but uses E-rooted 6 chords in related sections.',
+    faq: [
+      { q: 'What notes are in an E6 chord?', a: 'E6 contains four notes: E (root), G♯ (major third), B (perfect fifth), and C♯ (major sixth).' },
+      { q: 'Is E6 the same as C♯ minor 7?', a: 'Enharmonically yes — same four pitches. E6 has E as root (major tonic); C♯m7 has C♯ as root (minor 7th).' },
+      { q: 'How is E6 different from Emaj7?', a: 'Only the top note changes. E6 has C♯ (major sixth); Emaj7 has D♯ (major seventh). E6 sounds softer and more "country"; Emaj7 sounds more jazz-tinged.' },
+      { q: 'What pieces use E6?', a: 'Country and rockabilly tunes in E, jazz ballads ending in E, and many bossa-nova standards transposed to E. The bright, complete colour of E6 makes it a natural choice for tonic resolutions in those genres.' },
+    ],
+  },
+
+  'f-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'F6 — F, A, C, D — is an F major triad with an added major sixth. All four notes are naturals, making F6 one of the cleanest 6-chord spellings. The chord is enharmonic to D minor 7 — same four pitches — and is a staple jazz tonic for F major progressions.',
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'D', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F major', slug: 'f-major', kind: 'key' },
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Enharmonic: D minor 7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-major', 'f-major-7', 'd-minor-7', 'b-flat-major-7', 'c-dominant-7'],
+    commonMistakes:
+      'F6 has D natural as its sixth — a half-step lower than Fmaj7 (which has E natural). Don\'t confuse F6 with F7 (which has E♭ as a minor 7th); the 6 sits a step lower than the 7. On guitar, F6 is often a partial barre or a 4-string voicing avoiding the full F barre.',
+    inProgressions:
+      'F6 is the I chord in F major (often used as a softer alternative to Fmaj7). Many jazz standards in F major resolve to F6 at the end ("Girl from Ipanema" voicings sometimes end on F6). The chord also serves as the IV in C major (giving a slightly lydian flavour).',
+    faq: [
+      { q: 'What notes are in an F6 chord?', a: 'F6 contains four notes: F (root), A (major third), C (perfect fifth), and D (major sixth).' },
+      { q: 'Is F6 the same as D minor 7?', a: 'Enharmonically yes — same four pitches. F6 has F as root (major tonic); Dm7 has D as root (minor 7th).' },
+      { q: 'How is F6 different from F7?', a: 'F6 has D (major sixth — a stable, consonant note); F7 has E♭ (minor seventh — a tense, dominant-functioning note). F6 sits stably as a tonic; F7 pulls toward B♭.' },
+      { q: 'What pieces use F6?', a: '"Girl from Ipanema" (in F major) often uses F6 at final cadences. Many F-major jazz standards resolve to F6 as a final-tonic chord. Bossa-nova in F also leans on F6 voicings.' },
+    ],
+  },
+
+  'f-sharp-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯6 — F♯, A♯, C♯, D♯ — is an F♯ major triad with an added major sixth. Four sharps. The chord is enharmonic to G♭6 (used in flat-key music) and to D♯ minor 7 (sharing all four pitches).',
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'D#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F♯ major', slug: 'f-sharp-major', kind: 'key' },
+      { label: 'Enharmonic: G♭ major 6', slug: 'g-flat-major-6', kind: 'chord' },
+      { label: 'Enharmonic: D♯ minor 7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-major', 'f-sharp-major-7', 'g-flat-major-6', 'd-sharp-minor-7', 'c-sharp-major-7'],
+    commonMistakes:
+      'F♯6 has D♯ as its sixth — a half-step lower than F♯maj7 (which has E♯). On guitar, F♯6 is typically a 2nd-fret E-shape barre with the standard E6 modification (adjusting the high-string finger to grab the 6th).',
+    inProgressions:
+      'F♯6 is the I chord in F♯ major. The chord appears at final cadences in F♯-major jazz tunes. In flat-key contexts, the same chord is written G♭6.',
+    faq: [
+      { q: 'What notes are in an F♯6 chord?', a: 'F♯6 contains four notes: F♯ (root), A♯ (major third), C♯ (perfect fifth), and D♯ (major sixth).' },
+      { q: 'Is F♯6 the same as G♭6?', a: 'Yes, enharmonically — same four pitches. F♯6 has four sharps; G♭6 has four flats (with E♭ as the major sixth). Composers pick based on surrounding harmony.' },
+      { q: 'Is F♯6 the same as D♯ minor 7?', a: 'Enharmonically yes — same four pitches. F♯6 has F♯ as root; D♯m7 has D♯ as root. Different functions but same notes.' },
+      { q: 'When would I see F♯6 instead of G♭6?', a: 'In music notated in F♯ major or in sharp-side modulating jazz. In flat-key contexts, G♭6 is the practical spelling.' },
+    ],
+  },
+
+  'g-flat-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♭6 — G♭, B♭, D♭, E♭ — is a G♭ major triad with an added major sixth. The chord lives in deep flat-side jazz; many ballads modulate to G♭ specifically because G♭6 has a unique mellow colour. It\'s enharmonic to F♯6 and to E♭ minor 7.',
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Eb', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G♭ major', slug: 'g-flat-major', kind: 'key' },
+      { label: 'Enharmonic: F♯ major 6', slug: 'f-sharp-major-6', kind: 'chord' },
+      { label: 'Enharmonic: E♭ minor 7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-flat-major', 'g-flat-major-7', 'f-sharp-major-6', 'e-flat-minor-7', 'd-flat-major-7'],
+    commonMistakes:
+      'G♭6 uses four flats (G♭, B♭, D♭, E♭). The most common confusion is with G♭maj7, which has F natural on top instead of E♭. The half-step lower top note in G♭6 gives a softer landing.',
+    inProgressions:
+      'G♭6 functions as a tonic chord in G♭ major. Wayne Shorter\'s "Footprints" passes through G♭-major colours; jazz ballads in G♭ use G♭6 at final cadences. The chord is also enharmonic to E♭ minor 7, which can serve as a pivot for modulation.',
+    faq: [
+      { q: 'What notes are in a G♭6 chord?', a: 'G♭6 contains four notes: G♭ (root), B♭ (major third), D♭ (perfect fifth), and E♭ (major sixth).' },
+      { q: 'Is G♭6 the same as F♯6 or E♭ minor 7?', a: 'Yes to both, enharmonically — same four pitches. G♭6 is the flat-side spelling; F♯6 the sharp-side; E♭m7 names the chord by a different root.' },
+      { q: 'How is G♭6 different from G♭maj7?', a: 'Only the top note changes. G♭6 has E♭ (major sixth); G♭maj7 has F natural (major seventh). G♭6 sounds gentler.' },
+      { q: 'When does G♭6 appear in jazz?', a: 'In G♭-major ballads at final cadences, in modulating jazz tunes that visit G♭ for one section, and as an enharmonic pivot from E♭ minor.' },
+    ],
+  },
+
+  'g-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'G6 — G, B, D, E — is a G major triad with an added major sixth. All four notes are naturals. The chord is one of the friendliest 6-chord spellings, and on guitar the open G6 voicing (320000) is one of the very easiest chords to finger — almost identical to open G major.',
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'E', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G major', slug: 'g-major', kind: 'key' },
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Enharmonic: E minor 7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-major', 'g-major-7', 'e-minor-7', 'c-major-7', 'd-dominant-7'],
+    commonMistakes:
+      'G6 has E natural as its sixth — a half-step lower than Gmaj7 (which has F♯). The most common error is reading G6 as G7 (which has F natural). On guitar, the open G6 voicing (320000) just removes the high-string finger from open G major, letting the open E ring as the sixth.',
+    inProgressions:
+      'G6 is the I chord in G major (often substituted for plain G major for a brighter, more complete sound). Country and folk in G use G6 constantly; jazz ballads in G resolve to G6 as a final tonic. The Beatles\' "I Want to Hold Your Hand" hovers around G-related 6-chord voicings.',
+    faq: [
+      { q: 'What notes are in a G6 chord?', a: 'G6 contains four notes: G (root), B (major third), D (perfect fifth), and E (major sixth).' },
+      { q: 'How do you play G6 on guitar?', a: 'The open G6 voicing is 320000: G (3rd fret 6th string), B (2nd fret 5th string), open D, open G, open B, open high E.' },
+      { q: 'Is G6 the same as E minor 7?', a: 'Enharmonically yes — same four pitches. G6 has G as root (major tonic); Em7 has E as root (minor 7th).' },
+      { q: 'What pieces use G6?', a: 'Countless folk and country tunes in G use G6 instead of plain G major for a brighter sound. The Beatles\' "Day Tripper" and many other 60s pop hits pass through G6-related voicings.' },
+    ],
+  },
+
+  'g-sharp-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯6 — G♯, B♯, D♯, E♯ — is a G♯ major triad with an added major sixth. The B♯ (enharmonic to C) and E♯ (enharmonic to F) reveal the chord\'s deep-sharp-side spelling. In practical music the chord is universally written A♭6, which uses friendlier flats.',
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'E#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: A♭ major 6', slug: 'a-flat-major-6', kind: 'chord' },
+      { label: 'Parallel: G♯ major (theoretical)', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Enharmonic: F minor 7 (no — A♭6 pivot)', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-major', 'a-flat-major-6', 'f-minor-7', 'c-sharp-major-7', 'd-sharp-minor-7'],
+    commonMistakes:
+      'G♯6 uses B♯ and E♯ — both enharmonic to naturals. The spelling appears only in deep sharp-key music (around C♯ major or G♯ major). In all practical jazz and popular notation, A♭6 is the standard spelling.',
+    inProgressions:
+      'G♯6 doesn\'t function as a working chord outside theoretical sharp-key explorations. The enharmonic A♭6 covers all practical uses.',
+    faq: [
+      { q: 'What notes are in a G♯6 chord?', a: 'G♯6 contains four notes: G♯ (root), B♯ (major third — same as C), D♯ (perfect fifth), and E♯ (major sixth — same as F).' },
+      { q: 'Is G♯6 the same as A♭6?', a: 'Yes, enharmonically — same four pitches. A♭6 (four flats) is the universal practical spelling; G♯6 appears only in deeply chromatic sharp-key music.' },
+      { q: 'Why is the third B♯ and not C?', a: 'Major scales use each of the seven letters exactly once. The G♯ major scale runs G♯-A♯-B♯-C♯-D♯-E♯-F𝄪 — using each letter in order. The third must sit on B, becoming B♯.' },
+      { q: 'When would I see G♯6 in real music?', a: 'Essentially never as a working chord symbol. The spelling appears only in Bach\'s systematic key explorations (WTC) and in dense chromatic Romantic music.' },
+    ],
+  },
+
+  'a-flat-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭6 — A♭, C, E♭, F — is an A♭ major triad with an added major sixth. The chord is a jazz workhorse: A♭ major is comfortable for horns and vocalists, and A♭6 appears at countless final cadences in A♭-major standards. It\'s enharmonic to F minor 7.',
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'F', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A♭ major', slug: 'a-flat-major', kind: 'key' },
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: F minor 7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-major', 'a-flat-major-7', 'f-minor-7', 'd-flat-major-7', 'e-flat-dominant-7'],
+    commonMistakes:
+      'A♭6 has F natural as its sixth — a half-step lower than A♭maj7 (which has G natural). Don\'t confuse A♭6 with A♭7 (which has G♭ as a minor 7th). On piano, A♭6 falls comfortably under the hand as black-white-black-white.',
+    inProgressions:
+      'A♭6 is the I chord in A♭ major (often used as a final tonic at the end of A♭-major arrangements). "Misty" (in A♭ major) frequently ends on A♭6 for a softer landing than A♭maj7. The chord is also fundamental to jazz piano voicings throughout the A♭-major repertoire.',
+    faq: [
+      { q: 'What notes are in an A♭6 chord?', a: 'A♭6 contains four notes: A♭ (root), C (major third), E♭ (perfect fifth), and F (major sixth).' },
+      { q: 'Is A♭6 the same as F minor 7?', a: 'Enharmonically yes — same four pitches. A♭6 has A♭ as root (major tonic); Fm7 has F as root (minor 7th).' },
+      { q: 'How is A♭6 different from A♭maj7?', a: 'Only the top note changes. A♭6 has F (major sixth); A♭maj7 has G (major seventh). A♭6 sounds softer; A♭maj7 has more harmonic richness.' },
+      { q: 'What jazz standards use A♭6?', a: '"Misty" often resolves to A♭6 at the end. Many A♭-major ballads use A♭6 at final cadences. The chord is also a primary tonic substitute in A♭-major bossa-nova arrangements.' },
+    ],
+  },
+
+  'a-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'A6 — A, C♯, E, F♯ — is an A major triad with an added major sixth. The chord is a guitar favourite because the open A string makes A-rooted 6 voicings ring fully. It\'s enharmonic to F♯ minor 7. Country, folk, and rockabilly in A use A6 constantly.',
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'F#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A major', slug: 'a-major', kind: 'key' },
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Enharmonic: F♯ minor 7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['a-major', 'a-major-7', 'f-sharp-minor-7', 'd-major-7', 'e-dominant-7'],
+    commonMistakes:
+      'A6 has F♯ as its sixth — a half-step lower than Amaj7 (which has G♯). On guitar, the open A6 voicing replaces the standard A shape\'s top-string finger with an open string or barre to grab F♯ on the 2nd fret of the 4th string.',
+    inProgressions:
+      'A6 is the I chord in A major (often used as a softer alternative to Amaj7). Country and rockabilly in A use A6 as a primary tonic; jazz uses it at final cadences. The Beatles\' "If I Fell" (in D major but with A-rooted excursions) uses A6-related voicings.',
+    faq: [
+      { q: 'What notes are in an A6 chord?', a: 'A6 contains four notes: A (root), C♯ (major third), E (perfect fifth), and F♯ (major sixth).' },
+      { q: 'How do you play A6 on guitar?', a: 'A closed-position A6 voicing: A (open 5th string), F♯ (2nd fret 4th string), A (2nd fret 3rd string), C♯ (2nd fret 2nd string), open high E. Many other voicings exist — A6 is one of the more versatile chords on guitar.' },
+      { q: 'Is A6 the same as F♯ minor 7?', a: 'Enharmonically yes — same four pitches. A6 has A as root (major tonic); F♯m7 has F♯ as root (minor 7th).' },
+      { q: 'What pieces use A6?', a: 'Many country and rockabilly tunes in A use A6 as a tonic. Jazz ballads in A often resolve to A6 at final cadences. Bossa-nova standards in A use A6 throughout.' },
+    ],
+  },
+
+  'b-flat-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭6 — B♭, D, F, G — is a B♭ major triad with an added major sixth. The chord is fundamental to big-band jazz because B♭ is the natural concert key for trumpets and tenor saxes. B♭6 is enharmonic to G minor 7 and appears at every primary cadence in B♭-major arrangements.',
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'G', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B♭ major', slug: 'b-flat-major', kind: 'key' },
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Enharmonic: G minor 7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-major', 'b-flat-major-7', 'g-minor-7', 'e-flat-major-7', 'f-dominant-7'],
+    commonMistakes:
+      'B♭6 has G natural as its sixth — a half-step lower than B♭maj7 (which has A natural). Don\'t confuse B♭6 with B♭7 (which has A♭ as a minor 7th). On guitar, B♭6 is typically a 1st-fret A-shape barre with the standard barre voicing adjusted to grab the 6th.',
+    inProgressions:
+      'B♭6 is the I chord in B♭ major (often used as a final-tonic substitute for plain B♭ or B♭maj7). Charlie Parker\'s "Confirmation," "Anthropology," and other B♭-major bebop standards resolve to B♭6 at final cadences. Big-band charts in B♭ use B♭6 constantly.',
+    faq: [
+      { q: 'What notes are in a B♭6 chord?', a: 'B♭6 contains four notes: B♭ (root), D (major third), F (perfect fifth), and G (major sixth).' },
+      { q: 'Is B♭6 the same as G minor 7?', a: 'Enharmonically yes — same four pitches. B♭6 has B♭ as root (major tonic); Gm7 has G as root (minor 7th).' },
+      { q: 'How is B♭6 different from B♭maj7?', a: 'Only the top note changes. B♭6 has G (major sixth); B♭maj7 has A natural (major seventh). B♭6 sounds softer.' },
+      { q: 'What pieces use B♭6?', a: '"Confirmation" by Charlie Parker, "Anthropology," and many other B♭-major bebop standards resolve to B♭6. Big-band charts in B♭ use B♭6 throughout as a primary tonic colour.' },
+    ],
+  },
+
+  'b-major-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'B6 — B, D♯, F♯, G♯ — is a B major triad with an added major sixth. The chord uses four sharps. It\'s enharmonic to G♯ minor 7 and appears in jazz tunes transposed to B major for vocal range.',
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'G#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B major', slug: 'b-major', kind: 'key' },
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Enharmonic: G♯ minor 7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ['b-major', 'b-major-7', 'g-sharp-minor-7', 'e-major-7', 'f-sharp-dominant-7'],
+    commonMistakes:
+      'B6 has G♯ as its sixth — a half-step lower than Bmaj7 (which has A♯). On guitar, B6 is typically a 2nd-fret A-shape barre with the standard voicing adjusted.',
+    inProgressions:
+      'B6 is the I chord in B major (often used as a softer tonic). Jazz tunes transposed to B for vocal range often resolve to B6 at final cadences. The chord also serves as the IV in F♯ major.',
+    faq: [
+      { q: 'What notes are in a B6 chord?', a: 'B6 contains four notes: B (root), D♯ (major third), F♯ (perfect fifth), and G♯ (major sixth).' },
+      { q: 'Is B6 the same as G♯ minor 7?', a: 'Enharmonically yes — same four pitches. B6 has B as root (major tonic); G♯m7 has G♯ as root (minor 7th).' },
+      { q: 'How is B6 different from Bmaj7?', a: 'Only the top note changes. B6 has G♯ (major sixth); Bmaj7 has A♯ (major seventh). B6 sounds softer.' },
+      { q: 'When does B6 appear in music?', a: 'In jazz tunes transposed to B major for vocal range, in F♯-major arrangements (as the IV), and in late-Romantic classical music as a chromatic colour.' },
+    ],
+  },
+
+  // ─── Phase 4: minor 6th chords ───────────────────────────────────────────
+  // Minor triad + MAJOR 6th (yes, the "minor" 6 chord uses a major 6th —
+  // that\'s the defining sound). The chord shows up as i6 in jazz minor-
+  // key tonics and as a brighter alternative to a plain minor triad.
+
+  'c-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Cm6 — C, E♭, G, A — is a C minor triad with an added major sixth. The "minor 6" name refers to the minor triad, not the sixth itself; the 6 is the major sixth (A from C), which is what gives the chord its slightly brighter, more jazzy character compared to a plain Cm chord. Cm6 is a primary tonic chord in C-minor jazz.',
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'A', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C minor (= E♭ major)', slug: 'e-flat-major', kind: 'key' },
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: C major 6', slug: 'c-major-6', kind: 'chord' },
+    ],
+    relatedChords: ['c-minor', 'c-minor-7', 'c-major-6', 'a-half-diminished', 'g-dominant-7'],
+    commonMistakes:
+      'The most common surprise with m6 chords is the major sixth — Cm6 has A natural, not A♭ (which would come from C natural minor). The major 6 distinguishes the chord from a Cm scale-based harmonic colour; the chord effectively borrows from C melodic minor or C Dorian. Cm6 is enharmonic to Am7♭5 (sharing the same four pitches).',
+    inProgressions:
+      'Cm6 is the i chord in C minor (often used as a final tonic in C-minor jazz instead of a plain Cm triad). The cadence Dm7♭5 → G7 → Cm6 closes many C-minor jazz tunes. Bach used i6 chords in his C-minor literature as a softer minor-tonic landing.',
+    faq: [
+      { q: 'What notes are in a Cm6 chord?', a: 'Cm6 contains four notes: C (root), E♭ (minor third), G (perfect fifth), and A (major sixth).' },
+      { q: 'Why does a "minor 6" chord use a MAJOR sixth?', a: 'The "minor" in m6 refers to the triad, not the sixth interval. A minor triad plus a major sixth on top is the standard m6 voicing — it borrows the 6 from melodic minor or Dorian rather than from natural minor.' },
+      { q: 'Is Cm6 the same as Am7♭5?', a: 'Enharmonically yes — same four pitches. Cm6 has C as root (minor tonic); Am7♭5 has A as root (half-diminished, ii of G minor).' },
+      { q: 'What jazz standards use Cm6?', a: 'C-minor jazz tunes often end on Cm6 instead of plain Cm. "Stella by Starlight" passes through C-minor harmony; "Solar" by Miles Davis modulates through related minor 6 colours.' },
+    ],
+  },
+
+  'c-sharp-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'C♯m6 — C♯, E, G♯, A♯ — is a C♯ minor triad with an added major sixth. The chord is the i6 of C♯ minor and enharmonic to A♯ half-diminished. Its sound is darker than C♯m7 because the 6 (A♯) sits lower than the m7 would (B), but brighter than plain C♯ minor.',
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'A#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of C♯ minor (= E major)', slug: 'e-major', kind: 'key' },
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: A♯ half-diminished', slug: 'a-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['c-sharp-minor', 'c-sharp-minor-7', 'a-sharp-half-diminished', 'g-sharp-dominant-7', 'e-major-7'],
+    commonMistakes:
+      'C♯m6 has A♯ as its sixth — borrowed from C♯ Dorian or C♯ melodic minor (which include A♯ as the raised 6th of C♯ natural minor). On guitar, C♯m6 is typically a closed-position 4-string voicing on the upper strings.',
+    inProgressions:
+      'C♯m6 is the i6 of C♯ minor (often used as a final tonic in C♯-minor jazz). The cadence D♯m7♭5 → G♯7 → C♯m6 closes many C♯-minor tunes.',
+    faq: [
+      { q: 'What notes are in a C♯m6 chord?', a: 'C♯m6 contains four notes: C♯ (root), E (minor third), G♯ (perfect fifth), and A♯ (major sixth).' },
+      { q: 'Is C♯m6 the same as A♯ half-diminished?', a: 'Enharmonically yes — same four pitches. C♯m6 has C♯ as root; A♯ø has A♯ as root and functions differently.' },
+      { q: 'How is C♯m6 different from C♯m7?', a: 'Only the top note changes. C♯m6 has A♯ (major sixth); C♯m7 has B (minor seventh). The 6 sits a step lower; the m7 is more extended.' },
+      { q: 'When is C♯m6 used in jazz?', a: 'As a final tonic chord in C♯-minor ballads (rare but they exist when tunes are transposed for vocal range). The chord is more common in classical music as a borrowed-mode colour.' },
+    ],
+  },
+
+  'd-flat-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♭m6 — D♭, F♭, A♭, B♭ — is a D♭ minor triad with an added major sixth. The F♭ (enharmonic to E) marks the deeply flat-side spelling. In practice the chord is universally written C♯m6.',
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Bb', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: C♯ minor 6', slug: 'c-sharp-minor-6', kind: 'chord' },
+      { label: 'Parallel: D♭ minor (theoretical)', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭ major 6', slug: 'd-flat-major-6', kind: 'chord' },
+    ],
+    relatedChords: ['d-flat-minor', 'c-sharp-minor-6', 'd-flat-major-6', 'a-flat-minor-7', 'g-flat-major-7'],
+    commonMistakes:
+      'D♭m6 uses F♭ as the minor third (enharmonic to E). The spelling appears only in dense chromatic flat-key music. In all working jazz contexts, C♯m6 is the standard.',
+    inProgressions:
+      'D♭m6 doesn\'t function as a working chord outside theoretical flat-key explorations. The enharmonic C♯m6 covers all practical uses.',
+    faq: [
+      { q: 'What notes are in a D♭m6 chord?', a: 'D♭m6 contains four notes: D♭ (root), F♭ (minor third — same as E), A♭ (perfect fifth), and B♭ (major sixth).' },
+      { q: 'Is D♭m6 the same as C♯m6?', a: 'Yes, enharmonically — same four pitches. D♭m6 requires F♭ (rare); C♯m6 uses only sharps and naturals. C♯m6 is the universal practical spelling.' },
+      { q: 'When does D♭m6 appear in real music?', a: 'Essentially never as a working chord symbol. The spelling appears only in deeply chromatic Romantic-era classical music.' },
+      { q: 'Why is the third F♭ instead of E?', a: 'The minor 6 chord stacks intervals on each scale-letter from the root. D♭ minor uses letters D-F-A-C; the third lands on F, which is F♭ when lowered a half step.' },
+    ],
+  },
+
+  'd-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Dm6 — D, F, A, B — is a D minor triad with an added major sixth. All four notes are naturals. The chord is the i6 of D minor — a primary tonic in D-minor jazz — and is enharmonic to B half-diminished, sharing the same four pitches.',
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'B', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D minor (= F major)', slug: 'f-major', kind: 'key' },
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Enharmonic: B half-diminished', slug: 'b-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['d-minor', 'd-minor-7', 'b-half-diminished', 'a-dominant-7', 'g-minor-7'],
+    commonMistakes:
+      'Dm6 has B natural as its sixth — borrowed from D Dorian or D melodic minor (which include B as the raised 6th of D natural minor). Don\'t confuse Dm6 with Dm7: Dm6 has B (major sixth); Dm7 has C (minor seventh).',
+    inProgressions:
+      'Dm6 is the i6 of D minor (often used as a final tonic in D-minor jazz tunes). Miles Davis\'s "So What" is modally based on Dm7, but related D-minor tunes use Dm6 at cadences. The progression Em7♭5 → A7 → Dm6 is the standard ii-V-i in D minor.',
+    faq: [
+      { q: 'What notes are in a Dm6 chord?', a: 'Dm6 contains four notes: D (root), F (minor third), A (perfect fifth), and B (major sixth).' },
+      { q: 'Is Dm6 the same as B half-diminished?', a: 'Enharmonically yes — same four pitches. Dm6 has D as root (minor tonic); Bø has B as root (ii of A minor).' },
+      { q: 'How is Dm6 different from Dm7?', a: 'Only the top note changes. Dm6 has B (major sixth); Dm7 has C (minor seventh). Dm6 sounds brighter and more "jazz-tinged"; Dm7 sounds more modal.' },
+      { q: 'When is Dm6 used in jazz?', a: 'As a final tonic in D-minor ballads, as a substitute for plain D minor in modal jazz, and as a bossa-nova tonic colour. "Solar" by Miles Davis (which modulates through D minor) uses related m6 voicings.' },
+    ],
+  },
+
+  'd-sharp-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'D♯m6 — D♯, F♯, A♯, B♯ — is a D♯ minor triad with an added major sixth. The B♯ (enharmonic to C) marks the sharp-side spelling. The chord is the i6 of D♯ minor and is enharmonic to E♭m6 in flat-key notation.',
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'B#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of D♯ minor (= F♯ major)', slug: 'f-sharp-major', kind: 'key' },
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: E♭ minor 6', slug: 'e-flat-minor-6', kind: 'chord' },
+    ],
+    relatedChords: ['d-sharp-minor', 'd-sharp-minor-7', 'e-flat-minor-6', 'a-sharp-half-diminished', 'g-sharp-dominant-7'],
+    commonMistakes:
+      'D♯m6 uses B♯ as its sixth — enharmonic to C natural. The all-sharp spelling is unusual; most jazz charts use E♭m6 instead. The chord is enharmonic to A♯ half-diminished.',
+    inProgressions:
+      'D♯m6 is the i6 of D♯ minor (a rare key in practical music). The chord appears only in deep sharp-key contexts; flat-side music writes E♭m6.',
+    faq: [
+      { q: 'What notes are in a D♯m6 chord?', a: 'D♯m6 contains four notes: D♯ (root), F♯ (minor third), A♯ (perfect fifth), and B♯ (major sixth — same as C).' },
+      { q: 'Is D♯m6 the same as E♭m6?', a: 'Yes, enharmonically — same four pitches. D♯m6 is the sharp-side spelling; E♭m6 is the flat-side. E♭m6 is much more common in jazz literature.' },
+      { q: 'Why is the sixth B♯ and not C?', a: 'The m6 chord stacks intervals on each scale-letter from the root. D♯ minor uses letters D-F-A-B-... wait — D-F-A-C. So the sixth must sit on the B letter, which becomes B♯ in this context.' },
+      { q: 'When does D♯m6 appear in music?', a: 'Rarely. The chord appears in deep sharp-key contexts (F♯ major literature). Modern lead sheets use E♭m6 instead for readability.' },
+    ],
+  },
+
+  'e-flat-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'E♭m6 — E♭, G♭, B♭, C — is an E♭ minor triad with an added major sixth. The chord is the i6 of E♭ minor and is enharmonic to C half-diminished. E♭m6 appears at final cadences in E♭-minor jazz tunes, which though rare, do exist.',
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'C', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E♭ minor (= G♭ major)', slug: 'g-flat-major', kind: 'key' },
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Enharmonic: C half-diminished', slug: 'c-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['e-flat-minor', 'e-flat-minor-7', 'c-half-diminished', 'b-flat-dominant-7', 'g-flat-major-7'],
+    commonMistakes:
+      'E♭m6 uses three flats (E♭, G♭, B♭) plus C natural. The chord is rare in published music; flat-key minor tonics usually appear as plain triads or m7 chords. When E♭m6 does appear, the C natural is its identifying feature.',
+    inProgressions:
+      'E♭m6 functions as the i6 of E♭ minor in jazz. The cadence Fm7♭5 → B♭7 → E♭m6 closes E♭-minor tunes. The chord is also enharmonic to C half-diminished, which makes it a useful pivot for modulation.',
+    faq: [
+      { q: 'What notes are in an E♭m6 chord?', a: 'E♭m6 contains four notes: E♭ (root), G♭ (minor third), B♭ (perfect fifth), and C (major sixth).' },
+      { q: 'Is E♭m6 the same as C half-diminished?', a: 'Enharmonically yes — same four pitches. E♭m6 has E♭ as root (minor tonic); Cø has C as root (ii of B♭ minor).' },
+      { q: 'How is E♭m6 different from E♭m7?', a: 'Only the top note changes. E♭m6 has C (major sixth); E♭m7 has D♭ (minor seventh). The 6 sits a step lower than the m7.' },
+      { q: 'When is E♭m6 used in jazz?', a: 'As a tonic chord in E♭-minor tunes (rare but they exist) and as an enharmonic pivot via C half-diminished.' },
+    ],
+  },
+
+  'e-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Em6 — E, G, B, C♯ — is an E minor triad with an added major sixth. The chord is the i6 of E minor and is enharmonic to C♯ half-diminished. On guitar, the open Em6 voicing (022020) keeps the bass E open and adds the major 6th (C♯) on the 2nd fret of the 2nd string.',
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'C#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of E minor (= G major)', slug: 'g-major', kind: 'key' },
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Enharmonic: C♯ half-diminished', slug: 'c-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['e-minor', 'e-minor-7', 'c-sharp-half-diminished', 'b-dominant-7', 'a-minor-7'],
+    commonMistakes:
+      'Em6 has C♯ as its sixth — borrowed from E Dorian (which has C♯ as the raised 6th of E natural minor). The C♯ distinguishes Em6 from Em or Em7. On guitar, the open Em6 voicing is one of the easiest m6 chords to finger.',
+    inProgressions:
+      'Em6 is the i6 of E minor (often used as a tonic in E-minor jazz tunes). The cadence F♯m7♭5 → B7 → Em6 closes many E-minor jazz tunes. "Autumn Leaves" (in E minor / G major) sometimes uses Em6 at final cadences.',
+    faq: [
+      { q: 'What notes are in an Em6 chord?', a: 'Em6 contains four notes: E (root), G (minor third), B (perfect fifth), and C♯ (major sixth).' },
+      { q: 'How do you play Em6 on guitar?', a: 'The open Em6 voicing is 022020: open low E, B (2nd fret 5th string), E (2nd fret 4th string), open G, C♯ (2nd fret 2nd string), and open high E.' },
+      { q: 'Is Em6 the same as C♯ half-diminished?', a: 'Enharmonically yes — same four pitches. Em6 has E as root (minor tonic); C♯ø has C♯ as root (ii of B minor).' },
+      { q: 'What pieces use Em6?', a: '"Autumn Leaves" (in E minor) sometimes ends on Em6. Many E-minor jazz tunes use Em6 as a tonic; bossa-nova standards in E minor lean on Em6 for its mellow but bright colour.' },
+    ],
+  },
+
+  'f-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Fm6 — F, A♭, C, D — is an F minor triad with an added major sixth. The chord is the i6 of F minor and is enharmonic to D half-diminished. Beethoven\'s "Appassionata" Sonata uses related minor tonic colours; jazz uses Fm6 as a final cadence in F-minor tunes.',
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'D', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F minor (= A♭ major)', slug: 'a-flat-major', kind: 'key' },
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Enharmonic: D half-diminished', slug: 'd-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['f-minor', 'f-minor-7', 'd-half-diminished', 'c-dominant-7', 'b-flat-minor-7'],
+    commonMistakes:
+      'Fm6 has D natural as its sixth — borrowed from F Dorian (which has D as the raised 6th of F natural minor). The chord is enharmonic to Dm7♭5; same four pitches, different harmonic function. On guitar, Fm6 is typically a 1st-fret E-shape barre with the standard m6 voicing adjustments.',
+    inProgressions:
+      'Fm6 is the i6 of F minor (often used as a final tonic in F-minor jazz). The cadence Gm7♭5 → C7 → Fm6 closes many F-minor tunes. "Stella by Starlight" passes through F-minor harmony at moments; Fm6 voicings appear at related cadential points.',
+    faq: [
+      { q: 'What notes are in an Fm6 chord?', a: 'Fm6 contains four notes: F (root), A♭ (minor third), C (perfect fifth), and D (major sixth).' },
+      { q: 'Is Fm6 the same as D half-diminished?', a: 'Enharmonically yes — same four pitches. Fm6 has F as root (minor tonic); Dø has D as root (ii of C minor).' },
+      { q: 'How is Fm6 different from Fm7?', a: 'Only the top note changes. Fm6 has D (major sixth); Fm7 has E♭ (minor seventh). The 6 sits a step lower than the m7.' },
+      { q: 'When does Fm6 appear in jazz?', a: 'As a final tonic in F-minor ballads and as an enharmonic pivot via D half-diminished. Beethoven used related m6 colours in his "Appassionata" Sonata; jazz pianists from Bill Evans onward use Fm6 voicings throughout F-minor literature.' },
+    ],
+  },
+
+  'f-sharp-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'F♯m6 — F♯, A, C♯, D♯ — is an F♯ minor triad with an added major sixth. The chord is the i6 of F♯ minor and is enharmonic to D♯ half-diminished. On guitar, F♯m6 is typically a 2nd-fret E-minor-shape barre with the m6 voicing adjustments.',
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'D#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of F♯ minor (= A major)', slug: 'a-major', kind: 'key' },
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: D♯ half-diminished', slug: 'd-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['f-sharp-minor', 'f-sharp-minor-7', 'd-sharp-half-diminished', 'c-sharp-dominant-7', 'b-minor-7'],
+    commonMistakes:
+      'F♯m6 has D♯ as its sixth — borrowed from F♯ Dorian. The chord uses three sharps (F♯, C♯, D♯) plus A natural. Don\'t confuse with F♯m7 (which has E natural as the m7 instead of D♯ as the 6).',
+    inProgressions:
+      'F♯m6 is the i6 of F♯ minor (often used as a final tonic in F♯-minor jazz). The cadence G♯m7♭5 → C♯7 → F♯m6 closes many F♯-minor tunes.',
+    faq: [
+      { q: 'What notes are in an F♯m6 chord?', a: 'F♯m6 contains four notes: F♯ (root), A (minor third), C♯ (perfect fifth), and D♯ (major sixth).' },
+      { q: 'Is F♯m6 the same as D♯ half-diminished?', a: 'Enharmonically yes — same four pitches. F♯m6 has F♯ as root (minor tonic); D♯ø has D♯ as root (ii of C♯ minor).' },
+      { q: 'How is F♯m6 different from F♯m7?', a: 'Only the top note changes. F♯m6 has D♯ (major sixth); F♯m7 has E natural (minor seventh).' },
+      { q: 'When is F♯m6 used in music?', a: 'As a tonic chord in F♯-minor jazz tunes. The chord also appears in classical Romantic music as a borrowed Dorian colour from the parent key.' },
+    ],
+  },
+
+  'g-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Gm6 — G, B♭, D, E — is a G minor triad with an added major sixth. The chord is the i6 of G minor and is enharmonic to E half-diminished. Bach used related minor-tonic colours in his G-minor literature; jazz uses Gm6 as a final cadence in G-minor tunes.',
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'E', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G minor (= B♭ major)', slug: 'b-flat-major', kind: 'key' },
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Enharmonic: E half-diminished', slug: 'e-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['g-minor', 'g-minor-7', 'e-half-diminished', 'd-dominant-7', 'c-minor-7'],
+    commonMistakes:
+      'Gm6 has E natural as its sixth — borrowed from G Dorian (which has E as the raised 6th of G natural minor). Don\'t confuse Gm6 with Gm7 (which has F natural as the m7). On guitar, Gm6 is typically a 3rd-fret E-minor-shape barre.',
+    inProgressions:
+      'Gm6 is the i6 of G minor (often used as a final tonic). The cadence Am7♭5 → D7 → Gm6 closes many G-minor jazz tunes. Mozart\'s G-minor symphonies use related minor-tonic colours; the m6 chord adds a slightly brighter quality than plain Gm.',
+    faq: [
+      { q: 'What notes are in a Gm6 chord?', a: 'Gm6 contains four notes: G (root), B♭ (minor third), D (perfect fifth), and E (major sixth).' },
+      { q: 'Is Gm6 the same as E half-diminished?', a: 'Enharmonically yes — same four pitches. Gm6 has G as root (minor tonic); Eø has E as root (ii of D minor).' },
+      { q: 'How is Gm6 different from Gm7?', a: 'Only the top note changes. Gm6 has E (major sixth); Gm7 has F (minor seventh).' },
+      { q: 'What jazz standards use Gm6?', a: '"Solar" by Miles Davis modulates through G-minor colours. Many G-minor jazz tunes end on Gm6 as a softer tonic alternative to plain Gm.' },
+    ],
+  },
+
+  'g-sharp-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'G♯m6 — G♯, B, D♯, E♯ — is a G♯ minor triad with an added major sixth. The E♯ (enharmonic to F) marks the sharp-side spelling. The chord is enharmonic to A♭m6 in flat-key contexts and to F half-diminished in pitch.',
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'E#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of G♯ minor (= B major)', slug: 'b-major', kind: 'key' },
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Enharmonic: A♭ minor 6', slug: 'a-flat-minor-6', kind: 'chord' },
+    ],
+    relatedChords: ['g-sharp-minor', 'g-sharp-minor-7', 'a-flat-minor-6', 'd-sharp-dominant-7', 'f-half-diminished'],
+    commonMistakes:
+      'G♯m6 uses E♯ as its sixth — enharmonic to F natural. The all-sharp spelling appears in B-major / F♯-major contexts; in flat keys the same chord is A♭m6.',
+    inProgressions:
+      'G♯m6 is the i6 of G♯ minor in jazz contexts (rare). The cadence A♯m7♭5 → D♯7 → G♯m6 closes G♯-minor tunes, though most jazz uses A♭m6 instead.',
+    faq: [
+      { q: 'What notes are in a G♯m6 chord?', a: 'G♯m6 contains four notes: G♯ (root), B (minor third), D♯ (perfect fifth), and E♯ (major sixth — same as F).' },
+      { q: 'Is G♯m6 the same as A♭m6?', a: 'Enharmonically yes — same four pitches. G♯m6 is the sharp-side spelling; A♭m6 is the flat-side. A♭m6 is much more common in jazz.' },
+      { q: 'Why is the sixth E♯ and not F?', a: 'The m6 chord uses each scale-letter exactly once. G♯ minor uses letters G-B-D-E... wait — G-B-D-F. So the sixth must sit on E (one letter back from F), becoming E♯ when raised a half step.' },
+      { q: 'When would I see G♯m6 in music?', a: 'In music notated in B major or F♯ major. Jazz tunes transposed to those keys use G♯m6 as a minor tonic.' },
+    ],
+  },
+
+  'a-flat-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'A♭m6 — A♭, C♭, E♭, F — is an A♭ minor triad with an added major sixth. The C♭ (enharmonic to B) marks the deeply flat-side spelling. The chord is enharmonic to G♯m6 in sharp keys and to F half-diminished in pitch.',
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'F', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Enharmonic: G♯ minor 6', slug: 'g-sharp-minor-6', kind: 'chord' },
+      { label: 'Parallel: A♭ minor (theoretical)', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Enharmonic: F half-diminished', slug: 'f-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['a-flat-minor', 'g-sharp-minor-6', 'f-half-diminished', 'e-flat-dominant-7', 'd-flat-major-7'],
+    commonMistakes:
+      'A♭m6 uses C♭ as its minor third — enharmonic to B natural. The spelling is rare; in practical music G♯m6 is used. The chord is enharmonic to F half-diminished, which gives it a useful modulating role.',
+    inProgressions:
+      'A♭m6 doesn\'t function as a primary tonic in working music. The chord may appear briefly inside dense chromatic flat-key passages; everywhere else the enharmonic G♯m6 covers the harmonic territory.',
+    faq: [
+      { q: 'What notes are in an A♭m6 chord?', a: 'A♭m6 contains four notes: A♭ (root), C♭ (minor third — same as B), E♭ (perfect fifth), and F (major sixth).' },
+      { q: 'Is A♭m6 the same as G♯m6?', a: 'Yes, enharmonically — same four pitches. A♭m6 (with C♭) is rare; G♯m6 is the standard sharp-side spelling.' },
+      { q: 'Why is the third C♭ instead of B?', a: 'The m6 chord uses each scale-letter once. A♭ minor uses letters A-C-E-F (sometimes G). The third lands on C, which is C♭ when lowered from C natural.' },
+      { q: 'When does A♭m6 appear in real music?', a: 'Essentially never as a working chord. The spelling appears only in deep chromatic flat-key contexts. Practical music uses G♯m6 instead.' },
+    ],
+  },
+
+  'a-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Am6 — A, C, E, F♯ — is an A minor triad with an added major sixth. The chord is the i6 of A minor and is enharmonic to F♯ half-diminished. On guitar, the closed-position Am6 voicing is one of the most-used m6 chords in jazz.',
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'F#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of A minor (= C major)', slug: 'c-major', kind: 'key' },
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Enharmonic: F♯ half-diminished', slug: 'f-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['a-minor', 'a-minor-7', 'f-sharp-half-diminished', 'e-dominant-7', 'd-minor-7'],
+    commonMistakes:
+      'Am6 has F♯ as its sixth — borrowed from A Dorian (which has F♯ as the raised 6th of A natural minor). Don\'t confuse with Am7 (which has G natural as the m7) or Amaj7 (which would change the third too). The F♯ is the chord\'s identifying note.',
+    inProgressions:
+      'Am6 is the i6 of A minor (often used as a final tonic in A-minor jazz). "Autumn Leaves" (in A minor) ends on Am6 in some arrangements. The cadence Bm7♭5 → E7 → Am6 closes many A-minor tunes — and the chord is also enharmonic to F♯ half-diminished, the famous "Tristan-chord-related" sonority.',
+    faq: [
+      { q: 'What notes are in an Am6 chord?', a: 'Am6 contains four notes: A (root), C (minor third), E (perfect fifth), and F♯ (major sixth).' },
+      { q: 'Is Am6 the same as F♯ half-diminished?', a: 'Enharmonically yes — same four pitches. Am6 has A as root (minor tonic); F♯ø has F♯ as root (ii of E minor, also the Tristan chord transposed).' },
+      { q: 'How is Am6 different from Am7?', a: 'Only the top note changes. Am6 has F♯ (major sixth); Am7 has G (minor seventh). The 6 sits a step lower than the m7.' },
+      { q: 'What pieces use Am6?', a: '"Autumn Leaves" (in A minor) often ends on Am6. Many A-minor jazz standards use Am6 as a tonic. The chord is also famous as the enharmonic equivalent of F♯ø, used in Wagner\'s Tristan-style writing.' },
+    ],
+  },
+
+  'b-flat-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'B♭m6 — B♭, D♭, F, G — is a B♭ minor triad with an added major sixth. The chord is the i6 of B♭ minor and is enharmonic to G half-diminished. Tchaikovsky used related minor-tonic colours in his B♭-minor literature; jazz uses B♭m6 at final cadences.',
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'G', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B♭ minor (= D♭ major)', slug: 'd-flat-major', kind: 'key' },
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Enharmonic: G half-diminished', slug: 'g-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['b-flat-minor', 'b-flat-minor-7', 'g-half-diminished', 'f-dominant-7', 'e-flat-minor-7'],
+    commonMistakes:
+      'B♭m6 has G natural as its sixth — borrowed from B♭ Dorian (which has G as the raised 6th of B♭ natural minor). Don\'t confuse with B♭m7 (which has A♭ as the m7). The G sits a step lower than the m7.',
+    inProgressions:
+      'B♭m6 is the i6 of B♭ minor (used as a final tonic in B♭-minor jazz). The cadence Cm7♭5 → F7 → B♭m6 closes many B♭-minor tunes. Tchaikovsky\'s Piano Concerto No. 1 (which opens in B♭ minor) uses related minor-tonic colours.',
+    faq: [
+      { q: 'What notes are in a B♭m6 chord?', a: 'B♭m6 contains four notes: B♭ (root), D♭ (minor third), F (perfect fifth), and G (major sixth).' },
+      { q: 'Is B♭m6 the same as G half-diminished?', a: 'Enharmonically yes — same four pitches. B♭m6 has B♭ as root (minor tonic); Gø has G as root (ii of F minor).' },
+      { q: 'How is B♭m6 different from B♭m7?', a: 'Only the top note changes. B♭m6 has G (major sixth); B♭m7 has A♭ (minor seventh). The 6 sits a step lower than the m7.' },
+      { q: 'What jazz standards use B♭m6?', a: '"Lush Life" (in D♭ major, modulates through B♭-minor sections), "Stella by Starlight," and many other tunes pass through B♭-minor harmony with B♭m6 voicings at cadences.' },
+    ],
+  },
+
+  'b-minor-6': {
+    publishAt: '2020-01-01',
+    intro:
+      'Bm6 — B, D, F♯, G♯ — is a B minor triad with an added major sixth. The chord is the i6 of B minor and is enharmonic to G♯ half-diminished. Bach\'s Mass in B minor uses related minor-tonic colours; jazz uses Bm6 as a final cadence in B-minor tunes.',
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'G#', name: 'major 2nd', semitones: 2 },
+    ],
+    relatedKeys: [
+      { label: 'Key of B minor (= D major)', slug: 'd-major', kind: 'key' },
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Enharmonic: G♯ half-diminished', slug: 'g-sharp-half-diminished', kind: 'chord' },
+    ],
+    relatedChords: ['b-minor', 'b-minor-7', 'g-sharp-half-diminished', 'f-sharp-dominant-7', 'e-minor-7'],
+    commonMistakes:
+      'Bm6 has G♯ as its sixth — borrowed from B Dorian (which has G♯ as the raised 6th of B natural minor). Don\'t confuse with Bm7 (which has A natural as the m7). On guitar, Bm6 is typically a closed-position 4-string voicing.',
+    inProgressions:
+      'Bm6 is the i6 of B minor (often used as a final tonic in B-minor jazz). The cadence C♯m7♭5 → F♯7 → Bm6 closes many B-minor tunes. The chord is also enharmonic to G♯ half-diminished, which makes it useful as a pivot for modulation.',
+    faq: [
+      { q: 'What notes are in a Bm6 chord?', a: 'Bm6 contains four notes: B (root), D (minor third), F♯ (perfect fifth), and G♯ (major sixth).' },
+      { q: 'Is Bm6 the same as G♯ half-diminished?', a: 'Enharmonically yes — same four pitches. Bm6 has B as root (minor tonic); G♯ø has G♯ as root (ii of F♯ minor).' },
+      { q: 'How is Bm6 different from Bm7?', a: 'Only the top note changes. Bm6 has G♯ (major sixth); Bm7 has A natural (minor seventh). The 6 sits a step lower than the m7.' },
+      { q: 'What pieces use Bm6?', a: 'B-minor jazz standards often end on Bm6. Bach\'s Mass in B minor uses related minor-tonic colours; many film scores in B minor borrow the Dorian raised-6 colour that defines Bm6.' },
     ],
   },
 };

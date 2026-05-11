@@ -125,6 +125,7 @@ export default function HamburgerNav() {
             <li><Link to="/circle-of-fifths">Circle of Fifths</Link></li>
             <li><Link to="/intervals">Interval Trainer</Link></li>
             <li><Link to="/notes">Note Trainer</Link></li>
+            <li><Link to="/jazz-mapper">Jazz Scale Mapper <span className="nav-badge">new</span></Link></li>
           </ul>
         </div>
 

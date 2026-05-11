@@ -8,6 +8,7 @@ import IntervalTrainer from './components/IntervalTrainer.jsx';
 import NoteTrainer from './components/NoteTrainer.jsx';
 import Daily from './components/Daily.jsx';
 import Gauntlet from './components/Gauntlet.jsx';
+import JazzMapper from './components/JazzMapper.jsx';
 import StaticPage from './components/StaticPage.jsx';
 import LibraryIndex from './components/LibraryIndex.jsx';
 import ChordPage from './components/ChordPage.jsx';
@@ -82,6 +83,7 @@ export const routes = [
       { path: 'notes', Component: NoteTrainer },
       { path: 'daily', Component: Daily },
       { path: 'gauntlet', Component: Gauntlet },
+      { path: 'jazz-mapper', Component: JazzMapper },
       { path: 'about',    Component: () => <StaticPage slug="about" />,    entry: 'src/components/StaticPage.jsx' },
       { path: 'privacy',  Component: () => <StaticPage slug="privacy" />,  entry: 'src/components/StaticPage.jsx' },
       // Library index pages — list every published reference page in their

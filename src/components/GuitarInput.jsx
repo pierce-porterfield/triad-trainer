@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { noteToPc, pcToNote } from '../data/pitchClass';
 import { cyrb53 } from '../utils/seededRandom';
 
-// Per-position dot palette. Cycled through as the user places notes.
-const DOT_COLORS = [
+// Per-position dot palette. Cycled through as the user places notes
+// (input mode) or as the chord tones are walked through (display mode).
+// Exported so ChordPage's legend can use the same palette to label the
+// scale degrees that go with each colour on the fretboard.
+export const DOT_COLORS = [
   '#8b2c20', // accent red
   '#a88734', // gold
   '#2f6d4f', // green
@@ -143,6 +146,15 @@ export default function GuitarInput({
   const colorForPosition = (stringIdx, fret) => {
     const idx = positionAt(stringIdx, fret);
     if (idx < 0) return 'var(--accent)';
+    // In display mode, colour by which chord tone the pitch represents
+    // (root, 3rd, 5th, 7th...). Two fretted spots at the same pitch
+    // class — e.g. the high root and a doubled root on a different
+    // string — share the same colour so the legend reads correctly.
+    if (mode === 'display' && value && value.length > 0) {
+      const pc = fret === 0 ? TUNING_TOP_DOWN[stringIdx] : fretPc(stringIdx, fret);
+      const toneIdx = value.findIndex((n) => noteToPc(n) === pc);
+      if (toneIdx >= 0) return DOT_COLORS[toneIdx % DOT_COLORS.length];
+    }
     return DOT_COLORS[idx % DOT_COLORS.length];
   };
 

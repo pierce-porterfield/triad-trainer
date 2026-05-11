@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Head } from 'vite-react-ssg';
 import { getChordPageContent, slugToChord } from '../data/chordContent';
 import { pickFingering } from '../data/guitarFingerings';
-import { octavesForChord } from '../data/triads';
+import { octavesForChord, DEGREE_LABELS } from '../data/triads';
 import PianoInput from './PianoInput';
-import GuitarInput from './GuitarInput';
+import GuitarInput, { DOT_COLORS } from './GuitarInput';
 
 // Canonical reference page for a single chord. SEO-first layout per
 // seo-strategy.md: every section the strategy calls for, plus JSON-LD.
@@ -164,6 +164,26 @@ export default function ChordPage({ slug }) {
               fingering={pickFingering(qualityKey, root, slug)}
             />
           </div>
+          {DEGREE_LABELS[qualityKey] && (
+            <ul className="chord-degree-legend" aria-label="Scale degrees in this chord">
+              {notes.map((note, i) => {
+                const label = DEGREE_LABELS[qualityKey][i];
+                if (!label) return null;
+                const color = DOT_COLORS[i % DOT_COLORS.length];
+                return (
+                  <li key={`${i}-${note}`} className="chord-degree-legend-item">
+                    <span
+                      className="chord-degree-legend-dot"
+                      style={{ background: color, borderColor: color }}
+                      aria-hidden="true"
+                    />
+                    <span className="chord-degree-legend-label">{label}</span>
+                    <span className="chord-degree-legend-note">{note}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </section>
 
         <section>
@@ -355,6 +375,44 @@ const styles = `
     padding: 1.25rem;
     background: var(--paper-deep);
     border: 1px solid var(--ink-soft);
+  }
+  /* Legend below the guitar diagram — one entry per chord tone, with a
+     coloured dot matching the fretboard, the scale-degree label
+     (1, 3, 5, ♭7, etc.), and the spelled note. Layout wraps cleanly on
+     mobile so the whole legend stays under the diagram. */
+  .chord-degree-legend {
+    list-style: none;
+    margin: 0.5rem 0 1.5rem;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+  }
+  .chord-degree-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .chord-degree-legend-dot {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 1px solid var(--ink);
+  }
+  .chord-degree-legend-label {
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    min-width: 1.4em;
+  }
+  .chord-degree-legend-note {
+    font-family: 'Italiana', serif;
+    font-size: 1rem;
+    color: var(--ink);
   }
   .chord-trainer-cta {
     margin-top: 3rem;

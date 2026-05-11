@@ -42,6 +42,38 @@ export const QUALITIES = {
   min13:  { label: 'minor 13th',      symbol: 'm13',   intervals: [0, 3, 7, 10, 14, 21], degrees: [0, 2, 4, 6, 8, 12], group: 'thirteenths' },
 };
 
+// Scale-degree labels per chord tone, indexed the same way as
+// QUALITIES[*].intervals. Used to label the dots on the guitar diagram
+// legend on each chord page — "1" for root, "3" / "♭3" for major/minor
+// third, "♭7" for dominant seventh, "♭♭7" for the fully-diminished
+// seventh, etc.
+export const DEGREE_LABELS = {
+  maj:    ['1', '3', '5'],
+  min:    ['1', '♭3', '5'],
+  dim:    ['1', '♭3', '♭5'],
+  aug:    ['1', '3', '♯5'],
+  maj6:   ['1', '3', '5', '6'],
+  min6:   ['1', '♭3', '5', '6'],
+  maj7:   ['1', '3', '5', '7'],
+  dom7:   ['1', '3', '5', '♭7'],
+  min7:   ['1', '♭3', '5', '♭7'],
+  m7b5:   ['1', '♭3', '♭5', '♭7'],
+  dim7:   ['1', '♭3', '♭5', '♭♭7'],
+  maj9:   ['1', '3', '5', '7', '9'],
+  dom9:   ['1', '3', '5', '♭7', '9'],
+  min9:   ['1', '♭3', '5', '♭7', '9'],
+  add9:   ['1', '3', '5', '9'],
+  madd9:  ['1', '♭3', '5', '9'],
+  maj11:  ['1', '3', '5', '7', '9', '11'],
+  dom11:  ['1', '3', '5', '♭7', '9', '11'],
+  min11:  ['1', '♭3', '5', '♭7', '9', '11'],
+  add11:  ['1', '3', '5', '11'],
+  madd11: ['1', '♭3', '5', '11'],
+  maj13:  ['1', '3', '5', '7', '9', '13'],
+  dom13:  ['1', '3', '5', '♭7', '9', '13'],
+  min13:  ['1', '♭3', '5', '♭7', '9', '13'],
+};
+
 // Spell a chord. By default each interval index advances the letter name
 // by 2 (root → 3rd → 5th → 7th → 9th → 11th → 13th), which works for
 // stacked-thirds chords. Chords that skip a third (add9, add11) supply an

@@ -271,12 +271,13 @@ function MiniPiano({ rootPc, offsets }) {
   if (rootPc < 0 || !offsets || offsets.length === 0) return null;
 
   const maxOffset = Math.max(...offsets);
-  // Triads, 6ths, and 7ths fit within an octave — highlight by pitch
-  // class in a single C-to-B keyboard. Extensions (9ths/11ths/13ths)
-  // span past the octave, so we render absolute positions instead and
-  // let the keyboard grow to two octaves so each upper extension sits
-  // visibly above the chord tone it stacks on.
-  const fitsInOctave = maxOffset <= 11;
+  // Render the keyboard at whatever length keeps every chord tone above
+  // the root. Single-octave mode (highlight by pitch class) is only safe
+  // when no tone wraps — i.e. when rootPc + maxOffset stays ≤ 11. Past
+  // that point we switch to absolute positions and grow the keyboard so
+  // each chord tone (especially 7ths, 9ths, 11ths, 13ths) sits visibly
+  // above the previous one in the stack.
+  const fitsInOctave = rootPc + maxOffset <= 11;
   const octaves = fitsInOctave
     ? 1
     : Math.min(3, Math.ceil((rootPc + maxOffset + 1) / 12));

@@ -12,17 +12,30 @@ import { isLive } from './publishSchedule.js';
 // readable display name we use in headings and link labels. Keep slug
 // tokens stable — they ship in URLs that may already be indexed.
 const QUALITY_SLUG_MAP = {
-  'major':            { key: 'maj',  display: 'major' },
-  'minor':            { key: 'min',  display: 'minor' },
-  'diminished':       { key: 'dim',  display: 'diminished' },
-  'augmented':        { key: 'aug',  display: 'augmented' },
-  'major-6':          { key: 'maj6', display: 'major 6' },
-  'minor-6':          { key: 'min6', display: 'minor 6' },
-  'major-7':          { key: 'maj7', display: 'major 7' },
-  'minor-7':          { key: 'min7', display: 'minor 7' },
-  'dominant-7':       { key: 'dom7', display: 'dominant 7' },
-  'diminished-7':     { key: 'dim7', display: 'diminished 7' },
-  'half-diminished':  { key: 'm7b5', display: 'half-diminished' },
+  'major':            { key: 'maj',    display: 'major' },
+  'minor':            { key: 'min',    display: 'minor' },
+  'diminished':       { key: 'dim',    display: 'diminished' },
+  'augmented':        { key: 'aug',    display: 'augmented' },
+  'major-6':          { key: 'maj6',   display: 'major 6' },
+  'minor-6':          { key: 'min6',   display: 'minor 6' },
+  'major-7':          { key: 'maj7',   display: 'major 7' },
+  'minor-7':          { key: 'min7',   display: 'minor 7' },
+  'dominant-7':       { key: 'dom7',   display: 'dominant 7' },
+  'diminished-7':     { key: 'dim7',   display: 'diminished 7' },
+  'half-diminished':  { key: 'm7b5',   display: 'half-diminished' },
+  'major-9':          { key: 'maj9',   display: 'major 9' },
+  'minor-9':          { key: 'min9',   display: 'minor 9' },
+  'dominant-9':       { key: 'dom9',   display: 'dominant 9' },
+  'add-9':            { key: 'add9',   display: 'add 9' },
+  'minor-add-9':      { key: 'madd9',  display: 'minor add 9' },
+  'major-11':         { key: 'maj11',  display: 'major 11' },
+  'minor-11':         { key: 'min11',  display: 'minor 11' },
+  'dominant-11':      { key: 'dom11',  display: 'dominant 11' },
+  'add-11':           { key: 'add11',  display: 'add 11' },
+  'minor-add-11':     { key: 'madd11', display: 'minor add 11' },
+  'major-13':         { key: 'maj13',  display: 'major 13' },
+  'minor-13':         { key: 'min13',  display: 'minor 13' },
+  'dominant-13':      { key: 'dom13',  display: 'dominant 13' },
 };
 const QUALITY_TOKENS = Object.keys(QUALITY_SLUG_MAP).join('|');
 const SLUG_RE = new RegExp(`^([a-g])(?:-(sharp|flat))?-(${QUALITY_TOKENS})$`);
@@ -4245,6 +4258,5156 @@ const CONTENT = {
       { q: 'What pieces use Bm6?', a: 'B-minor jazz standards often end on Bm6. Bach\'s Mass in B minor uses related minor-tonic colours; many film scores in B minor borrow the Dorian raised-6 colour that defines Bm6.' },
     ],
   },
+
+  // ─── Phase 5/6: major-9 chords ─────────────────────────────────────
+  'c-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cmaj9 — C, E, G, B, D — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: Cmaj7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-major-7","c-major-13","c-major-6","c-major"],
+    commonMistakes:
+      "The defining note is the 9th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Cmaj9 chord?', a: 'Cmaj9 contains five notes: C, E, G, B, D.' },
+      { q: 'How is Cmaj9 different from Cmaj7?', a: 'Cmaj9 adds the 9th (D) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cmaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'c-sharp-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯maj9 — C♯, E♯, G♯, B♯, D♯ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯maj7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-major-7","c-sharp-major-13","c-sharp-major-6","c-sharp-major"],
+    commonMistakes:
+      "The defining note is the 9th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a C♯maj9 chord?', a: 'C♯maj9 contains five notes: C♯, E♯, G♯, B♯, D♯.' },
+      { q: 'How is C♯maj9 different from C♯maj7?', a: 'C♯maj9 adds the 9th (D♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'd-flat-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭maj9 — D♭, F, A♭, C, E♭ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭maj7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-major-7","d-flat-major-13","d-flat-major-6","d-flat-major"],
+    commonMistakes:
+      "The defining note is the 9th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a D♭maj9 chord?', a: 'D♭maj9 contains five notes: D♭, F, A♭, C, E♭.' },
+      { q: 'How is D♭maj9 different from D♭maj7?', a: 'D♭maj9 adds the 9th (E♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'd-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dmaj9 — D, F♯, A, C♯, E — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: Dmaj7', slug: 'd-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-major-7","d-major-13","d-major-6","d-major"],
+    commonMistakes:
+      "The defining note is the 9th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Dmaj9 chord?', a: 'Dmaj9 contains five notes: D, F♯, A, C♯, E.' },
+      { q: 'How is Dmaj9 different from Dmaj7?', a: 'Dmaj9 adds the 9th (E) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dmaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'e-flat-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭maj9 — E♭, G, B♭, D, F — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭maj7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-major-7","e-flat-major-13","e-flat-major-6","e-flat-major"],
+    commonMistakes:
+      "The defining note is the 9th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a E♭maj9 chord?', a: 'E♭maj9 contains five notes: E♭, G, B♭, D, F.' },
+      { q: 'How is E♭maj9 different from E♭maj7?', a: 'E♭maj9 adds the 9th (F) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'e-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Emaj9 — E, G♯, B, D♯, F♯ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: Emaj7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-major-7","e-major-13","e-major-6","e-major"],
+    commonMistakes:
+      "The defining note is the 9th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Emaj9 chord?', a: 'Emaj9 contains five notes: E, G♯, B, D♯, F♯.' },
+      { q: 'How is Emaj9 different from Emaj7?', a: 'Emaj9 adds the 9th (F♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Emaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'f-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fmaj9 — F, A, C, E, G — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: Fmaj7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-major-7","f-major-13","f-major-6","f-major"],
+    commonMistakes:
+      "The defining note is the 9th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Fmaj9 chord?', a: 'Fmaj9 contains five notes: F, A, C, E, G.' },
+      { q: 'How is Fmaj9 different from Fmaj7?', a: 'Fmaj9 adds the 9th (G) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fmaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'f-sharp-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯maj9 — F♯, A♯, C♯, E♯, G♯ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯maj7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-major-7","f-sharp-major-13","f-sharp-major-6","f-sharp-major"],
+    commonMistakes:
+      "The defining note is the 9th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a F♯maj9 chord?', a: 'F♯maj9 contains five notes: F♯, A♯, C♯, E♯, G♯.' },
+      { q: 'How is F♯maj9 different from F♯maj7?', a: 'F♯maj9 adds the 9th (G♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'g-flat-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭maj9 — G♭, B♭, D♭, F, A♭ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭maj7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-major-7","g-flat-major-13","g-flat-major-6","g-flat-major"],
+    commonMistakes:
+      "The defining note is the 9th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a G♭maj9 chord?', a: 'G♭maj9 contains five notes: G♭, B♭, D♭, F, A♭.' },
+      { q: 'How is G♭maj9 different from G♭maj7?', a: 'G♭maj9 adds the 9th (A♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'g-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gmaj9 — G, B, D, F♯, A — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: Gmaj7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-major-7","g-major-13","g-major-6","g-major"],
+    commonMistakes:
+      "The defining note is the 9th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Gmaj9 chord?', a: 'Gmaj9 contains five notes: G, B, D, F♯, A.' },
+      { q: 'How is Gmaj9 different from Gmaj7?', a: 'Gmaj9 adds the 9th (A) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gmaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'a-flat-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭maj9 — A♭, C, E♭, G, B♭ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭maj7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-major-7","a-flat-major-13","a-flat-major-6","a-flat-major"],
+    commonMistakes:
+      "The defining note is the 9th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a A♭maj9 chord?', a: 'A♭maj9 contains five notes: A♭, C, E♭, G, B♭.' },
+      { q: 'How is A♭maj9 different from A♭maj7?', a: 'A♭maj9 adds the 9th (B♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'a-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Amaj9 — A, C♯, E, G♯, B — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: Amaj7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-major-7","a-major-13","a-major-6","a-major"],
+    commonMistakes:
+      "The defining note is the 9th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Amaj9 chord?', a: 'Amaj9 contains five notes: A, C♯, E, G♯, B.' },
+      { q: 'How is Amaj9 different from Amaj7?', a: 'Amaj9 adds the 9th (B) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Amaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'b-flat-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭maj9 — B♭, D, F, A, C — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭maj7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-major-7","b-flat-major-13","b-flat-major-6","b-flat-major"],
+    commonMistakes:
+      "The defining note is the 9th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a B♭maj9 chord?', a: 'B♭maj9 contains five notes: B♭, D, F, A, C.' },
+      { q: 'How is B♭maj9 different from B♭maj7?', a: 'B♭maj9 adds the 9th (C) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭maj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+  'b-major-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bmaj9 — B, D♯, F♯, A♯, C♯ — is a major 9th chord: major triad + major 7th + major 9th — a lush, expansive Imaj9 sonority that defines the sound of modal-era jazz piano.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: Bmaj7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-major-7","b-major-13","b-major-6","b-major"],
+    commonMistakes:
+      "The defining note is the 9th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.",
+    faq: [
+      { q: 'What notes are in a Bmaj9 chord?', a: 'Bmaj9 contains five notes: B, D♯, F♯, A♯, C♯.' },
+      { q: 'How is Bmaj9 different from Bmaj7?', a: 'Bmaj9 adds the 9th (C♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bmaj9 used in music?', a: 'Functions as the Imaj9 chord in its parent major key; appears at every cadential resolution in jazz.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: dominant-9 chords ─────────────────────────────────────
+  'c-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C9 — C, E, G, B♭, D — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C7', slug: 'c-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-dominant-7","c-dominant-13","c-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a C9 chord?', a: 'C9 contains five notes: C, E, G, B♭, D.' },
+      { q: 'How is C9 different from C7?', a: 'C9 adds the 9th (D) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'c-sharp-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯9 — C♯, E♯, G♯, B, D♯ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯7', slug: 'c-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-dominant-7","c-sharp-dominant-13","c-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a C♯9 chord?', a: 'C♯9 contains five notes: C♯, E♯, G♯, B, D♯.' },
+      { q: 'How is C♯9 different from C♯7?', a: 'C♯9 adds the 9th (D♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'd-flat-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭9 — D♭, F, A♭, C♭, E♭ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭7', slug: 'd-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-dominant-7","d-flat-dominant-13","d-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a D♭9 chord?', a: 'D♭9 contains five notes: D♭, F, A♭, C♭, E♭.' },
+      { q: 'How is D♭9 different from D♭7?', a: 'D♭9 adds the 9th (E♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'd-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D9 — D, F♯, A, C, E — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: D7', slug: 'd-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-dominant-7","d-dominant-13","d-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a D9 chord?', a: 'D9 contains five notes: D, F♯, A, C, E.' },
+      { q: 'How is D9 different from D7?', a: 'D9 adds the 9th (E) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'e-flat-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭9 — E♭, G, B♭, D♭, F — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭7', slug: 'e-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-dominant-7","e-flat-dominant-13","e-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a E♭9 chord?', a: 'E♭9 contains five notes: E♭, G, B♭, D♭, F.' },
+      { q: 'How is E♭9 different from E♭7?', a: 'E♭9 adds the 9th (F) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'e-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E9 — E, G♯, B, D, F♯ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: E7', slug: 'e-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-dominant-7","e-dominant-13","e-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a E9 chord?', a: 'E9 contains five notes: E, G♯, B, D, F♯.' },
+      { q: 'How is E9 different from E7?', a: 'E9 adds the 9th (F♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'f-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F9 — F, A, C, E♭, G — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: F7', slug: 'f-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-dominant-7","f-dominant-13","f-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a F9 chord?', a: 'F9 contains five notes: F, A, C, E♭, G.' },
+      { q: 'How is F9 different from F7?', a: 'F9 adds the 9th (G) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'f-sharp-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯9 — F♯, A♯, C♯, E, G♯ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯7', slug: 'f-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-dominant-7","f-sharp-dominant-13","f-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a F♯9 chord?', a: 'F♯9 contains five notes: F♯, A♯, C♯, E, G♯.' },
+      { q: 'How is F♯9 different from F♯7?', a: 'F♯9 adds the 9th (G♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'g-flat-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭9 — G♭, B♭, D♭, F♭, A♭ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭7', slug: 'g-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-dominant-7","g-flat-dominant-13","g-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a G♭9 chord?', a: 'G♭9 contains five notes: G♭, B♭, D♭, F♭, A♭.' },
+      { q: 'How is G♭9 different from G♭7?', a: 'G♭9 adds the 9th (A♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'g-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G9 — G, B, D, F, A — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: G7', slug: 'g-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-dominant-7","g-dominant-13","g-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a G9 chord?', a: 'G9 contains five notes: G, B, D, F, A.' },
+      { q: 'How is G9 different from G7?', a: 'G9 adds the 9th (A) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'g-sharp-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯9 — G♯, B♯, D♯, F♯, A♯ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ major triad', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Related: G♯7', slug: 'g-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-dominant-7","g-sharp-dominant-13","g-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a G♯9 chord?', a: 'G♯9 contains five notes: G♯, B♯, D♯, F♯, A♯.' },
+      { q: 'How is G♯9 different from G♯7?', a: 'G♯9 adds the 9th (A♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'a-flat-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭9 — A♭, C, E♭, G♭, B♭ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭7', slug: 'a-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-dominant-7","a-flat-dominant-13","a-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a A♭9 chord?', a: 'A♭9 contains five notes: A♭, C, E♭, G♭, B♭.' },
+      { q: 'How is A♭9 different from A♭7?', a: 'A♭9 adds the 9th (B♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'a-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A9 — A, C♯, E, G, B — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: A7', slug: 'a-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-dominant-7","a-dominant-13","a-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a A9 chord?', a: 'A9 contains five notes: A, C♯, E, G, B.' },
+      { q: 'How is A9 different from A7?', a: 'A9 adds the 9th (B) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'b-flat-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭9 — B♭, D, F, A♭, C — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭7', slug: 'b-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-dominant-7","b-flat-dominant-13","b-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a B♭9 chord?', a: 'B♭9 contains five notes: B♭, D, F, A♭, C.' },
+      { q: 'How is B♭9 different from B♭7?', a: 'B♭9 adds the 9th (C) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+  'b-dominant-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B9 — B, D♯, F♯, A, C♯ — is a dominant 9th chord: major triad + minor 7th + major 9th — a dominant chord with the 9th added on top for a rich, slightly bluesy colour.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: B7', slug: 'b-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-dominant-7","b-dominant-13","b-dominant-11"],
+    commonMistakes:
+      "The defining note is the 9th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.",
+    faq: [
+      { q: 'What notes are in a B9 chord?', a: 'B9 contains five notes: B, D♯, F♯, A, C♯.' },
+      { q: 'How is B9 different from B7?', a: 'B9 adds the 9th (C♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B9 used in music?', a: 'Functions as the V9 in its target key — a richer, more colourful alternative to the plain V7 dominant.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: minor-9 chords ─────────────────────────────────────
+  'c-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cm9 — C, E♭, G, B♭, D — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: Cm7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-minor-7","c-minor-13","c-minor-11","c-minor"],
+    commonMistakes:
+      "The defining note is the 9th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Cm9 chord?', a: 'Cm9 contains five notes: C, E♭, G, B♭, D.' },
+      { q: 'How is Cm9 different from Cm7?', a: 'Cm9 adds the 9th (D) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cm9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'c-sharp-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯m9 — C♯, E, G♯, B, D♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯m7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-minor-7","c-sharp-minor-13","c-sharp-minor-11","c-sharp-minor"],
+    commonMistakes:
+      "The defining note is the 9th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a C♯m9 chord?', a: 'C♯m9 contains five notes: C♯, E, G♯, B, D♯.' },
+      { q: 'How is C♯m9 different from C♯m7?', a: 'C♯m9 adds the 9th (D♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'd-flat-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭m9 — D♭, F♭, A♭, C♭, E♭ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ minor triad', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭m7', slug: 'd-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-minor-7","d-flat-minor-13","d-flat-minor-11","d-flat-minor"],
+    commonMistakes:
+      "The defining note is the 9th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a D♭m9 chord?', a: 'D♭m9 contains five notes: D♭, F♭, A♭, C♭, E♭.' },
+      { q: 'How is D♭m9 different from D♭m7?', a: 'D♭m9 adds the 9th (E♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'd-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dm9 — D, F, A, C, E — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: Dm7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-minor-7","d-minor-13","d-minor-11","d-minor"],
+    commonMistakes:
+      "The defining note is the 9th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Dm9 chord?', a: 'Dm9 contains five notes: D, F, A, C, E.' },
+      { q: 'How is Dm9 different from Dm7?', a: 'Dm9 adds the 9th (E) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dm9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'd-sharp-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♯m9 — D♯, F♯, A♯, C♯, E♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Related: D♯m7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-sharp-minor-7","d-sharp-minor-13","d-sharp-minor-11","d-sharp-minor"],
+    commonMistakes:
+      "The defining note is the 9th (E♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a D♯m9 chord?', a: 'D♯m9 contains five notes: D♯, F♯, A♯, C♯, E♯.' },
+      { q: 'How is D♯m9 different from D♯m7?', a: 'D♯m9 adds the 9th (E♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♯m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'e-flat-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭m9 — E♭, G♭, B♭, D♭, F — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭m7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-minor-7","e-flat-minor-13","e-flat-minor-11","e-flat-minor"],
+    commonMistakes:
+      "The defining note is the 9th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a E♭m9 chord?', a: 'E♭m9 contains five notes: E♭, G♭, B♭, D♭, F.' },
+      { q: 'How is E♭m9 different from E♭m7?', a: 'E♭m9 adds the 9th (F) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'e-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Em9 — E, G, B, D, F♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: Em7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-minor-7","e-minor-13","e-minor-11","e-minor"],
+    commonMistakes:
+      "The defining note is the 9th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Em9 chord?', a: 'Em9 contains five notes: E, G, B, D, F♯.' },
+      { q: 'How is Em9 different from Em7?', a: 'Em9 adds the 9th (F♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Em9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'f-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fm9 — F, A♭, C, E♭, G — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: Fm7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-minor-7","f-minor-13","f-minor-11","f-minor"],
+    commonMistakes:
+      "The defining note is the 9th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Fm9 chord?', a: 'Fm9 contains five notes: F, A♭, C, E♭, G.' },
+      { q: 'How is Fm9 different from Fm7?', a: 'Fm9 adds the 9th (G) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fm9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'f-sharp-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯m9 — F♯, A, C♯, E, G♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯m7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-minor-7","f-sharp-minor-13","f-sharp-minor-11","f-sharp-minor"],
+    commonMistakes:
+      "The defining note is the 9th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a F♯m9 chord?', a: 'F♯m9 contains five notes: F♯, A, C♯, E, G♯.' },
+      { q: 'How is F♯m9 different from F♯m7?', a: 'F♯m9 adds the 9th (G♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'g-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gm9 — G, B♭, D, F, A — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: Gm7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-minor-7","g-minor-13","g-minor-11","g-minor"],
+    commonMistakes:
+      "The defining note is the 9th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Gm9 chord?', a: 'Gm9 contains five notes: G, B♭, D, F, A.' },
+      { q: 'How is Gm9 different from Gm7?', a: 'Gm9 adds the 9th (A) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gm9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'g-sharp-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯m9 — G♯, B, D♯, F♯, A♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯m7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-minor-7","g-sharp-minor-13","g-sharp-minor-11","g-sharp-minor"],
+    commonMistakes:
+      "The defining note is the 9th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a G♯m9 chord?', a: 'G♯m9 contains five notes: G♯, B, D♯, F♯, A♯.' },
+      { q: 'How is G♯m9 different from G♯m7?', a: 'G♯m9 adds the 9th (A♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'a-flat-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭m9 — A♭, C♭, E♭, G♭, B♭ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ minor triad', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭m7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-minor-7","a-flat-minor-13","a-flat-minor-11","a-flat-minor"],
+    commonMistakes:
+      "The defining note is the 9th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a A♭m9 chord?', a: 'A♭m9 contains five notes: A♭, C♭, E♭, G♭, B♭.' },
+      { q: 'How is A♭m9 different from A♭m7?', a: 'A♭m9 adds the 9th (B♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'a-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Am9 — A, C, E, G, B — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: Am7', slug: 'a-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-minor-7","a-minor-13","a-minor-11","a-minor"],
+    commonMistakes:
+      "The defining note is the 9th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Am9 chord?', a: 'Am9 contains five notes: A, C, E, G, B.' },
+      { q: 'How is Am9 different from Am7?', a: 'Am9 adds the 9th (B) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Am9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'a-sharp-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♯m9 — A♯, C♯, E♯, G♯, B♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♯ minor triad', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: A♯m7', slug: 'a-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-sharp-minor-7","a-sharp-minor-13","a-sharp-minor-11","a-sharp-minor"],
+    commonMistakes:
+      "The defining note is the 9th (B♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a A♯m9 chord?', a: 'A♯m9 contains five notes: A♯, C♯, E♯, G♯, B♯.' },
+      { q: 'How is A♯m9 different from A♯m7?', a: 'A♯m9 adds the 9th (B♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♯m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'b-flat-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭m9 — B♭, D♭, F, A♭, C — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭m7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-minor-7","b-flat-minor-13","b-flat-minor-11","b-flat-minor"],
+    commonMistakes:
+      "The defining note is the 9th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a B♭m9 chord?', a: 'B♭m9 contains five notes: B♭, D♭, F, A♭, C.' },
+      { q: 'How is B♭m9 different from B♭m7?', a: 'B♭m9 adds the 9th (C) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭m9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+  'b-minor-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bm9 — B, D, F♯, A, C♯ — is a minor 9th chord: minor triad + minor 7th + major 9th — the iim9 chord of jazz ii-V-I cadences and a workhorse for modal jazz tonics.",
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: Bm7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-minor-7","b-minor-13","b-minor-11","b-minor"],
+    commonMistakes:
+      "The defining note is the 9th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim9 in the relative major and the im9 in modal jazz contexts.",
+    faq: [
+      { q: 'What notes are in a Bm9 chord?', a: 'Bm9 contains five notes: B, D, F♯, A, C♯.' },
+      { q: 'How is Bm9 different from Bm7?', a: 'Bm9 adds the 9th (C♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bm9 used in music?', a: 'Functions as the iim9 in the relative major and the im9 in modal jazz contexts.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: add-9 chords ─────────────────────────────────────
+  'c-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cadd9 — C, E, G, D — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'D', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: Cmaj7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-major-7","c-major","c-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Cadd9 chord?', a: 'Cadd9 contains four notes: C, E, G, D.' },
+      { q: 'How is Cadd9 different from Cmaj7?', a: 'Cadd9 adds the 9th (D) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'c-sharp-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯add9 — C♯, E♯, G♯, D♯ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'D#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯maj7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-major-7","c-sharp-major","c-sharp-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a C♯add9 chord?', a: 'C♯add9 contains four notes: C♯, E♯, G♯, D♯.' },
+      { q: 'How is C♯add9 different from C♯maj7?', a: 'C♯add9 adds the 9th (D♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'd-flat-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭add9 — D♭, F, A♭, E♭ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Eb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭maj7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-major-7","d-flat-major","d-flat-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a D♭add9 chord?', a: 'D♭add9 contains four notes: D♭, F, A♭, E♭.' },
+      { q: 'How is D♭add9 different from D♭maj7?', a: 'D♭add9 adds the 9th (E♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'd-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dadd9 — D, F♯, A, E — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'E', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: Dmaj7', slug: 'd-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-major-7","d-major","d-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Dadd9 chord?', a: 'Dadd9 contains four notes: D, F♯, A, E.' },
+      { q: 'How is Dadd9 different from Dmaj7?', a: 'Dadd9 adds the 9th (E) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'e-flat-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭add9 — E♭, G, B♭, F — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'F', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭maj7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-major-7","e-flat-major","e-flat-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a E♭add9 chord?', a: 'E♭add9 contains four notes: E♭, G, B♭, F.' },
+      { q: 'How is E♭add9 different from E♭maj7?', a: 'E♭add9 adds the 9th (F) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'e-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Eadd9 — E, G♯, B, F♯ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'F#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: Emaj7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-major-7","e-major","e-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Eadd9 chord?', a: 'Eadd9 contains four notes: E, G♯, B, F♯.' },
+      { q: 'How is Eadd9 different from Emaj7?', a: 'Eadd9 adds the 9th (F♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Eadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'f-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fadd9 — F, A, C, G — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'G', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: Fmaj7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-major-7","f-major","f-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Fadd9 chord?', a: 'Fadd9 contains four notes: F, A, C, G.' },
+      { q: 'How is Fadd9 different from Fmaj7?', a: 'Fadd9 adds the 9th (G) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'f-sharp-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯add9 — F♯, A♯, C♯, G♯ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'G#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯maj7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-major-7","f-sharp-major","f-sharp-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a F♯add9 chord?', a: 'F♯add9 contains four notes: F♯, A♯, C♯, G♯.' },
+      { q: 'How is F♯add9 different from F♯maj7?', a: 'F♯add9 adds the 9th (G♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'g-flat-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭add9 — G♭, B♭, D♭, A♭ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Ab', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭maj7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-major-7","g-flat-major","g-flat-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a G♭add9 chord?', a: 'G♭add9 contains four notes: G♭, B♭, D♭, A♭.' },
+      { q: 'How is G♭add9 different from G♭maj7?', a: 'G♭add9 adds the 9th (A♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'g-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gadd9 — G, B, D, A — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'A', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: Gmaj7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-major-7","g-major","g-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Gadd9 chord?', a: 'Gadd9 contains four notes: G, B, D, A.' },
+      { q: 'How is Gadd9 different from Gmaj7?', a: 'Gadd9 adds the 9th (A) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'g-sharp-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯add9 — G♯, B♯, D♯, A♯ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'A#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ major triad', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Related: G♯maj7', slug: 'g-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-major-7","g-sharp-major","g-sharp-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a G♯add9 chord?', a: 'G♯add9 contains four notes: G♯, B♯, D♯, A♯.' },
+      { q: 'How is G♯add9 different from G♯maj7?', a: 'G♯add9 adds the 9th (A♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'a-flat-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭add9 — A♭, C, E♭, B♭ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Bb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭maj7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-major-7","a-flat-major","a-flat-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a A♭add9 chord?', a: 'A♭add9 contains four notes: A♭, C, E♭, B♭.' },
+      { q: 'How is A♭add9 different from A♭maj7?', a: 'A♭add9 adds the 9th (B♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'a-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Aadd9 — A, C♯, E, B — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'B', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: Amaj7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-major-7","a-major","a-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Aadd9 chord?', a: 'Aadd9 contains four notes: A, C♯, E, B.' },
+      { q: 'How is Aadd9 different from Amaj7?', a: 'Aadd9 adds the 9th (B) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Aadd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'b-flat-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭add9 — B♭, D, F, C — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'C', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭maj7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-major-7","b-flat-major","b-flat-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a B♭add9 chord?', a: 'B♭add9 contains four notes: B♭, D, F, C.' },
+      { q: 'How is B♭add9 different from B♭maj7?', a: 'B♭add9 adds the 9th (C) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭add9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+  'b-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Badd9 — B, D♯, F♯, C♯ — is an add9 chord: major triad + 9th (no 7th in between) — a brighter alternative to a plain major chord, popular in pop, indie, and modern songwriting.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'C#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: Bmaj7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-major-7","b-major","b-major-9"],
+    commonMistakes:
+      "The defining note is the 9th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.",
+    faq: [
+      { q: 'What notes are in a Badd9 chord?', a: 'Badd9 contains four notes: B, D♯, F♯, C♯.' },
+      { q: 'How is Badd9 different from Bmaj7?', a: 'Badd9 adds the 9th (C♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Badd9 used in music?', a: 'Functions as a bright tonic alternative in major-key pop, country, and modern songwriting.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: minor-add-9 chords ─────────────────────────────────────
+  'c-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cm(add9) — C, E♭, G, D — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'D', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: Cm7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-minor-7","c-minor","c-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Cm(add9) chord?', a: 'Cm(add9) contains four notes: C, E♭, G, D.' },
+      { q: 'How is Cm(add9) different from Cm7?', a: 'Cm(add9) adds the 9th (D) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cm(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'c-sharp-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯m(add9) — C♯, E, G♯, D♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'D#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯m7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-minor-7","c-sharp-minor","c-sharp-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a C♯m(add9) chord?', a: 'C♯m(add9) contains four notes: C♯, E, G♯, D♯.' },
+      { q: 'How is C♯m(add9) different from C♯m7?', a: 'C♯m(add9) adds the 9th (D♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'd-flat-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭m(add9) — D♭, F♭, A♭, E♭ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Eb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ minor triad', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭m7', slug: 'd-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-minor-7","d-flat-minor","d-flat-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a D♭m(add9) chord?', a: 'D♭m(add9) contains four notes: D♭, F♭, A♭, E♭.' },
+      { q: 'How is D♭m(add9) different from D♭m7?', a: 'D♭m(add9) adds the 9th (E♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'd-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dm(add9) — D, F, A, E — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'E', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: Dm7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-minor-7","d-minor","d-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Dm(add9) chord?', a: 'Dm(add9) contains four notes: D, F, A, E.' },
+      { q: 'How is Dm(add9) different from Dm7?', a: 'Dm(add9) adds the 9th (E) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dm(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'd-sharp-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♯m(add9) — D♯, F♯, A♯, E♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'E#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Related: D♯m7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-sharp-minor-7","d-sharp-minor","d-sharp-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (E♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a D♯m(add9) chord?', a: 'D♯m(add9) contains four notes: D♯, F♯, A♯, E♯.' },
+      { q: 'How is D♯m(add9) different from D♯m7?', a: 'D♯m(add9) adds the 9th (E♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♯m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'e-flat-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭m(add9) — E♭, G♭, B♭, F — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'F', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭m7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-minor-7","e-flat-minor","e-flat-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a E♭m(add9) chord?', a: 'E♭m(add9) contains four notes: E♭, G♭, B♭, F.' },
+      { q: 'How is E♭m(add9) different from E♭m7?', a: 'E♭m(add9) adds the 9th (F) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'e-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Em(add9) — E, G, B, F♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'F#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: Em7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-minor-7","e-minor","e-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Em(add9) chord?', a: 'Em(add9) contains four notes: E, G, B, F♯.' },
+      { q: 'How is Em(add9) different from Em7?', a: 'Em(add9) adds the 9th (F♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Em(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'f-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fm(add9) — F, A♭, C, G — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'G', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: Fm7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-minor-7","f-minor","f-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Fm(add9) chord?', a: 'Fm(add9) contains four notes: F, A♭, C, G.' },
+      { q: 'How is Fm(add9) different from Fm7?', a: 'Fm(add9) adds the 9th (G) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fm(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'f-sharp-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯m(add9) — F♯, A, C♯, G♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'G#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯m7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-minor-7","f-sharp-minor","f-sharp-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a F♯m(add9) chord?', a: 'F♯m(add9) contains four notes: F♯, A, C♯, G♯.' },
+      { q: 'How is F♯m(add9) different from F♯m7?', a: 'F♯m(add9) adds the 9th (G♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'g-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gm(add9) — G, B♭, D, A — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'A', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: Gm7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-minor-7","g-minor","g-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Gm(add9) chord?', a: 'Gm(add9) contains four notes: G, B♭, D, A.' },
+      { q: 'How is Gm(add9) different from Gm7?', a: 'Gm(add9) adds the 9th (A) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gm(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'g-sharp-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯m(add9) — G♯, B, D♯, A♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'A#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯m7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-minor-7","g-sharp-minor","g-sharp-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a G♯m(add9) chord?', a: 'G♯m(add9) contains four notes: G♯, B, D♯, A♯.' },
+      { q: 'How is G♯m(add9) different from G♯m7?', a: 'G♯m(add9) adds the 9th (A♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'a-flat-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭m(add9) — A♭, C♭, E♭, B♭ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Bb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ minor triad', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭m7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-minor-7","a-flat-minor","a-flat-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a A♭m(add9) chord?', a: 'A♭m(add9) contains four notes: A♭, C♭, E♭, B♭.' },
+      { q: 'How is A♭m(add9) different from A♭m7?', a: 'A♭m(add9) adds the 9th (B♭) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'a-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Am(add9) — A, C, E, B — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'B', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: Am7', slug: 'a-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-minor-7","a-minor","a-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Am(add9) chord?', a: 'Am(add9) contains four notes: A, C, E, B.' },
+      { q: 'How is Am(add9) different from Am7?', a: 'Am(add9) adds the 9th (B) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Am(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'a-sharp-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♯m(add9) — A♯, C♯, E♯, B♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'B#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♯ minor triad', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: A♯m7', slug: 'a-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-sharp-minor-7","a-sharp-minor","a-sharp-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (B♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a A♯m(add9) chord?', a: 'A♯m(add9) contains four notes: A♯, C♯, E♯, B♯.' },
+      { q: 'How is A♯m(add9) different from A♯m7?', a: 'A♯m(add9) adds the 9th (B♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♯m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'b-flat-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭m(add9) — B♭, D♭, F, C — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'C', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭m7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-minor-7","b-flat-minor","b-flat-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a B♭m(add9) chord?', a: 'B♭m(add9) contains four notes: B♭, D♭, F, C.' },
+      { q: 'How is B♭m(add9) different from B♭m7?', a: 'B♭m(add9) adds the 9th (C) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭m(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+  'b-minor-add-9': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bm(add9) — B, D, F♯, C♯ — is a minor add9 chord: minor triad + 9th (no 7th) — a brighter, more open colour than a plain minor triad without the full m9 stack.",
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'C#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: Bm7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-minor-7","b-minor","b-minor-9"],
+    commonMistakes:
+      "The defining note is the 9th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 9th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.",
+    faq: [
+      { q: 'What notes are in a Bm(add9) chord?', a: 'Bm(add9) contains four notes: B, D, F♯, C♯.' },
+      { q: 'How is Bm(add9) different from Bm7?', a: 'Bm(add9) adds the 9th (C♯) on top of the underlying 7th chord. The 9th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bm(add9) used in music?', a: 'Functions as a brighter minor-tonic alternative; common in indie rock, ambient music, and modern jazz.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: major-11 chords ─────────────────────────────────────
+  'c-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cmaj11 — C, E, G, B, D, F — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: Cmaj7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-major-9","c-major-13","c-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Cmaj11 chord?', a: 'Cmaj11 contains six notes: C, E, G, B, D, F.' },
+      { q: 'How is Cmaj11 different from Cmaj7?', a: 'Cmaj11 adds the 11th (F) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cmaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'c-sharp-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯maj11 — C♯, E♯, G♯, B♯, D♯, F♯ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯maj7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-major-9","c-sharp-major-13","c-sharp-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a C♯maj11 chord?', a: 'C♯maj11 contains six notes: C♯, E♯, G♯, B♯, D♯, F♯.' },
+      { q: 'How is C♯maj11 different from C♯maj7?', a: 'C♯maj11 adds the 11th (F♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'd-flat-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭maj11 — D♭, F, A♭, C, E♭, G♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭maj7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-major-9","d-flat-major-13","d-flat-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (G♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a D♭maj11 chord?', a: 'D♭maj11 contains six notes: D♭, F, A♭, C, E♭, G♭.' },
+      { q: 'How is D♭maj11 different from D♭maj7?', a: 'D♭maj11 adds the 11th (G♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'd-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dmaj11 — D, F♯, A, C♯, E, G — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: Dmaj7', slug: 'd-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-major-9","d-major-13","d-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Dmaj11 chord?', a: 'Dmaj11 contains six notes: D, F♯, A, C♯, E, G.' },
+      { q: 'How is Dmaj11 different from Dmaj7?', a: 'Dmaj11 adds the 11th (G) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dmaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'e-flat-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭maj11 — E♭, G, B♭, D, F, A♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭maj7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-major-9","e-flat-major-13","e-flat-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a E♭maj11 chord?', a: 'E♭maj11 contains six notes: E♭, G, B♭, D, F, A♭.' },
+      { q: 'How is E♭maj11 different from E♭maj7?', a: 'E♭maj11 adds the 11th (A♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'e-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Emaj11 — E, G♯, B, D♯, F♯, A — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: Emaj7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-major-9","e-major-13","e-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Emaj11 chord?', a: 'Emaj11 contains six notes: E, G♯, B, D♯, F♯, A.' },
+      { q: 'How is Emaj11 different from Emaj7?', a: 'Emaj11 adds the 11th (A) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Emaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'f-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fmaj11 — F, A, C, E, G, B♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: Fmaj7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-major-9","f-major-13","f-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Fmaj11 chord?', a: 'Fmaj11 contains six notes: F, A, C, E, G, B♭.' },
+      { q: 'How is Fmaj11 different from Fmaj7?', a: 'Fmaj11 adds the 11th (B♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fmaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'f-sharp-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯maj11 — F♯, A♯, C♯, E♯, G♯, B — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯maj7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-major-9","f-sharp-major-13","f-sharp-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a F♯maj11 chord?', a: 'F♯maj11 contains six notes: F♯, A♯, C♯, E♯, G♯, B.' },
+      { q: 'How is F♯maj11 different from F♯maj7?', a: 'F♯maj11 adds the 11th (B) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'g-flat-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭maj11 — G♭, B♭, D♭, F, A♭, C♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭maj7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-major-9","g-flat-major-13","g-flat-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (C♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a G♭maj11 chord?', a: 'G♭maj11 contains six notes: G♭, B♭, D♭, F, A♭, C♭.' },
+      { q: 'How is G♭maj11 different from G♭maj7?', a: 'G♭maj11 adds the 11th (C♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'g-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gmaj11 — G, B, D, F♯, A, C — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: Gmaj7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-major-9","g-major-13","g-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Gmaj11 chord?', a: 'Gmaj11 contains six notes: G, B, D, F♯, A, C.' },
+      { q: 'How is Gmaj11 different from Gmaj7?', a: 'Gmaj11 adds the 11th (C) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gmaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'a-flat-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭maj11 — A♭, C, E♭, G, B♭, D♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭maj7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-major-9","a-flat-major-13","a-flat-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (D♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a A♭maj11 chord?', a: 'A♭maj11 contains six notes: A♭, C, E♭, G, B♭, D♭.' },
+      { q: 'How is A♭maj11 different from A♭maj7?', a: 'A♭maj11 adds the 11th (D♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'a-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Amaj11 — A, C♯, E, G♯, B, D — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: Amaj7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-major-9","a-major-13","a-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Amaj11 chord?', a: 'Amaj11 contains six notes: A, C♯, E, G♯, B, D.' },
+      { q: 'How is Amaj11 different from Amaj7?', a: 'Amaj11 adds the 11th (D) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Amaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'b-flat-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭maj11 — B♭, D, F, A, C, E♭ — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭maj7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-major-9","b-flat-major-13","b-flat-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a B♭maj11 chord?', a: 'B♭maj11 contains six notes: B♭, D, F, A, C, E♭.' },
+      { q: 'How is B♭maj11 different from B♭maj7?', a: 'B♭maj11 adds the 11th (E♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭maj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+  'b-major-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bmaj11 — B, D♯, F♯, A♯, C♯, E — is a major 11th chord: stacked thirds up through the 11th — maj7 + 9th + 11th. In practice often voiced without the 3rd to avoid the avoid-note tension between the 3rd and the 11th.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: Bmaj7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-major-9","b-major-13","b-major-7"],
+    commonMistakes:
+      "The defining note is the 11th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.",
+    faq: [
+      { q: 'What notes are in a Bmaj11 chord?', a: 'Bmaj11 contains six notes: B, D♯, F♯, A♯, C♯, E.' },
+      { q: 'How is Bmaj11 different from Bmaj7?', a: 'Bmaj11 adds the 11th (E) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bmaj11 used in music?', a: 'Functions as an extended Imaj11 in modal jazz; the 11th is often emphasised over the 3rd for a lydian colour.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: dominant-11 chords ─────────────────────────────────────
+  'c-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C11 — C, E, G, B♭, D, F — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C7', slug: 'c-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-dominant-9","c-dominant-13","c-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a C11 chord?', a: 'C11 contains six notes: C, E, G, B♭, D, F.' },
+      { q: 'How is C11 different from C7?', a: 'C11 adds the 11th (F) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'c-sharp-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯11 — C♯, E♯, G♯, B, D♯, F♯ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯7', slug: 'c-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-dominant-9","c-sharp-dominant-13","c-sharp-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a C♯11 chord?', a: 'C♯11 contains six notes: C♯, E♯, G♯, B, D♯, F♯.' },
+      { q: 'How is C♯11 different from C♯7?', a: 'C♯11 adds the 11th (F♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'd-flat-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭11 — D♭, F, A♭, C♭, E♭, G♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭7', slug: 'd-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-dominant-9","d-flat-dominant-13","d-flat-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (G♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a D♭11 chord?', a: 'D♭11 contains six notes: D♭, F, A♭, C♭, E♭, G♭.' },
+      { q: 'How is D♭11 different from D♭7?', a: 'D♭11 adds the 11th (G♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'd-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D11 — D, F♯, A, C, E, G — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: D7', slug: 'd-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-dominant-9","d-dominant-13","d-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a D11 chord?', a: 'D11 contains six notes: D, F♯, A, C, E, G.' },
+      { q: 'How is D11 different from D7?', a: 'D11 adds the 11th (G) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'e-flat-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭11 — E♭, G, B♭, D♭, F, A♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭7', slug: 'e-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-dominant-9","e-flat-dominant-13","e-flat-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a E♭11 chord?', a: 'E♭11 contains six notes: E♭, G, B♭, D♭, F, A♭.' },
+      { q: 'How is E♭11 different from E♭7?', a: 'E♭11 adds the 11th (A♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'e-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E11 — E, G♯, B, D, F♯, A — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: E7', slug: 'e-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-dominant-9","e-dominant-13","e-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a E11 chord?', a: 'E11 contains six notes: E, G♯, B, D, F♯, A.' },
+      { q: 'How is E11 different from E7?', a: 'E11 adds the 11th (A) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'f-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F11 — F, A, C, E♭, G, B♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: F7', slug: 'f-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-dominant-9","f-dominant-13","f-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a F11 chord?', a: 'F11 contains six notes: F, A, C, E♭, G, B♭.' },
+      { q: 'How is F11 different from F7?', a: 'F11 adds the 11th (B♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'f-sharp-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯11 — F♯, A♯, C♯, E, G♯, B — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯7', slug: 'f-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-dominant-9","f-sharp-dominant-13","f-sharp-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a F♯11 chord?', a: 'F♯11 contains six notes: F♯, A♯, C♯, E, G♯, B.' },
+      { q: 'How is F♯11 different from F♯7?', a: 'F♯11 adds the 11th (B) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'g-flat-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭11 — G♭, B♭, D♭, F♭, A♭, C♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭7', slug: 'g-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-dominant-9","g-flat-dominant-13","g-flat-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (C♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a G♭11 chord?', a: 'G♭11 contains six notes: G♭, B♭, D♭, F♭, A♭, C♭.' },
+      { q: 'How is G♭11 different from G♭7?', a: 'G♭11 adds the 11th (C♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'g-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G11 — G, B, D, F, A, C — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: G7', slug: 'g-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-dominant-9","g-dominant-13","g-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a G11 chord?', a: 'G11 contains six notes: G, B, D, F, A, C.' },
+      { q: 'How is G11 different from G7?', a: 'G11 adds the 11th (C) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'g-sharp-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯11 — G♯, B♯, D♯, F♯, A♯, C♯ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ major triad', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Related: G♯7', slug: 'g-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-dominant-9","g-sharp-dominant-13","g-sharp-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a G♯11 chord?', a: 'G♯11 contains six notes: G♯, B♯, D♯, F♯, A♯, C♯.' },
+      { q: 'How is G♯11 different from G♯7?', a: 'G♯11 adds the 11th (C♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'a-flat-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭11 — A♭, C, E♭, G♭, B♭, D♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭7', slug: 'a-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-dominant-9","a-flat-dominant-13","a-flat-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (D♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a A♭11 chord?', a: 'A♭11 contains six notes: A♭, C, E♭, G♭, B♭, D♭.' },
+      { q: 'How is A♭11 different from A♭7?', a: 'A♭11 adds the 11th (D♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'a-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A11 — A, C♯, E, G, B, D — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: A7', slug: 'a-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-dominant-9","a-dominant-13","a-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a A11 chord?', a: 'A11 contains six notes: A, C♯, E, G, B, D.' },
+      { q: 'How is A11 different from A7?', a: 'A11 adds the 11th (D) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'b-flat-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭11 — B♭, D, F, A♭, C, E♭ — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭7', slug: 'b-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-dominant-9","b-flat-dominant-13","b-flat-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a B♭11 chord?', a: 'B♭11 contains six notes: B♭, D, F, A♭, C, E♭.' },
+      { q: 'How is B♭11 different from B♭7?', a: 'B♭11 adds the 11th (E♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+  'b-dominant-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B11 — B, D♯, F♯, A, C♯, E — is a dominant 11th chord: stacked thirds up through the 11th over a dominant 7. The third is almost always omitted in practice because the 11th sits a half-step above it — the classic suspended colour.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: B7', slug: 'b-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-dominant-9","b-dominant-13","b-dominant-7"],
+    commonMistakes:
+      "The defining note is the 11th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.",
+    faq: [
+      { q: 'What notes are in a B11 chord?', a: 'B11 contains six notes: B, D♯, F♯, A, C♯, E.' },
+      { q: 'How is B11 different from B7?', a: 'B11 adds the 11th (E) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B11 used in music?', a: 'Functions as a V-sus colour — the 11th replaces the 3rd, giving the chord a suspended, unresolved feel before final resolution.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: minor-11 chords ─────────────────────────────────────
+  'c-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cm11 — C, E♭, G, B♭, D, F — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: Cm7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-minor-9","c-minor-13","c-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Cm11 chord?', a: 'Cm11 contains six notes: C, E♭, G, B♭, D, F.' },
+      { q: 'How is Cm11 different from Cm7?', a: 'Cm11 adds the 11th (F) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cm11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'c-sharp-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯m11 — C♯, E, G♯, B, D♯, F♯ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯m7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-minor-9","c-sharp-minor-13","c-sharp-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a C♯m11 chord?', a: 'C♯m11 contains six notes: C♯, E, G♯, B, D♯, F♯.' },
+      { q: 'How is C♯m11 different from C♯m7?', a: 'C♯m11 adds the 11th (F♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'd-flat-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭m11 — D♭, F♭, A♭, C♭, E♭, G♭ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ minor triad', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭m7', slug: 'd-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-minor-9","d-flat-minor-13","d-flat-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (G♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a D♭m11 chord?', a: 'D♭m11 contains six notes: D♭, F♭, A♭, C♭, E♭, G♭.' },
+      { q: 'How is D♭m11 different from D♭m7?', a: 'D♭m11 adds the 11th (G♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'd-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dm11 — D, F, A, C, E, G — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: Dm7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-minor-9","d-minor-13","d-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Dm11 chord?', a: 'Dm11 contains six notes: D, F, A, C, E, G.' },
+      { q: 'How is Dm11 different from Dm7?', a: 'Dm11 adds the 11th (G) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dm11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'd-sharp-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♯m11 — D♯, F♯, A♯, C♯, E♯, G♯ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Related: D♯m7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-sharp-minor-9","d-sharp-minor-13","d-sharp-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a D♯m11 chord?', a: 'D♯m11 contains six notes: D♯, F♯, A♯, C♯, E♯, G♯.' },
+      { q: 'How is D♯m11 different from D♯m7?', a: 'D♯m11 adds the 11th (G♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♯m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'e-flat-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭m11 — E♭, G♭, B♭, D♭, F, A♭ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭m7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-minor-9","e-flat-minor-13","e-flat-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a E♭m11 chord?', a: 'E♭m11 contains six notes: E♭, G♭, B♭, D♭, F, A♭.' },
+      { q: 'How is E♭m11 different from E♭m7?', a: 'E♭m11 adds the 11th (A♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'e-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Em11 — E, G, B, D, F♯, A — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: Em7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-minor-9","e-minor-13","e-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Em11 chord?', a: 'Em11 contains six notes: E, G, B, D, F♯, A.' },
+      { q: 'How is Em11 different from Em7?', a: 'Em11 adds the 11th (A) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Em11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'f-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fm11 — F, A♭, C, E♭, G, B♭ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: Fm7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-minor-9","f-minor-13","f-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Fm11 chord?', a: 'Fm11 contains six notes: F, A♭, C, E♭, G, B♭.' },
+      { q: 'How is Fm11 different from Fm7?', a: 'Fm11 adds the 11th (B♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fm11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'f-sharp-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯m11 — F♯, A, C♯, E, G♯, B — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯m7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-minor-9","f-sharp-minor-13","f-sharp-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a F♯m11 chord?', a: 'F♯m11 contains six notes: F♯, A, C♯, E, G♯, B.' },
+      { q: 'How is F♯m11 different from F♯m7?', a: 'F♯m11 adds the 11th (B) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'g-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gm11 — G, B♭, D, F, A, C — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: Gm7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-minor-9","g-minor-13","g-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Gm11 chord?', a: 'Gm11 contains six notes: G, B♭, D, F, A, C.' },
+      { q: 'How is Gm11 different from Gm7?', a: 'Gm11 adds the 11th (C) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gm11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'g-sharp-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯m11 — G♯, B, D♯, F♯, A♯, C♯ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯m7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-minor-9","g-sharp-minor-13","g-sharp-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a G♯m11 chord?', a: 'G♯m11 contains six notes: G♯, B, D♯, F♯, A♯, C♯.' },
+      { q: 'How is G♯m11 different from G♯m7?', a: 'G♯m11 adds the 11th (C♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'a-flat-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭m11 — A♭, C♭, E♭, G♭, B♭, D♭ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ minor triad', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭m7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-minor-9","a-flat-minor-13","a-flat-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (D♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a A♭m11 chord?', a: 'A♭m11 contains six notes: A♭, C♭, E♭, G♭, B♭, D♭.' },
+      { q: 'How is A♭m11 different from A♭m7?', a: 'A♭m11 adds the 11th (D♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'a-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Am11 — A, C, E, G, B, D — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: Am7', slug: 'a-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-minor-9","a-minor-13","a-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Am11 chord?', a: 'Am11 contains six notes: A, C, E, G, B, D.' },
+      { q: 'How is Am11 different from Am7?', a: 'Am11 adds the 11th (D) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Am11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'a-sharp-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♯m11 — A♯, C♯, E♯, G♯, B♯, D♯ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♯ minor triad', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: A♯m7', slug: 'a-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-sharp-minor-9","a-sharp-minor-13","a-sharp-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a A♯m11 chord?', a: 'A♯m11 contains six notes: A♯, C♯, E♯, G♯, B♯, D♯.' },
+      { q: 'How is A♯m11 different from A♯m7?', a: 'A♯m11 adds the 11th (D♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♯m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'b-flat-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭m11 — B♭, D♭, F, A♭, C, E♭ — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭m7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-minor-9","b-flat-minor-13","b-flat-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a B♭m11 chord?', a: 'B♭m11 contains six notes: B♭, D♭, F, A♭, C, E♭.' },
+      { q: 'How is B♭m11 different from B♭m7?', a: 'B♭m11 adds the 11th (E♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭m11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+  'b-minor-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bm11 — B, D, F♯, A, C♯, E — is a minor 11th chord: stacked thirds up through the 11th over a minor 7. One of the most-used extended minor chords in jazz, often heard as the iim11 in modal ii-V-I cadences.",
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: Bm7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-minor-9","b-minor-13","b-minor-7"],
+    commonMistakes:
+      "The defining note is the 11th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.",
+    faq: [
+      { q: 'What notes are in a Bm11 chord?', a: 'Bm11 contains six notes: B, D, F♯, A, C♯, E.' },
+      { q: 'How is Bm11 different from Bm7?', a: 'Bm11 adds the 11th (E) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bm11 used in music?', a: 'Functions as the iim11 in jazz ii-V-i cadences and as a modal-minor tonic alternative to plain m7 or m9.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: add-11 chords ─────────────────────────────────────
+  'c-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cadd11 — C, E, G, F — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'F', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: Cmaj7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-major-7","c-major","c-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Cadd11 chord?', a: 'Cadd11 contains four notes: C, E, G, F.' },
+      { q: 'How is Cadd11 different from Cmaj7?', a: 'Cadd11 adds the 11th (F) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'c-sharp-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯add11 — C♯, E♯, G♯, F♯ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'F#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯maj7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-major-7","c-sharp-major","c-sharp-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a C♯add11 chord?', a: 'C♯add11 contains four notes: C♯, E♯, G♯, F♯.' },
+      { q: 'How is C♯add11 different from C♯maj7?', a: 'C♯add11 adds the 11th (F♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'd-flat-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭add11 — D♭, F, A♭, G♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Gb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭maj7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-major-7","d-flat-major","d-flat-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (G♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a D♭add11 chord?', a: 'D♭add11 contains four notes: D♭, F, A♭, G♭.' },
+      { q: 'How is D♭add11 different from D♭maj7?', a: 'D♭add11 adds the 11th (G♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'd-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dadd11 — D, F♯, A, G — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'G', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: Dmaj7', slug: 'd-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-major-7","d-major","d-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Dadd11 chord?', a: 'Dadd11 contains four notes: D, F♯, A, G.' },
+      { q: 'How is Dadd11 different from Dmaj7?', a: 'Dadd11 adds the 11th (G) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'e-flat-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭add11 — E♭, G, B♭, A♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Ab', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭maj7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-major-7","e-flat-major","e-flat-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a E♭add11 chord?', a: 'E♭add11 contains four notes: E♭, G, B♭, A♭.' },
+      { q: 'How is E♭add11 different from E♭maj7?', a: 'E♭add11 adds the 11th (A♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'e-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Eadd11 — E, G♯, B, A — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'A', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: Emaj7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-major-7","e-major","e-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Eadd11 chord?', a: 'Eadd11 contains four notes: E, G♯, B, A.' },
+      { q: 'How is Eadd11 different from Emaj7?', a: 'Eadd11 adds the 11th (A) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Eadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'f-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fadd11 — F, A, C, B♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Bb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: Fmaj7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-major-7","f-major","f-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Fadd11 chord?', a: 'Fadd11 contains four notes: F, A, C, B♭.' },
+      { q: 'How is Fadd11 different from Fmaj7?', a: 'Fadd11 adds the 11th (B♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'f-sharp-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯add11 — F♯, A♯, C♯, B — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'B', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯maj7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-major-7","f-sharp-major","f-sharp-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a F♯add11 chord?', a: 'F♯add11 contains four notes: F♯, A♯, C♯, B.' },
+      { q: 'How is F♯add11 different from F♯maj7?', a: 'F♯add11 adds the 11th (B) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'g-flat-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭add11 — G♭, B♭, D♭, C♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Cb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭maj7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-major-7","g-flat-major","g-flat-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (C♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a G♭add11 chord?', a: 'G♭add11 contains four notes: G♭, B♭, D♭, C♭.' },
+      { q: 'How is G♭add11 different from G♭maj7?', a: 'G♭add11 adds the 11th (C♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'g-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gadd11 — G, B, D, C — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'C', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: Gmaj7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-major-7","g-major","g-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Gadd11 chord?', a: 'Gadd11 contains four notes: G, B, D, C.' },
+      { q: 'How is Gadd11 different from Gmaj7?', a: 'Gadd11 adds the 11th (C) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'g-sharp-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯add11 — G♯, B♯, D♯, C♯ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'C#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ major triad', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Related: G♯maj7', slug: 'g-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-major-7","g-sharp-major","g-sharp-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a G♯add11 chord?', a: 'G♯add11 contains four notes: G♯, B♯, D♯, C♯.' },
+      { q: 'How is G♯add11 different from G♯maj7?', a: 'G♯add11 adds the 11th (C♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'a-flat-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭add11 — A♭, C, E♭, D♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Db', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭maj7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-major-7","a-flat-major","a-flat-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (D♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a A♭add11 chord?', a: 'A♭add11 contains four notes: A♭, C, E♭, D♭.' },
+      { q: 'How is A♭add11 different from A♭maj7?', a: 'A♭add11 adds the 11th (D♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'a-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Aadd11 — A, C♯, E, D — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'D', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: Amaj7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-major-7","a-major","a-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Aadd11 chord?', a: 'Aadd11 contains four notes: A, C♯, E, D.' },
+      { q: 'How is Aadd11 different from Amaj7?', a: 'Aadd11 adds the 11th (D) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Aadd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'b-flat-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭add11 — B♭, D, F, E♭ — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Eb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭maj7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-major-7","b-flat-major","b-flat-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a B♭add11 chord?', a: 'B♭add11 contains four notes: B♭, D, F, E♭.' },
+      { q: 'How is B♭add11 different from B♭maj7?', a: 'B♭add11 adds the 11th (E♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭add11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+  'b-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Badd11 — B, D♯, F♯, E — is an add11 chord: major triad + 11th (no 7th, no 9th in between) — a brighter, more harmonically open colour.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'E', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: Bmaj7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-major-7","b-major","b-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.",
+    faq: [
+      { q: 'What notes are in a Badd11 chord?', a: 'Badd11 contains four notes: B, D♯, F♯, E.' },
+      { q: 'How is Badd11 different from Bmaj7?', a: 'Badd11 adds the 11th (E) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Badd11 used in music?', a: 'Functions as a bright extended tonic in rock and modern songwriting, especially in lydian-flavoured passages.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: minor-add-11 chords ─────────────────────────────────────
+  'c-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cm(add11) — C, E♭, G, F — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'F', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: Cm7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-minor-7","c-minor","c-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Cm(add11) chord?', a: 'Cm(add11) contains four notes: C, E♭, G, F.' },
+      { q: 'How is Cm(add11) different from Cm7?', a: 'Cm(add11) adds the 11th (F) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cm(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'c-sharp-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯m(add11) — C♯, E, G♯, F♯ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'F#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯m7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-minor-7","c-sharp-minor","c-sharp-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a C♯m(add11) chord?', a: 'C♯m(add11) contains four notes: C♯, E, G♯, F♯.' },
+      { q: 'How is C♯m(add11) different from C♯m7?', a: 'C♯m(add11) adds the 11th (F♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'd-flat-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭m(add11) — D♭, F♭, A♭, G♭ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Gb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ minor triad', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭m7', slug: 'd-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-minor-7","d-flat-minor","d-flat-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (G♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a D♭m(add11) chord?', a: 'D♭m(add11) contains four notes: D♭, F♭, A♭, G♭.' },
+      { q: 'How is D♭m(add11) different from D♭m7?', a: 'D♭m(add11) adds the 11th (G♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'd-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dm(add11) — D, F, A, G — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'G', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: Dm7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-minor-7","d-minor","d-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Dm(add11) chord?', a: 'Dm(add11) contains four notes: D, F, A, G.' },
+      { q: 'How is Dm(add11) different from Dm7?', a: 'Dm(add11) adds the 11th (G) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dm(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'd-sharp-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♯m(add11) — D♯, F♯, A♯, G♯ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'G#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Related: D♯m7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-sharp-minor-7","d-sharp-minor","d-sharp-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a D♯m(add11) chord?', a: 'D♯m(add11) contains four notes: D♯, F♯, A♯, G♯.' },
+      { q: 'How is D♯m(add11) different from D♯m7?', a: 'D♯m(add11) adds the 11th (G♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♯m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'e-flat-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭m(add11) — E♭, G♭, B♭, A♭ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Ab', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭m7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-minor-7","e-flat-minor","e-flat-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (A♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a E♭m(add11) chord?', a: 'E♭m(add11) contains four notes: E♭, G♭, B♭, A♭.' },
+      { q: 'How is E♭m(add11) different from E♭m7?', a: 'E♭m(add11) adds the 11th (A♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'e-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Em(add11) — E, G, B, A — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'A', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: Em7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-minor-7","e-minor","e-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Em(add11) chord?', a: 'Em(add11) contains four notes: E, G, B, A.' },
+      { q: 'How is Em(add11) different from Em7?', a: 'Em(add11) adds the 11th (A) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Em(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'f-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fm(add11) — F, A♭, C, B♭ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Bb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: Fm7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-minor-7","f-minor","f-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Fm(add11) chord?', a: 'Fm(add11) contains four notes: F, A♭, C, B♭.' },
+      { q: 'How is Fm(add11) different from Fm7?', a: 'Fm(add11) adds the 11th (B♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fm(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'f-sharp-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯m(add11) — F♯, A, C♯, B — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'B', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯m7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-minor-7","f-sharp-minor","f-sharp-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a F♯m(add11) chord?', a: 'F♯m(add11) contains four notes: F♯, A, C♯, B.' },
+      { q: 'How is F♯m(add11) different from F♯m7?', a: 'F♯m(add11) adds the 11th (B) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'g-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gm(add11) — G, B♭, D, C — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'C', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: Gm7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-minor-7","g-minor","g-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Gm(add11) chord?', a: 'Gm(add11) contains four notes: G, B♭, D, C.' },
+      { q: 'How is Gm(add11) different from Gm7?', a: 'Gm(add11) adds the 11th (C) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gm(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'g-sharp-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯m(add11) — G♯, B, D♯, C♯ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'C#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯m7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-minor-7","g-sharp-minor","g-sharp-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a G♯m(add11) chord?', a: 'G♯m(add11) contains four notes: G♯, B, D♯, C♯.' },
+      { q: 'How is G♯m(add11) different from G♯m7?', a: 'G♯m(add11) adds the 11th (C♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'a-flat-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭m(add11) — A♭, C♭, E♭, D♭ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Db', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ minor triad', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭m7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-minor-7","a-flat-minor","a-flat-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (D♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a A♭m(add11) chord?', a: 'A♭m(add11) contains four notes: A♭, C♭, E♭, D♭.' },
+      { q: 'How is A♭m(add11) different from A♭m7?', a: 'A♭m(add11) adds the 11th (D♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'a-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Am(add11) — A, C, E, D — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'D', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: Am7', slug: 'a-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-minor-7","a-minor","a-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Am(add11) chord?', a: 'Am(add11) contains four notes: A, C, E, D.' },
+      { q: 'How is Am(add11) different from Am7?', a: 'Am(add11) adds the 11th (D) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Am(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'a-sharp-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♯m(add11) — A♯, C♯, E♯, D♯ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'D#', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♯ minor triad', slug: 'a-sharp-minor', kind: 'chord' },
+      { label: 'Related: A♯m7', slug: 'a-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-sharp-minor-7","a-sharp-minor","a-sharp-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a A♯m(add11) chord?', a: 'A♯m(add11) contains four notes: A♯, C♯, E♯, D♯.' },
+      { q: 'How is A♯m(add11) different from A♯m7?', a: 'A♯m(add11) adds the 11th (D♯) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♯m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'b-flat-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭m(add11) — B♭, D♭, F, E♭ — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Eb', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭m7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-minor-7","b-flat-minor","b-flat-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a B♭m(add11) chord?', a: 'B♭m(add11) contains four notes: B♭, D♭, F, E♭.' },
+      { q: 'How is B♭m(add11) different from B♭m7?', a: 'B♭m(add11) adds the 11th (E♭) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭m(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+  'b-minor-add-11': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bm(add11) — B, D, F♯, E — is a minor add11 chord: minor triad + 11th (no 7th, no 9th) — a relatively rare extended minor chord with a distinctive open colour.",
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'E', name: 'minor 7th', semitones: 10 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: Bm7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-minor-7","b-minor","b-minor-add-9"],
+    commonMistakes:
+      "The defining note is the 11th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 11th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as an open-sounding minor tonic in folk, indie, and modal music.",
+    faq: [
+      { q: 'What notes are in a Bm(add11) chord?', a: 'Bm(add11) contains four notes: B, D, F♯, E.' },
+      { q: 'How is Bm(add11) different from Bm7?', a: 'Bm(add11) adds the 11th (E) on top of the underlying 7th chord. The 11th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bm(add11) used in music?', a: 'Functions as an open-sounding minor tonic in folk, indie, and modal music.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: major-13 chords ─────────────────────────────────────
+  'c-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cmaj13 — C, E, G, B, D, A — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'A', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: Cmaj7', slug: 'c-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-major-9","c-major-7","c-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Cmaj13 chord?', a: 'Cmaj13 contains six notes: C, E, G, B, D, A.' },
+      { q: 'How is Cmaj13 different from Cmaj7?', a: 'Cmaj13 adds the 13th (A) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cmaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'c-sharp-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯maj13 — C♯, E♯, G♯, B♯, D♯, A♯ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'A#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯maj7', slug: 'c-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-major-9","c-sharp-major-7","c-sharp-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a C♯maj13 chord?', a: 'C♯maj13 contains six notes: C♯, E♯, G♯, B♯, D♯, A♯.' },
+      { q: 'How is C♯maj13 different from C♯maj7?', a: 'C♯maj13 adds the 13th (A♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'd-flat-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭maj13 — D♭, F, A♭, C, E♭, B♭ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Bb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭maj7', slug: 'd-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-major-9","d-flat-major-7","d-flat-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a D♭maj13 chord?', a: 'D♭maj13 contains six notes: D♭, F, A♭, C, E♭, B♭.' },
+      { q: 'How is D♭maj13 different from D♭maj7?', a: 'D♭maj13 adds the 13th (B♭) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'd-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dmaj13 — D, F♯, A, C♯, E, B — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'B', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: Dmaj7', slug: 'd-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-major-9","d-major-7","d-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Dmaj13 chord?', a: 'Dmaj13 contains six notes: D, F♯, A, C♯, E, B.' },
+      { q: 'How is Dmaj13 different from Dmaj7?', a: 'Dmaj13 adds the 13th (B) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dmaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'e-flat-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭maj13 — E♭, G, B♭, D, F, C — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'C', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭maj7', slug: 'e-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-major-9","e-flat-major-7","e-flat-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a E♭maj13 chord?', a: 'E♭maj13 contains six notes: E♭, G, B♭, D, F, C.' },
+      { q: 'How is E♭maj13 different from E♭maj7?', a: 'E♭maj13 adds the 13th (C) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'e-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Emaj13 — E, G♯, B, D♯, F♯, C♯ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'C#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: Emaj7', slug: 'e-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-major-9","e-major-7","e-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Emaj13 chord?', a: 'Emaj13 contains six notes: E, G♯, B, D♯, F♯, C♯.' },
+      { q: 'How is Emaj13 different from Emaj7?', a: 'Emaj13 adds the 13th (C♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Emaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'f-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fmaj13 — F, A, C, E, G, D — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'D', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: Fmaj7', slug: 'f-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-major-9","f-major-7","f-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Fmaj13 chord?', a: 'Fmaj13 contains six notes: F, A, C, E, G, D.' },
+      { q: 'How is Fmaj13 different from Fmaj7?', a: 'Fmaj13 adds the 13th (D) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fmaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'f-sharp-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯maj13 — F♯, A♯, C♯, E♯, G♯, D♯ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'D#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯maj7', slug: 'f-sharp-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-major-9","f-sharp-major-7","f-sharp-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a F♯maj13 chord?', a: 'F♯maj13 contains six notes: F♯, A♯, C♯, E♯, G♯, D♯.' },
+      { q: 'How is F♯maj13 different from F♯maj7?', a: 'F♯maj13 adds the 13th (D♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'g-flat-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭maj13 — G♭, B♭, D♭, F, A♭, E♭ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Eb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭maj7', slug: 'g-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-major-9","g-flat-major-7","g-flat-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a G♭maj13 chord?', a: 'G♭maj13 contains six notes: G♭, B♭, D♭, F, A♭, E♭.' },
+      { q: 'How is G♭maj13 different from G♭maj7?', a: 'G♭maj13 adds the 13th (E♭) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'g-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gmaj13 — G, B, D, F♯, A, E — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'E', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: Gmaj7', slug: 'g-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-major-9","g-major-7","g-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Gmaj13 chord?', a: 'Gmaj13 contains six notes: G, B, D, F♯, A, E.' },
+      { q: 'How is Gmaj13 different from Gmaj7?', a: 'Gmaj13 adds the 13th (E) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gmaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'a-flat-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭maj13 — A♭, C, E♭, G, B♭, F — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'F', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭maj7', slug: 'a-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-major-9","a-flat-major-7","a-flat-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a A♭maj13 chord?', a: 'A♭maj13 contains six notes: A♭, C, E♭, G, B♭, F.' },
+      { q: 'How is A♭maj13 different from A♭maj7?', a: 'A♭maj13 adds the 13th (F) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'a-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Amaj13 — A, C♯, E, G♯, B, F♯ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'F#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: Amaj7', slug: 'a-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-major-9","a-major-7","a-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Amaj13 chord?', a: 'Amaj13 contains six notes: A, C♯, E, G♯, B, F♯.' },
+      { q: 'How is Amaj13 different from Amaj7?', a: 'Amaj13 adds the 13th (F♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Amaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'b-flat-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭maj13 — B♭, D, F, A, C, G — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'G', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭maj7', slug: 'b-flat-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-major-9","b-flat-major-7","b-flat-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a B♭maj13 chord?', a: 'B♭maj13 contains six notes: B♭, D, F, A, C, G.' },
+      { q: 'How is B♭maj13 different from B♭maj7?', a: 'B♭maj13 adds the 13th (G) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭maj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'b-major-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bmaj13 — B, D♯, F♯, A♯, C♯, G♯ — is a major 13th chord: stacked thirds through the 13th — maj7 + 9 + 13 (the 11th is conventionally omitted to avoid clashing with the 3rd). The full-stacked tonic sonority of advanced jazz harmony.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'G#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: Bmaj7', slug: 'b-major-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-major-9","b-major-7","b-major-11"],
+    commonMistakes:
+      "The defining note is the 13th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Bmaj13 chord?', a: 'Bmaj13 contains six notes: B, D♯, F♯, A♯, C♯, G♯.' },
+      { q: 'How is Bmaj13 different from Bmaj7?', a: 'Bmaj13 adds the 13th (G♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bmaj13 used in music?', a: 'Functions as the fully-extended Imaj13 — a complete tonic sonority in modern jazz harmony.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: dominant-13 chords ─────────────────────────────────────
+  'c-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "C13 — C, E, G, B♭, D, A — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'A', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C major triad', slug: 'c-major', kind: 'chord' },
+      { label: 'Related: C7', slug: 'c-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-dominant-9","c-dominant-7","c-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a C13 chord?', a: 'C13 contains six notes: C, E, G, B♭, D, A.' },
+      { q: 'How is C13 different from C7?', a: 'C13 adds the 13th (A) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'c-sharp-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯13 — C♯, E♯, G♯, B, D♯, A♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'G#', name: 'minor 3rd', semitones: 3 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'A#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ major triad', slug: 'c-sharp-major', kind: 'chord' },
+      { label: 'Related: C♯7', slug: 'c-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-dominant-9","c-sharp-dominant-7","c-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a C♯13 chord?', a: 'C♯13 contains six notes: C♯, E♯, G♯, B, D♯, A♯.' },
+      { q: 'How is C♯13 different from C♯7?', a: 'C♯13 adds the 13th (A♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'd-flat-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭13 — D♭, F, A♭, C♭, E♭, B♭ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Bb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ major triad', slug: 'd-flat-major', kind: 'chord' },
+      { label: 'Related: D♭7', slug: 'd-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-dominant-9","d-flat-dominant-7","d-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a D♭13 chord?', a: 'D♭13 contains six notes: D♭, F, A♭, C♭, E♭, B♭.' },
+      { q: 'How is D♭13 different from D♭7?', a: 'D♭13 adds the 13th (B♭) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'd-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "D13 — D, F♯, A, C, E, B — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'B', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D major triad', slug: 'd-major', kind: 'chord' },
+      { label: 'Related: D7', slug: 'd-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-dominant-9","d-dominant-7","d-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a D13 chord?', a: 'D13 contains six notes: D, F♯, A, C, E, B.' },
+      { q: 'How is D13 different from D7?', a: 'D13 adds the 13th (B) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'e-flat-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭13 — E♭, G, B♭, D♭, F, C — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'C', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ major triad', slug: 'e-flat-major', kind: 'chord' },
+      { label: 'Related: E♭7', slug: 'e-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-dominant-9","e-flat-dominant-7","e-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a E♭13 chord?', a: 'E♭13 contains six notes: E♭, G, B♭, D♭, F, C.' },
+      { q: 'How is E♭13 different from E♭7?', a: 'E♭13 adds the 13th (C) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'e-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "E13 — E, G♯, B, D, F♯, C♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'C#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E major triad', slug: 'e-major', kind: 'chord' },
+      { label: 'Related: E7', slug: 'e-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-dominant-9","e-dominant-7","e-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a E13 chord?', a: 'E13 contains six notes: E, G♯, B, D, F♯, C♯.' },
+      { q: 'How is E13 different from E7?', a: 'E13 adds the 13th (C♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'f-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "F13 — F, A, C, E♭, G, D — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'D', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F major triad', slug: 'f-major', kind: 'chord' },
+      { label: 'Related: F7', slug: 'f-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-dominant-9","f-dominant-7","f-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a F13 chord?', a: 'F13 contains six notes: F, A, C, E♭, G, D.' },
+      { q: 'How is F13 different from F7?', a: 'F13 adds the 13th (D) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'f-sharp-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯13 — F♯, A♯, C♯, E, G♯, D♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'D#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ major triad', slug: 'f-sharp-major', kind: 'chord' },
+      { label: 'Related: F♯7', slug: 'f-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-dominant-9","f-sharp-dominant-7","f-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a F♯13 chord?', a: 'F♯13 contains six notes: F♯, A♯, C♯, E, G♯, D♯.' },
+      { q: 'How is F♯13 different from F♯7?', a: 'F♯13 adds the 13th (D♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'g-flat-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♭13 — G♭, B♭, D♭, F♭, A♭, E♭ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Eb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♭ major triad', slug: 'g-flat-major', kind: 'chord' },
+      { label: 'Related: G♭7', slug: 'g-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-flat-dominant-9","g-flat-dominant-7","g-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (E♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a G♭13 chord?', a: 'G♭13 contains six notes: G♭, B♭, D♭, F♭, A♭, E♭.' },
+      { q: 'How is G♭13 different from G♭7?', a: 'G♭13 adds the 13th (E♭) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♭13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'g-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "G13 — G, B, D, F, A, E — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'E', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G major triad', slug: 'g-major', kind: 'chord' },
+      { label: 'Related: G7', slug: 'g-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-dominant-9","g-dominant-7","g-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a G13 chord?', a: 'G13 contains six notes: G, B, D, F, A, E.' },
+      { q: 'How is G13 different from G7?', a: 'G13 adds the 13th (E) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'g-sharp-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯13 — G♯, B♯, D♯, F♯, A♯, E♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'G#', to: 'B#', name: 'major 3rd', semitones: 4 },
+      { from: 'B#', to: 'D#', name: 'minor 3rd', semitones: 3 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'E#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ major triad', slug: 'g-sharp-major', kind: 'chord' },
+      { label: 'Related: G♯7', slug: 'g-sharp-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-dominant-9","g-sharp-dominant-7","g-sharp-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (E♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a G♯13 chord?', a: 'G♯13 contains six notes: G♯, B♯, D♯, F♯, A♯, E♯.' },
+      { q: 'How is G♯13 different from G♯7?', a: 'G♯13 adds the 13th (E♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'a-flat-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭13 — A♭, C, E♭, G♭, B♭, F — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'F', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ major triad', slug: 'a-flat-major', kind: 'chord' },
+      { label: 'Related: A♭7', slug: 'a-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-dominant-9","a-flat-dominant-7","a-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a A♭13 chord?', a: 'A♭13 contains six notes: A♭, C, E♭, G♭, B♭, F.' },
+      { q: 'How is A♭13 different from A♭7?', a: 'A♭13 adds the 13th (F) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'a-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "A13 — A, C♯, E, G, B, F♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'F#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A major triad', slug: 'a-major', kind: 'chord' },
+      { label: 'Related: A7', slug: 'a-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-dominant-9","a-dominant-7","a-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a A13 chord?', a: 'A13 contains six notes: A, C♯, E, G, B, F♯.' },
+      { q: 'How is A13 different from A7?', a: 'A13 adds the 13th (F♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'b-flat-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭13 — B♭, D, F, A♭, C, G — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'G', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ major triad', slug: 'b-flat-major', kind: 'chord' },
+      { label: 'Related: B♭7', slug: 'b-flat-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-dominant-9","b-flat-dominant-7","b-flat-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a B♭13 chord?', a: 'B♭13 contains six notes: B♭, D, F, A♭, C, G.' },
+      { q: 'How is B♭13 different from B♭7?', a: 'B♭13 adds the 13th (G) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+  'b-dominant-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "B13 — B, D♯, F♯, A, C♯, G♯ — is a dominant 13th chord: dominant 7 + 9 + 13. The 13 is a major 6th above the root, an octave up; the chord is the standard big-V chord in jazz cadences.",
+    intervals: [
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'G#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B major triad', slug: 'b-major', kind: 'chord' },
+      { label: 'Related: B7', slug: 'b-dominant-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-dominant-9","b-dominant-7","b-dominant-11"],
+    commonMistakes:
+      "The defining note is the 13th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.",
+    faq: [
+      { q: 'What notes are in a B13 chord?', a: 'B13 contains six notes: B, D♯, F♯, A, C♯, G♯.' },
+      { q: 'How is B13 different from B7?', a: 'B13 adds the 13th (G♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B13 used in music?', a: 'Functions as the fully-extended V13 — the standard big-dominant in jazz cadences.' }
+    ],
+  },
+
+
+  // ─── Phase 5/6: minor-13 chords ─────────────────────────────────────
+  'c-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Cm13 — C, E♭, G, B♭, D, A — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'A', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C minor triad', slug: 'c-minor', kind: 'chord' },
+      { label: 'Related: Cm7', slug: 'c-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-minor-9","c-minor-7","c-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (A). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Cm13 chord?', a: 'Cm13 contains six notes: C, E♭, G, B♭, D, A.' },
+      { q: 'How is Cm13 different from Cm7?', a: 'Cm13 adds the 13th (A) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Cm13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'c-sharp-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "C♯m13 — C♯, E, G♯, B, D♯, A♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'A#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: C♯ minor triad', slug: 'c-sharp-minor', kind: 'chord' },
+      { label: 'Related: C♯m7', slug: 'c-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["c-sharp-minor-9","c-sharp-minor-7","c-sharp-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (A♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a C♯m13 chord?', a: 'C♯m13 contains six notes: C♯, E, G♯, B, D♯, A♯.' },
+      { q: 'How is C♯m13 different from C♯m7?', a: 'C♯m13 adds the 13th (A♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is C♯m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'd-flat-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♭m13 — D♭, F♭, A♭, C♭, E♭, B♭ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'Db', to: 'Fb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Fb', to: 'Ab', name: 'major 3rd', semitones: 4 },
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Bb', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♭ minor triad', slug: 'd-flat-minor', kind: 'chord' },
+      { label: 'Related: D♭m7', slug: 'd-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-flat-minor-9","d-flat-minor-7","d-flat-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (B♭). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a D♭m13 chord?', a: 'D♭m13 contains six notes: D♭, F♭, A♭, C♭, E♭, B♭.' },
+      { q: 'How is D♭m13 different from D♭m7?', a: 'D♭m13 adds the 13th (B♭) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♭m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'd-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Dm13 — D, F, A, C, E, B — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'B', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D minor triad', slug: 'd-minor', kind: 'chord' },
+      { label: 'Related: Dm7', slug: 'd-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-minor-9","d-minor-7","d-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (B). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Dm13 chord?', a: 'Dm13 contains six notes: D, F, A, C, E, B.' },
+      { q: 'How is Dm13 different from Dm7?', a: 'Dm13 adds the 13th (B) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Dm13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'd-sharp-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "D♯m13 — D♯, F♯, A♯, C♯, E♯, B♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'C#', name: 'minor 3rd', semitones: 3 },
+      { from: 'C#', to: 'E#', name: 'major 3rd', semitones: 4 },
+      { from: 'E#', to: 'B#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: D♯ minor triad', slug: 'd-sharp-minor', kind: 'chord' },
+      { label: 'Related: D♯m7', slug: 'd-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["d-sharp-minor-9","d-sharp-minor-7","d-sharp-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (B♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a D♯m13 chord?', a: 'D♯m13 contains six notes: D♯, F♯, A♯, C♯, E♯, B♯.' },
+      { q: 'How is D♯m13 different from D♯m7?', a: 'D♯m13 adds the 13th (B♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is D♯m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'e-flat-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "E♭m13 — E♭, G♭, B♭, D♭, F, C — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'C', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E♭ minor triad', slug: 'e-flat-minor', kind: 'chord' },
+      { label: 'Related: E♭m7', slug: 'e-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-flat-minor-9","e-flat-minor-7","e-flat-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (C). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a E♭m13 chord?', a: 'E♭m13 contains six notes: E♭, G♭, B♭, D♭, F, C.' },
+      { q: 'How is E♭m13 different from E♭m7?', a: 'E♭m13 adds the 13th (C) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is E♭m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'e-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Em13 — E, G, B, D, F♯, C♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'C#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: E minor triad', slug: 'e-minor', kind: 'chord' },
+      { label: 'Related: Em7', slug: 'e-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["e-minor-9","e-minor-7","e-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (C♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Em13 chord?', a: 'Em13 contains six notes: E, G, B, D, F♯, C♯.' },
+      { q: 'How is Em13 different from Em7?', a: 'Em13 adds the 13th (C♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Em13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'f-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Fm13 — F, A♭, C, E♭, G, D — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'Eb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Eb', to: 'G', name: 'major 3rd', semitones: 4 },
+      { from: 'G', to: 'D', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F minor triad', slug: 'f-minor', kind: 'chord' },
+      { label: 'Related: Fm7', slug: 'f-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-minor-9","f-minor-7","f-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (D). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Fm13 chord?', a: 'Fm13 contains six notes: F, A♭, C, E♭, G, D.' },
+      { q: 'How is Fm13 different from Fm7?', a: 'Fm13 adds the 13th (D) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Fm13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'f-sharp-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "F♯m13 — F♯, A, C♯, E, G♯, D♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'E', name: 'minor 3rd', semitones: 3 },
+      { from: 'E', to: 'G#', name: 'major 3rd', semitones: 4 },
+      { from: 'G#', to: 'D#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: F♯ minor triad', slug: 'f-sharp-minor', kind: 'chord' },
+      { label: 'Related: F♯m7', slug: 'f-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["f-sharp-minor-9","f-sharp-minor-7","f-sharp-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (D♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a F♯m13 chord?', a: 'F♯m13 contains six notes: F♯, A, C♯, E, G♯, D♯.' },
+      { q: 'How is F♯m13 different from F♯m7?', a: 'F♯m13 adds the 13th (D♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is F♯m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'g-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Gm13 — G, B♭, D, F, A, E — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'G', to: 'Bb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Bb', to: 'D', name: 'major 3rd', semitones: 4 },
+      { from: 'D', to: 'F', name: 'minor 3rd', semitones: 3 },
+      { from: 'F', to: 'A', name: 'major 3rd', semitones: 4 },
+      { from: 'A', to: 'E', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G minor triad', slug: 'g-minor', kind: 'chord' },
+      { label: 'Related: Gm7', slug: 'g-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-minor-9","g-minor-7","g-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (E). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Gm13 chord?', a: 'Gm13 contains six notes: G, B♭, D, F, A, E.' },
+      { q: 'How is Gm13 different from Gm7?', a: 'Gm13 adds the 13th (E) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Gm13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'g-sharp-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "G♯m13 — G♯, B, D♯, F♯, A♯, E♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'G#', to: 'B', name: 'minor 3rd', semitones: 3 },
+      { from: 'B', to: 'D#', name: 'major 3rd', semitones: 4 },
+      { from: 'D#', to: 'F#', name: 'minor 3rd', semitones: 3 },
+      { from: 'F#', to: 'A#', name: 'major 3rd', semitones: 4 },
+      { from: 'A#', to: 'E#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: G♯ minor triad', slug: 'g-sharp-minor', kind: 'chord' },
+      { label: 'Related: G♯m7', slug: 'g-sharp-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["g-sharp-minor-9","g-sharp-minor-7","g-sharp-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (E♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a G♯m13 chord?', a: 'G♯m13 contains six notes: G♯, B, D♯, F♯, A♯, E♯.' },
+      { q: 'How is G♯m13 different from G♯m7?', a: 'G♯m13 adds the 13th (E♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is G♯m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'a-flat-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "A♭m13 — A♭, C♭, E♭, G♭, B♭, F — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'Ab', to: 'Cb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Cb', to: 'Eb', name: 'major 3rd', semitones: 4 },
+      { from: 'Eb', to: 'Gb', name: 'minor 3rd', semitones: 3 },
+      { from: 'Gb', to: 'Bb', name: 'major 3rd', semitones: 4 },
+      { from: 'Bb', to: 'F', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A♭ minor triad', slug: 'a-flat-minor', kind: 'chord' },
+      { label: 'Related: A♭m7', slug: 'a-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-flat-minor-9","a-flat-minor-7","a-flat-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (F). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a A♭m13 chord?', a: 'A♭m13 contains six notes: A♭, C♭, E♭, G♭, B♭, F.' },
+      { q: 'How is A♭m13 different from A♭m7?', a: 'A♭m13 adds the 13th (F) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is A♭m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'a-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Am13 — A, C, E, G, B, F♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'A', to: 'C', name: 'minor 3rd', semitones: 3 },
+      { from: 'C', to: 'E', name: 'major 3rd', semitones: 4 },
+      { from: 'E', to: 'G', name: 'minor 3rd', semitones: 3 },
+      { from: 'G', to: 'B', name: 'major 3rd', semitones: 4 },
+      { from: 'B', to: 'F#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: A minor triad', slug: 'a-minor', kind: 'chord' },
+      { label: 'Related: Am7', slug: 'a-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["a-minor-9","a-minor-7","a-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (F♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Am13 chord?', a: 'Am13 contains six notes: A, C, E, G, B, F♯.' },
+      { q: 'How is Am13 different from Am7?', a: 'Am13 adds the 13th (F♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Am13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'b-flat-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "B♭m13 — B♭, D♭, F, A♭, C, G — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'Bb', to: 'Db', name: 'minor 3rd', semitones: 3 },
+      { from: 'Db', to: 'F', name: 'major 3rd', semitones: 4 },
+      { from: 'F', to: 'Ab', name: 'minor 3rd', semitones: 3 },
+      { from: 'Ab', to: 'C', name: 'major 3rd', semitones: 4 },
+      { from: 'C', to: 'G', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B♭ minor triad', slug: 'b-flat-minor', kind: 'chord' },
+      { label: 'Related: B♭m7', slug: 'b-flat-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-flat-minor-9","b-flat-minor-7","b-flat-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (G). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a B♭m13 chord?', a: 'B♭m13 contains six notes: B♭, D♭, F, A♭, C, G.' },
+      { q: 'How is B♭m13 different from B♭m7?', a: 'B♭m13 adds the 13th (G) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is B♭m13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+  'b-minor-13': {
+    publishAt: '2020-01-01',
+    intro:
+      "Bm13 — B, D, F♯, A, C♯, G♯ — is a minor 13th chord: m7 + 9 + 13. The 13 sits a major 6th above the root, two octaves up — borrowed from Dorian or melodic minor like the m6 chord's sixth.",
+    intervals: [
+      { from: 'B', to: 'D', name: 'minor 3rd', semitones: 3 },
+      { from: 'D', to: 'F#', name: 'major 3rd', semitones: 4 },
+      { from: 'F#', to: 'A', name: 'minor 3rd', semitones: 3 },
+      { from: 'A', to: 'C#', name: 'major 3rd', semitones: 4 },
+      { from: 'C#', to: 'G#', name: 'perfect 5th', semitones: 7 },
+    ],
+    relatedKeys: [
+      { label: 'Parallel: B minor triad', slug: 'b-minor', kind: 'chord' },
+      { label: 'Related: Bm7', slug: 'b-minor-7', kind: 'chord' },
+    ],
+    relatedChords: ["b-minor-9","b-minor-7","b-minor-11"],
+    commonMistakes:
+      "The defining note is the 13th (G♯). It sits more than an octave above the root, which is why the chord needs a wide voicing — in tight piano voicings the 13th usually appears in the top register while the root and lower triad tones cluster below.",
+    inProgressions:
+      "Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.",
+    faq: [
+      { q: 'What notes are in a Bm13 chord?', a: 'Bm13 contains six notes: B, D, F♯, A, C♯, G♯.' },
+      { q: 'How is Bm13 different from Bm7?', a: 'Bm13 adds the 13th (G♯) on top of the underlying 7th chord. The 13th extends the chord into the next octave and adds harmonic colour.' },
+      { q: 'When is Bm13 used in music?', a: 'Functions as a fully-extended iim13 or im13 — a complete minor sonority in modern jazz harmony.' }
+    ],
+  },
+
+
 };
 
 // Public lookup. Returns the full page descriptor or null if not yet live.

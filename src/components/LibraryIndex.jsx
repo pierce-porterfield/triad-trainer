@@ -37,15 +37,27 @@ const MAJOR_FLAVOR_QUALITIES = new Set([
 ]);
 const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
 
-// Within each major / minor column, chords are further split into two
-// sub-groups so the bigger extended chords (9ths, 11ths, 13ths, adds)
-// visually stand apart from the more common triads, 6ths, and 7ths.
+// Within each major / minor column, chords split into three sub-groups
+// so the cards are easier to scan:
+//   - "triads"        — 3-note chords (maj, min, dim, aug)
+//   - "sixths-sevenths" — 4-note basics (6, m6, maj7, 7, m7, m7b5, dim7)
+//   - "extensions"    — 5+ note chords (9ths, 11ths, 13ths, adds)
+const TRIAD_QUALITIES = new Set(['maj', 'min', 'dim', 'aug']);
+const SIXTH_SEVENTH_QUALITIES = new Set([
+  'maj6', 'min6',
+  'maj7', 'dom7', 'min7', 'm7b5', 'dim7',
+]);
 const EXTENSION_QUALITIES = new Set([
   'maj9', 'dom9', 'min9', 'add9', 'madd9',
   'maj11', 'dom11', 'min11', 'add11', 'madd11',
   'maj13', 'dom13', 'min13',
 ]);
-const isExtension = (qualityKey) => EXTENSION_QUALITIES.has(qualityKey);
+const chordSubgroup = (qualityKey) => {
+  if (TRIAD_QUALITIES.has(qualityKey)) return 'triads';
+  if (SIXTH_SEVENTH_QUALITIES.has(qualityKey)) return 'sixths-sevenths';
+  if (EXTENSION_QUALITIES.has(qualityKey)) return 'extensions';
+  return 'triads'; // fallback
+};
 
 // Slug-safe id from a group label (e.g. "C♯ / D♭" → "root-c-sharp-d-flat").
 // Used as the anchor target for the left sidebar's jump links.
@@ -382,39 +394,40 @@ function MiniPiano({ rootPc, offsets }) {
   );
 }
 
-// Render the cards for one side of a split chord-section column, split
-// further into "basics" (triads + 6ths + 7ths) and "extensions" (9ths,
-// 11ths, 13ths, adds). The extensions get a small heading so they're
-// visually distinct from the more common smaller chords.
+// Render the cards for one side of a split chord-section column,
+// further split into three sub-groups (Triads, Sixths & Sevenths,
+// Extensions) so the increasingly-extended chords visually stand apart
+// from the simpler ones.
+const SUBGROUP_ORDER = ['triads', 'sixths-sevenths', 'extensions'];
+const SUBGROUP_LABEL = {
+  'triads':           'Triads',
+  'sixths-sevenths':  'Sixths & Sevenths',
+  'extensions':       'Extensions',
+};
 function ChordColumn({ items, emptyLabel }) {
   if (items.length === 0) {
     return <p className="library-split-empty">{emptyLabel}</p>;
   }
-  const basics = items.filter((it) => !isExtension(it.qualityKey));
-  const extensions = items.filter((it) => isExtension(it.qualityKey));
+  const buckets = { triads: [], 'sixths-sevenths': [], extensions: [] };
+  for (const it of items) buckets[chordSubgroup(it.qualityKey)].push(it);
   return (
     <>
-      {basics.length > 0 && (
-        <ul className="library-grid library-grid-stack">
-          {basics.map((item) => (
-            <li key={item.slug}>
-              <LibraryCard item={item} />
-            </li>
-          ))}
-        </ul>
-      )}
-      {extensions.length > 0 && (
-        <>
-          <h4 className="library-subgroup-title">Extensions</h4>
-          <ul className="library-grid library-grid-stack">
-            {extensions.map((item) => (
-              <li key={item.slug}>
-                <LibraryCard item={item} />
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+      {SUBGROUP_ORDER.map((key) => {
+        const bucket = buckets[key];
+        if (bucket.length === 0) return null;
+        return (
+          <div key={key} className="library-subgroup">
+            <h4 className="library-subgroup-title">{SUBGROUP_LABEL[key]}</h4>
+            <ul className="library-grid library-grid-stack">
+              {bucket.map((item) => (
+                <li key={item.slug}>
+                  <LibraryCard item={item} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -701,18 +714,21 @@ const styles = `
       text-align: center;
     }
   }
-  /* Sub-group heading within a chord column (e.g. "Extensions"). Sits
-     between the basic-chord cards and the 9th/11th/13th cards in the
-     same column. */
+  /* Sub-group container within a chord column — one each for Triads,
+     Sixths & Sevenths, and Extensions. The first sub-group skips the
+     top divider since it sits directly under the column heading. */
+  .library-subgroup + .library-subgroup .library-subgroup-title {
+    margin-top: 1.1rem;
+    padding-top: 0.5rem;
+    border-top: 1px dotted var(--ink-soft);
+  }
   .library-subgroup-title {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.55rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--accent);
-    margin: 1.1rem 0 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px dotted var(--ink-soft);
+    margin: 0 0 0.5rem;
     font-weight: 600;
     opacity: 0.85;
   }

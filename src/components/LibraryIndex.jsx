@@ -44,7 +44,6 @@ const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
 const QUALITY_COLOR = {
   // Major triad + its non-dominant extensions
   maj:    'major',
-  maj6:   'major',
   maj7:   'major',
   maj9:   'major',
   add9:   'major',
@@ -53,13 +52,17 @@ const QUALITY_COLOR = {
   maj13:  'major',
   // Minor triad + its extensions
   min:    'minor',
-  min6:   'minor',
   min7:   'minor',
   min9:   'minor',
   madd9:  'minor',
   min11:  'minor',
   madd11: 'minor',
   min13:  'minor',
+  // 6 chords stand apart from the maj/min families — same triad
+  // underneath but with the major-6th sound that's distinctive enough
+  // to deserve its own colour.
+  maj6:   'sixth',
+  min6:   'sixth',
   // Dominant family (major triad + minor 7th, or extended)
   dom7:   'dominant',
   dom9:   'dominant',
@@ -784,6 +787,7 @@ const styles = `
      update together. */
   .library-card-chord[data-color="major"]      { --spine: #4a6b54; }
   .library-card-chord[data-color="minor"]      { --spine: #4a5980; }
+  .library-card-chord[data-color="sixth"]      { --spine: #b86a2b; }
   .library-card-chord[data-color="dominant"]   { --spine: #a64535; }
   .library-card-chord[data-color="diminished"] { --spine: #5e3a6b; }
   .library-card-chord[data-color="half-dim"]   { --spine: #846a92; }

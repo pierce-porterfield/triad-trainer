@@ -37,16 +37,15 @@ const MAJOR_FLAVOR_QUALITIES = new Set([
 ]);
 const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
 
-// Within each major / minor column, chords split into three sub-groups
+// Within each major / minor column, chords split into four sub-groups
 // so the cards are easier to scan:
-//   - "triads"        — 3-note chords (maj, min, dim, aug)
-//   - "sixths-sevenths" — 4-note basics (6, m6, maj7, 7, m7, m7b5, dim7)
-//   - "extensions"    — 5+ note chords (9ths, 11ths, 13ths, adds)
+//   - "triads"      — 3-note chords (maj, min, dim, aug)
+//   - "sixths"      — 6 and m6 chords
+//   - "sevenths"    — maj7, 7, m7, m7b5, dim7
+//   - "extensions"  — 5+ note chords (9ths, 11ths, 13ths, adds)
 const TRIAD_QUALITIES = new Set(['maj', 'min', 'dim', 'aug']);
-const SIXTH_SEVENTH_QUALITIES = new Set([
-  'maj6', 'min6',
-  'maj7', 'dom7', 'min7', 'm7b5', 'dim7',
-]);
+const SIXTH_QUALITIES = new Set(['maj6', 'min6']);
+const SEVENTH_QUALITIES = new Set(['maj7', 'dom7', 'min7', 'm7b5', 'dim7']);
 const EXTENSION_QUALITIES = new Set([
   'maj9', 'dom9', 'min9', 'add9', 'madd9',
   'maj11', 'dom11', 'min11', 'add11', 'madd11',
@@ -54,7 +53,8 @@ const EXTENSION_QUALITIES = new Set([
 ]);
 const chordSubgroup = (qualityKey) => {
   if (TRIAD_QUALITIES.has(qualityKey)) return 'triads';
-  if (SIXTH_SEVENTH_QUALITIES.has(qualityKey)) return 'sixths-sevenths';
+  if (SIXTH_QUALITIES.has(qualityKey)) return 'sixths';
+  if (SEVENTH_QUALITIES.has(qualityKey)) return 'sevenths';
   if (EXTENSION_QUALITIES.has(qualityKey)) return 'extensions';
   return 'triads'; // fallback
 };
@@ -398,17 +398,18 @@ function MiniPiano({ rootPc, offsets }) {
 // further split into three sub-groups (Triads, Sixths & Sevenths,
 // Extensions) so the increasingly-extended chords visually stand apart
 // from the simpler ones.
-const SUBGROUP_ORDER = ['triads', 'sixths-sevenths', 'extensions'];
+const SUBGROUP_ORDER = ['triads', 'sixths', 'sevenths', 'extensions'];
 const SUBGROUP_LABEL = {
-  'triads':           'Triads',
-  'sixths-sevenths':  'Sixths & Sevenths',
-  'extensions':       'Extensions',
+  'triads':     'Triads',
+  'sixths':     'Sixths',
+  'sevenths':   'Sevenths',
+  'extensions': 'Extensions',
 };
 function ChordColumn({ items, emptyLabel }) {
   if (items.length === 0) {
     return <p className="library-split-empty">{emptyLabel}</p>;
   }
-  const buckets = { triads: [], 'sixths-sevenths': [], extensions: [] };
+  const buckets = { triads: [], sixths: [], sevenths: [], extensions: [] };
   for (const it of items) buckets[chordSubgroup(it.qualityKey)].push(it);
   return (
     <>

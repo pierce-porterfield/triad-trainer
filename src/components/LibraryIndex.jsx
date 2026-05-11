@@ -37,6 +37,27 @@ const MAJOR_FLAVOR_QUALITIES = new Set([
 ]);
 const isMajorFlavor = (qualityKey) => MAJOR_FLAVOR_QUALITIES.has(qualityKey);
 
+// Within each major / minor column, chords are further split into two
+// sub-groups so the bigger extended chords (9ths, 11ths, 13ths, adds)
+// visually stand apart from the more common triads, 6ths, and 7ths.
+const EXTENSION_QUALITIES = new Set([
+  'maj9', 'dom9', 'min9', 'add9', 'madd9',
+  'maj11', 'dom11', 'min11', 'add11', 'madd11',
+  'maj13', 'dom13', 'min13',
+]);
+const isExtension = (qualityKey) => EXTENSION_QUALITIES.has(qualityKey);
+
+// Slug-safe id from a group label (e.g. "C♯ / D♭" → "root-c-sharp-d-flat").
+// Used as the anchor target for the left sidebar's jump links.
+const groupAnchorId = (label) =>
+  'root-' + label
+    .toLowerCase()
+    .replace(/♯/g, '-sharp')
+    .replace(/♭/g, '-flat')
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
 // Color category per quality — drives the coloured spine on each chord card
 // in the chord-library index. Major and minor get their own colours;
 // dominants (V chords in disguise) stand out in red; diminished family
@@ -149,6 +170,7 @@ const LIBRARIES = {
           // Chord-card extras: lead-sheet shorthand + colour category + piano.
           shorthand: formatChordSymbol(meta.chordName),
           colorKey: QUALITY_COLOR[meta.qualityKey] || 'other',
+          qualityKey: meta.qualityKey,
           rootPc,
           offsets,
           // Stable sort key: QUALITIES-table order, then root spelling so
@@ -360,6 +382,43 @@ function MiniPiano({ rootPc, offsets }) {
   );
 }
 
+// Render the cards for one side of a split chord-section column, split
+// further into "basics" (triads + 6ths + 7ths) and "extensions" (9ths,
+// 11ths, 13ths, adds). The extensions get a small heading so they're
+// visually distinct from the more common smaller chords.
+function ChordColumn({ items, emptyLabel }) {
+  if (items.length === 0) {
+    return <p className="library-split-empty">{emptyLabel}</p>;
+  }
+  const basics = items.filter((it) => !isExtension(it.qualityKey));
+  const extensions = items.filter((it) => isExtension(it.qualityKey));
+  return (
+    <>
+      {basics.length > 0 && (
+        <ul className="library-grid library-grid-stack">
+          {basics.map((item) => (
+            <li key={item.slug}>
+              <LibraryCard item={item} />
+            </li>
+          ))}
+        </ul>
+      )}
+      {extensions.length > 0 && (
+        <>
+          <h4 className="library-subgroup-title">Extensions</h4>
+          <ul className="library-grid library-grid-stack">
+            {extensions.map((item) => (
+              <li key={item.slug}>
+                <LibraryCard item={item} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </>
+  );
+}
+
 // Renders one card for a single library entry. Two visual variants:
 //   - chord cards (when `shorthand` is present): big lead-sheet symbol on
 //     top with a small quality label underneath, plus a coloured spine on
@@ -437,7 +496,23 @@ export default function LibraryIndex({ library }) {
         </div>
       </header>
 
-      <main className="library-container library-main">
+      <main className={`library-container library-main${config.grouped ? ' library-main-with-nav' : ''}`}>
+        {/* Sticky "jump to root" sidebar — only relevant for grouped layouts
+            (currently just the chord library). Hidden on narrow screens
+            where scrolling is the natural interaction. */}
+        {config.grouped && !isEmpty && groups && (
+          <nav className="library-root-nav" aria-label="Jump to root">
+            <h3 className="library-root-nav-title">Roots</h3>
+            <ul>
+              {groups.map((group) => (
+                <li key={group.label}>
+                  <a href={`#${groupAnchorId(group.label)}`}>{group.label}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+        <div className="library-main-content">
         {isEmpty ? (
           <p className="library-empty">
             No pages have rolled live yet — check back soon. (Pages publish on a
@@ -451,37 +526,27 @@ export default function LibraryIndex({ library }) {
           // major-flavour chords on the left, minor/dim/half-dim on the right.
           <div className="library-groups">
             {groups.map((group) => (
-              <section key={group.label} className="library-group">
+              <section
+                key={group.label}
+                id={groupAnchorId(group.label)}
+                className="library-group"
+              >
                 <h2 className="library-group-title">{group.label}</h2>
                 {config.splitByQuality ? (
                   <div className="library-split">
                     <div className="library-split-column">
                       <h3 className="library-split-title">Major</h3>
-                      {group.majorItems.length === 0 ? (
-                        <p className="library-split-empty">No major chords yet.</p>
-                      ) : (
-                        <ul className="library-grid library-grid-stack">
-                          {group.majorItems.map((item) => (
-                            <li key={item.slug}>
-                              <LibraryCard item={item} />
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      <ChordColumn
+                        items={group.majorItems}
+                        emptyLabel="No major chords yet."
+                      />
                     </div>
                     <div className="library-split-column">
                       <h3 className="library-split-title">Minor</h3>
-                      {group.minorItems.length === 0 ? (
-                        <p className="library-split-empty">No minor chords yet.</p>
-                      ) : (
-                        <ul className="library-grid library-grid-stack">
-                          {group.minorItems.map((item) => (
-                            <li key={item.slug}>
-                              <LibraryCard item={item} />
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+                      <ChordColumn
+                        items={group.minorItems}
+                        emptyLabel="No minor chords yet."
+                      />
                     </div>
                   </div>
                 ) : (
@@ -529,6 +594,7 @@ export default function LibraryIndex({ library }) {
             ))}
           </ul>
         )}
+        </div>
       </main>
 
       <footer className="library-footer">
@@ -558,6 +624,97 @@ const styles = `
   .library-container {
     max-width: 760px;
     margin: 0 auto;
+  }
+  /* Wider container + sidebar layout for the grouped chord library so
+     the "jump to root" nav can sit alongside the content without
+     squashing the cards. On narrow screens the sidebar drops below
+     the header and the main content takes full width. */
+  .library-main-with-nav {
+    max-width: 1080px;
+  }
+  @media (min-width: 900px) {
+    .library-main-with-nav {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+  }
+  .library-main-content { min-width: 0; }
+  /* Left-rail "jump to root" navigation. Sticky on desktop, horizontal
+     scroll pill row on mobile. */
+  .library-root-nav {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px dotted var(--ink-soft);
+  }
+  .library-root-nav-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 0.6rem;
+    font-weight: 400;
+  }
+  .library-root-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+  }
+  .library-root-nav a {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    font-family: 'Italiana', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--paper-deep);
+    border: 1px solid var(--ink-soft);
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  .library-root-nav a:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  @media (min-width: 900px) {
+    .library-root-nav {
+      position: sticky;
+      top: 1rem;
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+      max-height: calc(100vh - 2rem);
+      overflow-y: auto;
+    }
+    .library-root-nav ul {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+    }
+    .library-root-nav a {
+      display: block;
+      text-align: center;
+    }
+  }
+  /* Sub-group heading within a chord column (e.g. "Extensions"). Sits
+     between the basic-chord cards and the 9th/11th/13th cards in the
+     same column. */
+  .library-subgroup-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 1.1rem 0 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px dotted var(--ink-soft);
+    font-weight: 600;
+    opacity: 0.85;
   }
   .library-back {
     font-family: 'JetBrains Mono', monospace;

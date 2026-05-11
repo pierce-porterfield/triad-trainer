@@ -7,7 +7,7 @@ import { getLiveScaleSlugs, slugToScale } from '../data/scaleContent';
 import { getLiveLearnSlugs, getLearnPageContent } from '../data/learnContent';
 import { notesInKey } from '../data/keys';
 import { noteToPc } from '../data/pitchClass';
-import { QUALITIES, buildChord } from '../data/triads';
+import { QUALITIES } from '../data/triads';
 
 // Display labels for the 12 pitch-class buckets used to group chord pages.
 // Enharmonic spellings share a heading (e.g. "C♯ / D♭") so users hunting
@@ -130,14 +130,14 @@ const LIBRARIES = {
         if (!meta) continue;
         const pc = noteToPc(meta.root);
         if (pc < 0) continue;
-        // Pitch classes of every note in the chord — drives the mini piano
-        // diagram on the card. buildChord returns spelled notes; we map to
-        // pitch class so the highlight works regardless of enharmonic
-        // spelling.
-        const chordNotes = buildChord(meta.root, meta.qualityKey);
-        const pitchClasses = chordNotes
-          .map((n) => noteToPc(n))
-          .filter((pc) => pc >= 0);
+        // Root pitch class + interval offsets drive the mini piano on the
+        // card. Pulling intervals directly from QUALITIES (instead of
+        // computing spelled notes) lets the keyboard show each chord tone
+        // at its true register — important for 9ths/11ths/13ths whose
+        // upper extensions sit above the octave.
+        const qualityDef = QUALITIES[meta.qualityKey];
+        const rootPc = noteToPc(meta.root);
+        const offsets = qualityDef ? qualityDef.intervals : null;
         const item = {
           slug,
           to: `/chords/${slug}`,
@@ -146,7 +146,8 @@ const LIBRARIES = {
           // Chord-card extras: lead-sheet shorthand + colour category + piano.
           shorthand: formatChordSymbol(meta.chordName),
           colorKey: QUALITY_COLOR[meta.qualityKey] || 'other',
-          pitchClasses,
+          rootPc,
+          offsets,
           // Stable sort key: QUALITIES-table order, then root spelling so
           // C# major sits next to C# minor under "C♯ / D♭" ahead of Db.
           _sortKey: (QUALITY_ORDER[meta.qualityKey] ?? 99) * 100 + meta.root.length,
@@ -252,56 +253,103 @@ const LIBRARIES = {
   },
 };
 
-// Compact single-octave piano keyboard with chord notes highlighted.
-// Pulls its fill colour from the parent's `--spine` CSS variable so the
-// highlight always matches the chord-quality colour of the card it sits in.
+// Compact piano keyboard with chord notes highlighted at their actual
+// register. For triads, 6ths, and 7ths the chord fits in one octave; for
+// 9ths, 11ths, and 13ths the keyboard automatically grows to two or three
+// octaves so every chord tone sits visibly above the one before it (the
+// stacked-thirds shape stays geometric).
 //
-// Black keys sit centred on the boundary between adjacent white keys —
-// good enough for a 100-px-wide decorative diagram.
-function MiniPiano({ pitchClasses }) {
-  const WHITE_PCS = [0, 2, 4, 5, 7, 9, 11];           // C D E F G A B
-  const BLACK_PCS_AT_BOUNDARY = [                       // pc → which boundary
-    { pc: 1,  after: 0 },                               // C♯/D♭ between C and D
-    { pc: 3,  after: 1 },                               // D♯/E♭ between D and E
-    { pc: 6,  after: 3 },                               // F♯/G♭ between F and G
-    { pc: 8,  after: 4 },                               // G♯/A♭ between G and A
-    { pc: 10, after: 5 },                               // A♯/B♭ between A and B
-  ];
-  const whiteW = 14;
-  const whiteH = 40;
-  const blackW = 10;
-  const blackH = 25;
-  const totalW = whiteW * 7;
-  const set = new Set(pitchClasses);
+// Inputs:
+//   rootPc — pitch class 0..11 of the chord root
+//   offsets — semitones above the root for each chord tone, in order
+//             (these are QUALITIES[qKey].intervals, always ascending)
+//
+// White-key widths shrink as the keyboard grows so all cards stay roughly
+// the same overall width — the diagram for C maj13 is the same horizontal
+// footprint as C maj, just with thinner keys.
+function MiniPiano({ rootPc, offsets }) {
+  if (rootPc < 0 || !offsets || offsets.length === 0) return null;
+
+  const maxOffset = Math.max(...offsets);
+  // Triads, 6ths, and 7ths fit within an octave — highlight by pitch
+  // class in a single C-to-B keyboard. Extensions (9ths/11ths/13ths)
+  // span past the octave, so we render absolute positions instead and
+  // let the keyboard grow to two octaves so each upper extension sits
+  // visibly above the chord tone it stacks on.
+  const fitsInOctave = maxOffset <= 11;
+  const octaves = fitsInOctave
+    ? 1
+    : Math.min(3, Math.ceil((rootPc + maxOffset + 1) / 12));
+
+  // The set of "lit" positions in the SVG's coordinate space. In one-
+  // octave mode that's just pitch classes 0..11; in multi-octave mode
+  // it's absolute semitone positions from C of the lowest octave.
+  const lit = new Set(
+    fitsInOctave
+      ? offsets.map((o) => (rootPc + o) % 12)
+      : offsets.map((o) => rootPc + o)
+  );
+
+  // Pitch classes within a single octave that map to white vs. black keys,
+  // plus which white key each black key sits to the right of.
+  const WHITE_PC_IN_OCTAVE = [0, 2, 4, 5, 7, 9, 11];                 // C D E F G A B
+  const BLACK_PC_IN_OCTAVE = [1, 3, 6, 8, 10];                       // C♯ D♯ F♯ G♯ A♯
+  const BLACK_AFTER_WHITE = { 1: 0, 3: 1, 6: 3, 8: 4, 10: 5 };
+
+  // Per-octave-count sizing — wider keys when there's only one octave,
+  // thinner when there are three, so total width stays roughly similar.
+  const WHITE_W = octaves === 1 ? 14 : octaves === 2 ? 9 : 7;
+  const BLACK_W = Math.max(5, Math.round(WHITE_W * 0.65));
+  const WHITE_H = 40;
+  const BLACK_H = 25;
+  const totalW = octaves * 7 * WHITE_W;
+
+  const whiteKeys = [];
+  for (let oct = 0; oct < octaves; oct++) {
+    WHITE_PC_IN_OCTAVE.forEach((pc, i) => {
+      whiteKeys.push({
+        x: (oct * 7 + i) * WHITE_W,
+        position: oct * 12 + pc,
+      });
+    });
+  }
+  const blackKeys = [];
+  for (let oct = 0; oct < octaves; oct++) {
+    BLACK_PC_IN_OCTAVE.forEach((pc) => {
+      const afterWhiteIdx = oct * 7 + BLACK_AFTER_WHITE[pc];
+      blackKeys.push({
+        x: (afterWhiteIdx + 1) * WHITE_W - BLACK_W / 2,
+        position: oct * 12 + pc,
+      });
+    });
+  }
 
   return (
     <svg
       className="library-card-chord-piano"
       width={totalW}
-      height={whiteH}
-      viewBox={`0 0 ${totalW} ${whiteH}`}
+      height={WHITE_H}
+      viewBox={`0 0 ${totalW} ${WHITE_H}`}
       aria-hidden="true"
     >
-      {/* White keys */}
-      {WHITE_PCS.map((pc, i) => (
+      {whiteKeys.map((k) => (
         <rect
-          key={`w-${pc}`}
-          x={i * whiteW}
+          key={`w-${k.position}`}
+          x={k.x}
           y={0}
-          width={whiteW}
-          height={whiteH}
-          className={`mp-key mp-white${set.has(pc) ? ' is-on' : ''}`}
+          width={WHITE_W}
+          height={WHITE_H}
+          className={`mp-key mp-white${lit.has(k.position) ? ' is-on' : ''}`}
         />
       ))}
-      {/* Black keys */}
-      {BLACK_PCS_AT_BOUNDARY.map(({ pc, after }) => (
+      {blackKeys.map((k) => (
         <rect
-          key={`b-${pc}`}
-          x={(after + 1) * whiteW - blackW / 2}
+          key={`b-${k.position}`}
+          x={k.x}
           y={0}
-          width={blackW}
-          height={blackH}
-          className={`mp-key mp-black${set.has(pc) ? ' is-on' : ''}`}
+          width={BLACK_W}
+          height={BLACK_H}
+          className={`mp-key mp-black${lit.has(k.position) ? ' is-on' : ''}`}
         />
       ))}
     </svg>
@@ -325,7 +373,7 @@ function LibraryCard({ item }) {
           <span className="library-card-chord-symbol">{item.shorthand}</span>
           {item.sub && <span className="library-card-chord-label">{item.sub}</span>}
         </div>
-        {item.pitchClasses && <MiniPiano pitchClasses={item.pitchClasses} />}
+        {item.offsets && <MiniPiano rootPc={item.rootPc} offsets={item.offsets} />}
       </Link>
     );
   }
